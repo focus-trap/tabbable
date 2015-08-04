@@ -4,8 +4,10 @@
   "description": "Returns an array of all tabbable DOM nodes within a containing node.",
   "main": "index.js",
   "scripts": {
-    "test": "tape test/index.js",
-    "test-local": "browserify test -t brfs | testling"
+    "test": "npm run test-bundle && npm run test-single",
+    "test-bundle": "browserify test -t brfs -o test/test-bundle.js",
+    "test-watch": "watchify test -t brfs -o test/test-bundle.js",
+    "test-single": "karma start --single-run"
   },
   "repository": {
     "type": "git",
@@ -20,17 +22,11 @@
   "devDependencies": {
     "brfs": "1.4.0",
     "browserify": "11.0.1",
+    "karma": "0.13.3",
+    "karma-phantomjs-launcher": "0.2.0",
+    "karma-tap": "1.0.3",
+    "phantomjs": "1.9.17",
     "tape": "4.0.1",
     "watchify": "3.3.1"
-  },
-  "testling": {
-    "files": "test/index.js",
-    "browsers": [
-      "ie/9..latest",
-      "chrome/22..latest",
-      "firefox/16..latest",
-      "safari/latest",
-      "opera/11.0..latest"
-    ]
   }
 }
