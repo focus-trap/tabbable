@@ -4,6 +4,8 @@
   "description": "Returns an array of all tabbable DOM nodes within a containing node.",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
     "test": "npm run test-bundle && npm run test-single",
     "test-bundle": "browserify test -t brfs -o test/test-bundle.js",
     "test-watch": "watchify test -t brfs -o test/test-bundle.js",
@@ -20,6 +22,7 @@
   },
   "homepage": "https://github.com/davidtheclark/tabbable#readme",
   "devDependencies": {
+    "async": "1.4.0",
     "brfs": "1.4.0",
     "browserify": "11.0.1",
     "karma": "0.13.3",
