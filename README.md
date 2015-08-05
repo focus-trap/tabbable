@@ -1,4 +1,4 @@
-# tabbable
+# tabbable [![Build Status](https://travis-ci.org/davidtheclark/tabbable.svg?branch=master)](https://travis-ci.org/davidtheclark/tabbable)
 
 Returns an array of all tabbable DOM nodes within a containing node.
 
