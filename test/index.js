@@ -1,10 +1,11 @@
 var test = require('tape');
+var path = require('path');
 var fs = require('fs');
 var tabbable = require('..');
 
 testFixture(
   'basic',
-  fs.readFileSync(__dirname + '/fixtures/basic.html', 'utf8'),
+  fs.readFileSync(path.join(__dirname, '/fixtures/basic.html'), 'utf8'),
   [
     'input',
     'select',
@@ -18,7 +19,7 @@ testFixture(
 
 testFixture(
   'nested',
-  fs.readFileSync(__dirname + '/fixtures/nested.html', 'utf8'),
+  fs.readFileSync(path.join(__dirname, '/fixtures/nested.html'), 'utf8'),
   [
     'tabindex-div-1',
     'tabindex-div-2',
@@ -28,7 +29,7 @@ testFixture(
 
 testFixture(
   'jqueryui',
-  fs.readFileSync(__dirname + '/fixtures/jqueryui.html', 'utf8'),
+  fs.readFileSync(path.join(__dirname, '/fixtures/jqueryui.html'), 'utf8'),
   [
   	'formTabindex',
   	'visibleAncestor-inputTypeNone',
