@@ -1,15 +1,17 @@
 module.exports = function(el) {
-  var tabbableNodes = [];
+  var basicTabbables = [];
+  var orderedTabbables = [];
 
   var candidateNodelist = el.querySelectorAll('input, select, a, textarea, button, [tabindex]');
   var candidates = Array.prototype.slice.call(candidateNodelist);
 
-  var candidate;
+  var candidate, candidateIndex;
   for (var i = 0, l = candidates.length; i < l; i++) {
     candidate = candidates[i];
+    candidateIndex = candidate.tabIndex;
 
     if (
-      candidate.tabIndex < 0
+      candidateIndex < 0
       || (candidate.tagName === 'INPUT' && candidate.type === 'hidden')
       || (candidate.tagName === 'A' && !candidate.href && !candidate.tabIndex)
       || candidate.disabled
@@ -18,8 +20,25 @@ module.exports = function(el) {
       continue;
     }
 
-    tabbableNodes.push(candidate);
+    if (candidateIndex === 0) {
+      basicTabbables.push(candidate);
+    } else {
+      orderedTabbables.push({
+        tabIndex: candidateIndex,
+        node: candidate,
+      });
+    }
   }
+
+  var tabbableNodes = orderedTabbables
+    .sort(function(a, b) {
+      return a.tabIndex - b.tabIndex;
+    })
+    .map(function(a) {
+      return a.node
+    });
+
+  Array.prototype.push.apply(tabbableNodes, basicTabbables);
 
   return tabbableNodes;
 }
