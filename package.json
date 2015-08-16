@@ -32,5 +32,8 @@
     "phantomjs": "1.9.17",
     "tape": "4.0.1",
     "watchify": "3.3.1"
-  }
+  },
+  "files": [
+    "index.js"
+  ]
 }
