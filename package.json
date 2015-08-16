@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/davidtheclark/tabbable#readme",
   "devDependencies": {
-    "async": "1.4.0",
     "brfs": "1.4.0",
     "browserify": "11.0.1",
     "eslint": "1.0.0",
