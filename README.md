@@ -34,6 +34,8 @@ Why? It uses [Element.querySelectorAll()](https://developer.mozilla.org/en-US/do
 npm install tabbable
 ```
 
+Dependencies: *none*.
+
 You'll need to be compiling CommonJS (via browserify or webpack).
 
 ## Usage

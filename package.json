@@ -1,6 +1,6 @@
 {
   "name": "tabbable",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Returns an array of all tabbable DOM nodes within a containing node.",
   "main": "index.js",
   "scripts": {
@@ -22,14 +22,14 @@
   },
   "homepage": "https://github.com/davidtheclark/tabbable#readme",
   "devDependencies": {
-    "brfs": "1.4.0",
+    "brfs": "1.4.1",
     "browserify": "11.0.1",
-    "eslint": "1.0.0",
-    "karma": "0.13.3",
-    "karma-phantomjs-launcher": "0.2.0",
+    "eslint": "1.2.1",
+    "karma": "0.13.9",
+    "karma-phantomjs-launcher": "0.2.1",
     "karma-tap": "1.0.3",
-    "phantomjs": "1.9.17",
-    "tape": "4.0.1",
+    "phantomjs": "1.9.18",
+    "tape": "4.2.0",
     "watchify": "3.3.1"
   },
   "files": [
