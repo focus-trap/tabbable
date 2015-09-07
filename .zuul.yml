@@ -1,0 +1,19 @@
+ui: tape
+browserify:
+  - transform:
+      name: brfs
+browsers:
+  - name: chrome
+    version: 43..latest
+  - name: firefox
+    version: 38..latest
+  - name: safari
+    version: 7..latest
+  - name: ie
+    version: 8..latest
+  - name: opera
+    version: 11..latest
+  - name: iphone
+    version: [7, 8, latest]
+  - name: android
+    version: 4.3..latest

@@ -5,11 +5,9 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
+    "test-dev": "zuul --local 8080 -- test/index.js",
     "pretest": "npm run lint",
-    "test": "npm run test-bundle && npm run test-single",
-    "test-bundle": "browserify test -t brfs -o test/test-bundle.js",
-    "test-watch": "watchify test -t brfs -o test/test-bundle.js",
-    "test-single": "karma start --single-run"
+    "test": "zuul -- test/index.js"
   },
   "repository": {
     "type": "git",
@@ -25,12 +23,8 @@
     "brfs": "1.4.1",
     "browserify": "11.0.1",
     "eslint": "1.2.1",
-    "karma": "0.13.9",
-    "karma-phantomjs-launcher": "0.2.1",
-    "karma-tap": "1.0.3",
-    "phantomjs": "1.9.18",
     "tape": "4.2.0",
-    "watchify": "3.3.1"
+    "zuul": "3.4.0"
   },
   "files": [
     "index.js"
