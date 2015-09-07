@@ -24,9 +24,11 @@ Any of the above will *not* be added to the array, though, if any of the followi
 
 ## Browser Support
 
-IE9+
+Basically IE9+. See `.zuul.yml` for more details.
 
 Why? It uses [Element.querySelectorAll()](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll) and [Window.getComputedStyle()](https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle).
+
+Automated testing is done with [zuul](https://github.com/defunctzombie/zuul) and [Open Suace](https://saucelabs.com/opensauce/).
 
 ## Installation
 
