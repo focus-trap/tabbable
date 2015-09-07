@@ -62,3 +62,9 @@ Also: jQuery UI's `:tabbable` selector ignores elements with height and width of
 Also: This plugin ignores the rarely used `<area>` and `<object>` elements, which are focusable in some circumstances. (If you need them, maybe PR?)
 
 *Feedback more than welcome!*
+
+## Development
+
+Lint with `npm run lint`.
+
+Test with `npm run test-dev`, which will give you a URL to open in your browser. Look at the console log for TAP output.
