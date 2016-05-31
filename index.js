@@ -2,7 +2,7 @@ module.exports = function(el) {
   var basicTabbables = [];
   var orderedTabbables = [];
 
-  var candidateNodelist = el.querySelectorAll('input, select, a, textarea, button, [tabindex]');
+  var candidateNodelist = el.querySelectorAll('input, select, a[href], textarea, button, [tabindex]');
   var candidates = Array.prototype.slice.call(candidateNodelist);
 
   var candidate, candidateIndex;
@@ -13,7 +13,6 @@ module.exports = function(el) {
     if (
       candidateIndex < 0
       || (candidate.tagName === 'INPUT' && candidate.type === 'hidden')
-      || (candidate.tagName === 'A' && !candidate.href && !candidate.tabIndex)
       || candidate.disabled
       || isHidden(candidate)
     ) {
