@@ -1,6 +1,6 @@
 # Changelog
 
-## Head
+## 1.0.3
 
 - Further improvements to caching.
 
