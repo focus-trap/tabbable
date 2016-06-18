@@ -1,6 +1,6 @@
 # Changelog
 
-## Head
+## 1.0.2
 
 - Fix overaggressive caching that would prevent `tabbable` from knowing an element's children had changed.
 
