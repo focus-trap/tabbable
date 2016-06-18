@@ -2,8 +2,7 @@ module.exports = function(el) {
   var basicTabbables = [];
   var orderedTabbables = [];
 
-  var candidateNodelist = el.querySelectorAll('input, select, a[href], textarea, button, [tabindex]');
-  var candidates = Array.prototype.slice.call(candidateNodelist);
+  var candidates = el.querySelectorAll('input, select, a[href], textarea, button, [tabindex]');
 
   var candidate, candidateIndex;
   for (var i = 0, l = candidates.length; i < l; i++) {
