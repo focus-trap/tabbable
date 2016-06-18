@@ -1,2 +1,3 @@
 node_modules
 test/test-bundle.js
+*.log
