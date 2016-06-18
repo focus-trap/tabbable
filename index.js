@@ -1,34 +1,7 @@
 module.exports = function(el) {
-  // Node cache must be refreshed on every check, in case
-  // the content of the element has changed
-  var nodeCache = {};
-  var nodeCacheIndex = 1;
-  function isHidden(node) {
-    if (node === document.documentElement) {
-      return false;
-    }
-
-    if (node.tabbableCacheIndex) {
-      return nodeCache[node.tabbableCacheIndex];
-    }
-
-    var result = false;
-    var style = window.getComputedStyle(node);
-    if (style.visibility === 'hidden' || style.display === 'none') {
-      result = true;
-    } else if (node.parentNode) {
-      result = isHidden(node.parentNode);
-    }
-
-    node.tabbableCacheIndex = nodeCacheIndex;
-    nodeCache[node.tabbableCacheIndex] = result;
-    nodeCacheIndex++;
-
-    return result;
-  }
-
   var basicTabbables = [];
   var orderedTabbables = [];
+  var isHidden = createIsHidden();
 
   var candidates = el.querySelectorAll('input, select, a[href], textarea, button, [tabindex]');
 
@@ -67,4 +40,32 @@ module.exports = function(el) {
   Array.prototype.push.apply(tabbableNodes, basicTabbables);
 
   return tabbableNodes;
+}
+
+function createIsHidden() {
+  // Node cache must be refreshed on every check, in case
+  // the content of the element has changed
+  var nodeCache = [];
+
+  return function isHidden(node) {
+    if (node === document.documentElement) return false;
+
+    var cached = nodeCache.find(function(item) {
+      return item[0] === node;
+    });
+
+    if (cached) return cached[1];
+
+    var result = false;
+    var style = window.getComputedStyle(node);
+    if (style.visibility === 'hidden' || style.display === 'none') {
+      result = true;
+    } else if (node.parentNode) {
+      result = isHidden(node.parentNode);
+    }
+
+    nodeCache.push([node, result]);
+
+    return result;
+  }
 }
