@@ -1,4 +1,4 @@
-# tabbable [![Build Status](https://travis-ci.org/davidtheclark/tabbable.svg?branch=master)](https://travis-ci.org/davidtheclark/tabbable)
+# tabbable
 
 Returns an array of all tabbable DOM nodes within a containing node, *in their actual tab order* (cf. [Sequential focus navigation and the tabindex attribute](http://www.w3.org/TR/html5/editing.html#sequential-focus-navigation-and-the-tabindex-attribute)).
 
