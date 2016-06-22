@@ -50,8 +50,10 @@ function createIsHidden() {
   return function isHidden(node) {
     if (node === document.documentElement) return false;
 
-    var cached = nodeCache.find(function(item) {
-      return item[0] === node;
+    var cached;
+
+    nodeCache.some(function(item) {
+      return item[0] === node && (cached = item);
     });
 
     if (cached) return cached[1];
