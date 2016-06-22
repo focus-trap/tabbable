@@ -24,7 +24,7 @@ module.exports = function(el) {
     } else {
       orderedTabbables.push({
         tabIndex: candidateIndex,
-        node: candidate,
+        node: candidate
       });
     }
   }
@@ -40,7 +40,7 @@ module.exports = function(el) {
   Array.prototype.push.apply(tabbableNodes, basicTabbables);
 
   return tabbableNodes;
-}
+};
 
 function createIsHidden() {
   // Node cache must be refreshed on every check, in case
@@ -50,8 +50,10 @@ function createIsHidden() {
   return function isHidden(node) {
     if (node === document.documentElement) return false;
 
-    var cached = nodeCache.find(function(item) {
-      return item[0] === node;
+    var cached;
+
+    nodeCache.some(function(item) {
+      return item[0] === node && (cached = item);
     });
 
     if (cached) return cached[1];
