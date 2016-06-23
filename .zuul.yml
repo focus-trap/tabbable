@@ -4,15 +4,15 @@ browserify:
       name: brfs
 browsers:
   - name: chrome
-    version: 43..latest
+    version: latest
   - name: firefox
-    version: 38..latest
+    version: latest
   - name: safari
-    version: 7..latest
+    version: latest
   - name: ie
     version: 9..latest
   - name: opera
-    version: 11..latest
+    version: latest
   - name: android
     version: 4.3..latest
 concurrency: 2
