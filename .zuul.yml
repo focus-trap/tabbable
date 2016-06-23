@@ -15,3 +15,7 @@ browsers:
     version: 11..latest
   - name: android
     version: 4.3..latest
+concurrency: 2
+tunnel:
+  type: ngrok
+  bind_tls: true

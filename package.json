@@ -24,7 +24,8 @@
     "browserify": "13.0.1",
     "eslint": "2.13.0",
     "tape": "4.5.1",
-    "zuul": "3.10.1"
+    "zuul": "3.10.1",
+    "zuul-ngrok": "^4.0.0"
   },
   "files": [
     "index.js"
