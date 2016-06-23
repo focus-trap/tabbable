@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.4
+
+- Fix IE9 compatibility.
+
 ## 1.0.3
 
 - Further improvements to caching.

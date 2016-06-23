@@ -50,16 +50,10 @@ function createIsHidden() {
   return function isHidden(node) {
     if (node === document.documentElement) return false;
 
-    var cached;
-
+    // Find the cached node (Array.prototype.find not available in IE9)
     for (var i = 0, length = nodeCache.length; i < length; i++) {
-      if (nodeCache[length] === node) {
-        cached = node;
-        break;
-      }
+      if (nodeCache[i][0] === node) return nodeCache[i][1];
     }
-
-    if (cached) return cached[1];
 
     var result = false;
     var style = window.getComputedStyle(node);
