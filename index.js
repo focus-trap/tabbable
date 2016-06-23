@@ -52,9 +52,12 @@ function createIsHidden() {
 
     var cached;
 
-    nodeCache.some(function(item) {
-      return item[0] === node && (cached = item);
-    });
+    for (var i = 0, length = nodeCache.length; i < length; i++) {
+      if (nodeCache[length] === node) {
+        cached = node;
+        break;
+      }
+    }
 
     if (cached) return cached[1];
 
