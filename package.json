@@ -22,9 +22,6 @@
     "eslint": "^3.9.0",
     "jest": "^16.0.2"
   },
-  "files": [
-    "index.js"
-  ],
   "jest": {
     "testRegex": ".*.js?",
     "testPathDirs": [
