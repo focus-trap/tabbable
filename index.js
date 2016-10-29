@@ -3,7 +3,16 @@ module.exports = function(el) {
   var orderedTabbables = [];
   var isHidden = createIsHidden();
 
-  var candidates = el.querySelectorAll('input, select, a[href], textarea, button, [tabindex]');
+  var candidateSelectors = [
+    'input',
+    'select',
+    'a[href]',
+    'textarea',
+    'button',
+    '[tabindex]',
+  ];
+
+  var candidates = el.querySelectorAll(candidateSelectors);
 
   var candidate, candidateIndex;
   for (var i = 0, l = candidates.length; i < l; i++) {
