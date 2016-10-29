@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/davidtheclark/tabbable#readme",
   "devDependencies": {
-    "eslint": "2.13.0",
+    "eslint": "^3.9.0",
     "jest": "^16.0.2"
   },
   "files": [
@@ -27,6 +27,8 @@
   ],
   "jest": {
     "testRegex": ".*.js?",
-    "testPathDirs": ["./test"]
+    "testPathDirs": [
+      "./test"
+    ]
   }
 }

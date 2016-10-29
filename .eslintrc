@@ -1,8 +1,10 @@
 {
   "env": {
     "node": true,
-    "browser": true
+    "browser": true,
+    "jest": true
   },
+  "extends": ["eslint:recommended"],
   "rules": {
     "comma-dangle": [2, "always-multiline"],
     "curly": 0,

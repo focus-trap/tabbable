@@ -63,21 +63,21 @@ describe('tabbable', function() {
     var actual = fixture('jqueryui').getTabbableIds();
     var expected = [
       // 1
-    	'formTabindex',
+      'formTabindex',
       'visibleAncestor-spanWithTabindex',
       // 10
       'inputTabindex10',
       'spanTabindex10',
       // 0
-    	'visibleAncestor-inputTypeNone',
-    	'visibleAncestor-inputTypeText',
-    	'visibleAncestor-inputTypeCheckbox',
-    	'visibleAncestor-inputTypeRadio',
-    	'visibleAncestor-inputTypeButton',
-    	'visibleAncestor-button',
-    	'visibleAncestor-select',
-    	'visibleAncestor-textarea',
-    	'visibleAncestor-anchorWithHref',
+      'visibleAncestor-inputTypeNone',
+      'visibleAncestor-inputTypeText',
+      'visibleAncestor-inputTypeCheckbox',
+      'visibleAncestor-inputTypeRadio',
+      'visibleAncestor-inputTypeButton',
+      'visibleAncestor-button',
+      'visibleAncestor-select',
+      'visibleAncestor-textarea',
+      'visibleAncestor-anchorWithHref',
       'inputTabindex0',
       'spanTabindex0',
       'dimensionlessParent',
