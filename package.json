@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint .",
     "jest": "jest",
-    "test": "npm run lint && npm run jest"
+    "test": "npm run lint && npm run jest",
+    "debug": "budo -l -d -o test/debug.js -- -t brfs"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,8 @@
   },
   "homepage": "https://github.com/davidtheclark/tabbable#readme",
   "devDependencies": {
+    "brfs": "^1.4.3",
+    "budo": "^9.2.1",
     "eslint": "^3.9.0",
     "jest": "^16.0.2"
   },
