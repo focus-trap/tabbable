@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "test-dev": "zuul --local 8080 -- test/index.js --debug",
-    "pretest": "npm run lint",
-    "test": "zuul -- test/index.js"
+    "jest": "jest",
+    "test": "npm run lint && npm run jest"
   },
   "repository": {
     "type": "git",
@@ -20,14 +19,14 @@
   },
   "homepage": "https://github.com/davidtheclark/tabbable#readme",
   "devDependencies": {
-    "brfs": "1.4.3",
-    "browserify": "13.0.1",
     "eslint": "2.13.0",
-    "tape": "4.5.1",
-    "zuul": "3.10.1",
-    "zuul-ngrok": "^4.0.0"
+    "jest": "^16.0.2"
   },
   "files": [
     "index.js"
-  ]
+  ],
+  "jest": {
+    "testRegex": ".*.js?",
+    "testPathDirs": ["./test"]
+  }
 }

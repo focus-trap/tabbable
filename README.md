@@ -24,11 +24,9 @@ Any of the above will *not* be added to the array, though, if any of the followi
 
 ## Browser Support
 
-Basically IE9+. See `.zuul.yml` for more details.
+Basically IE9+.
 
 Why? It uses [Element.querySelectorAll()](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll) and [Window.getComputedStyle()](https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle).
-
-Automated testing is done with [zuul](https://github.com/defunctzombie/zuul) and [Open Suace](https://saucelabs.com/opensauce/).
 
 ## Installation
 
@@ -62,9 +60,3 @@ Also: jQuery UI's `:tabbable` selector ignores elements with height and width of
 Also: This plugin ignores the rarely used `<area>` and `<object>` elements, which are focusable in some circumstances. (If you need them, maybe PR?)
 
 *Feedback more than welcome!*
-
-## Development
-
-Lint with `npm run lint`.
-
-Test with `npm run test-dev`, which will give you a URL to open in your browser. Look at the console log for TAP output.
