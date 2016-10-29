@@ -26,7 +26,7 @@
     "jest": "^16.0.2"
   },
   "jest": {
-    "testRegex": ".*.js?",
+    "testRegex": ".*.test.js?",
     "testPathDirs": [
       "./test"
     ]
