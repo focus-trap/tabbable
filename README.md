@@ -18,6 +18,8 @@ Any of the above will *not* be added to the array, though, if any of the followi
 - `disabled`
 - either the node itself *or an ancestor of it* is hidden via `display: none` or `visibility: hidden`
 
+**Note**: Though browsers allow tabbing into elements marked `contenteditable`, outstanding bugs in the `tabIndex` API prevents `tabbable` from registering them. If you have `contenteditable` elements that you need included in the array, you'll have to additionally specify `tabindex="0"`.
+
 ## Goals
 - Accurate
 - No dependencies
