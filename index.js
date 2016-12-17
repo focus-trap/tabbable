@@ -1,7 +1,10 @@
 module.exports = function(el) {
   var basicTabbables = [];
   var orderedTabbables = [];
-  var isHidden = createIsHidden();
+
+  // A node is "available" if
+  // - it's computed style
+  var isUnavailable = createIsUnavailable();
 
   var candidateSelectors = [
     'input',
@@ -23,7 +26,7 @@ module.exports = function(el) {
       candidateIndex < 0
       || (candidate.tagName === 'INPUT' && candidate.type === 'hidden')
       || candidate.disabled
-      || isHidden(candidate)
+      || isUnavailable(candidate)
     ) {
       continue;
     }
@@ -51,29 +54,46 @@ module.exports = function(el) {
   return tabbableNodes;
 }
 
-function createIsHidden() {
+function createIsUnavailable() {
   // Node cache must be refreshed on every check, in case
   // the content of the element has changed
-  var nodeCache = [];
+  var isOffCache = [];
 
-  return function isHidden(node) {
+  // "off" means `display: none;`, as opposed to "hidden",
+  // which means `visibility: hidden;`. getComputedStyle
+  // accurately reflects visiblity in context but not
+  // "off" state, so we need to recursively check parents.
+
+  function isOff(node, nodeComputedStyle) {
     if (node === document.documentElement) return false;
 
     // Find the cached node (Array.prototype.find not available in IE9)
-    for (var i = 0, length = nodeCache.length; i < length; i++) {
-      if (nodeCache[i][0] === node) return nodeCache[i][1];
+    for (var i = 0, length = isOffCache.length; i < length; i++) {
+      if (isOffCache[i][0] === node) return isOffCache[i][1];
     }
+
+    nodeComputedStyle = nodeComputedStyle || window.getComputedStyle(node);
 
     var result = false;
-    var style = window.getComputedStyle(node);
-    if (style.visibility === 'hidden' || style.display === 'none') {
+
+    if (nodeComputedStyle.display === 'none') {
       result = true;
     } else if (node.parentNode) {
-      result = isHidden(node.parentNode);
+      result = isOff(node.parentNode);
     }
 
-    nodeCache.push([node, result]);
+    isOffCache.push([node, result]);
 
     return result;
+  }
+
+  return function isUnavailable(node) {
+    if (node === document.documentElement) return false;
+
+    var computedStyle = window.getComputedStyle(node);
+
+    if (isOff(node, computedStyle)) return true;
+
+    return computedStyle.visibility === 'hidden';
   }
 }

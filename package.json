@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "jest": "jest",
-    "test": "npm run lint && npm run jest",
+    "test": "karma start && npm run lint",
     "debug": "budo -l -d -o test/debug.js -- -t brfs"
   },
   "repository": {
@@ -21,14 +20,18 @@
   "homepage": "https://github.com/davidtheclark/tabbable#readme",
   "devDependencies": {
     "brfs": "^1.4.3",
+    "browserify": "^13.1.1",
     "budo": "^9.2.1",
     "eslint": "^3.9.0",
-    "jest": "^18.0.0"
+    "karma": "^1.3.0",
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-mocha": "^1.3.0",
+    "mocha": "^3.2.0",
+    "watchify": "^3.8.0"
   },
-  "jest": {
-    "testRegex": ".*.test.js$",
-    "testPathDirs": [
-      "./test"
-    ]
+  "dependencies": {
+    "chai": "^3.5.0",
+    "karma-browserify": "^5.1.0",
+    "karma-mocha-reporter": "^2.2.1"
   }
 }

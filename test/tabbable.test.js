@@ -1,15 +1,20 @@
 var path = require('path');
 var fs = require('fs');
+var assert = require('chai').assert;
 var tabbable = require('..');
 
-function readFixture(fixtureName) {
-  return fs.readFileSync(path.join(__dirname, 'fixtures', fixtureName + '.html'), 'utf8');
-}
+var fixtures = {
+  'basic': fs.readFileSync(path.join(__dirname, 'fixtures/basic.html'), 'utf8'),
+  'changing-content': fs.readFileSync(path.join(__dirname, 'fixtures/changing-content.html'), 'utf8'),
+  'jqueryui': fs.readFileSync(path.join(__dirname, 'fixtures/jqueryui.html'), 'utf8'),
+  'nested': fs.readFileSync(path.join(__dirname, 'fixtures/nested.html'), 'utf8'),
+  'non-linear': fs.readFileSync(path.join(__dirname, 'fixtures/non-linear.html'), 'utf8'),
+};
 
 var fixtureRoots = [];
 
 function fixture(fixtureName) {
-  var html = readFixture(fixtureName);
+  var html = fixtures[fixtureName];
   var root = document.createElement('div');
   root.innerHTML = html;
   document.body.appendChild(root);
@@ -45,8 +50,9 @@ describe('tabbable', function() {
       'textarea',
       'button',
       'tabindex-div',
+      'hiddenParentVisible-button',
     ];
-    expect(actual).toEqual(expected);
+    assert.deepEqual(actual, expected);
   });
 
   it('nested', function() {
@@ -56,7 +62,7 @@ describe('tabbable', function() {
       'tabindex-div-0',
       'input',
     ];
-    expect(actual).toEqual(expected);
+    assert.deepEqual(actual, expected);
   });
 
   it('jqueryui', function() {
@@ -83,7 +89,7 @@ describe('tabbable', function() {
       'dimensionlessParent',
       'dimensionlessParent-dimensionless',
     ];
-    expect(actual).toEqual(expected);
+    assert.deepEqual(actual, expected);
   });
 
   it('non-linear', function() {
@@ -109,7 +115,7 @@ describe('tabbable', function() {
       'button',
       'tabindex-div-0',
     ];
-    expect(actual).toEqual(expected);
+    assert.deepEqual(actual, expected);
   });
 
   it('changing content', function() {
@@ -120,7 +126,7 @@ describe('tabbable', function() {
       'visible-button-2',
       'visible-button-3',
     ];
-    expect(actualA).toEqual(expectedA);
+    assert.deepEqual(actualA, expectedA);
 
     document.getElementById('initially-hidden').style.display = 'block';
 
@@ -132,6 +138,6 @@ describe('tabbable', function() {
       'initially-hidden-button-1',
       'initially-hidden-button-2',
     ];
-    expect(actualB).toEqual(expectedB);
+    assert.deepEqual(actualB, expectedB);
   });
 });

@@ -1,6 +1,8 @@
 var fs = require('fs');
 var path = require('path');
 
+global.tabbable = require('..');
+
 var testCases = {
   basic: fs.readFileSync(path.join(__dirname, 'fixtures/basic.html'), 'utf8'),
   changingContent: fs.readFileSync(path.join(__dirname, 'fixtures/changing-content.html'), 'utf8'),
