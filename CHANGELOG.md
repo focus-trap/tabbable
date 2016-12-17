@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5
+
+- Children of `visibility: hidden` elements that themselves have `visibility: visible` are considered tabbable.
+
 ## 1.0.4
 
 - Fix IE9 compatibility.
