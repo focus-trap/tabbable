@@ -23,10 +23,10 @@
     "brfs": "^1.4.3",
     "budo": "^9.2.1",
     "eslint": "^3.9.0",
-    "jest": "^16.0.2"
+    "jest": "^18.0.0"
   },
   "jest": {
-    "testRegex": ".*.test.js?",
+    "testRegex": ".*.test.js$",
     "testPathDirs": [
       "./test"
     ]
