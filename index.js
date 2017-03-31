@@ -20,7 +20,7 @@ module.exports = function(el) {
   var candidate, candidateIndex;
   for (var i = 0, l = candidates.length; i < l; i++) {
     candidate = candidates[i];
-    candidateIndex = candidate.tabIndex;
+    candidateIndex = candidate.tabIndex || candidate.getAttribute('tabindex');
 
     if (
       candidateIndex < 0
