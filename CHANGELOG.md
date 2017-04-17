@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.6
+
+- Check `tabindex` attribute (via `getAttribute`), in addition to `node.tabIndex`, to fix handling of SVGs with `tabindex="-1"` in IE.
+
 ## 1.0.5
 
 - Children of `visibility: hidden` elements that themselves have `visibility: visible` are considered tabbable.
