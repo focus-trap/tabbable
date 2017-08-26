@@ -93,7 +93,20 @@ describe('tabbable', function() {
   });
 
   it('non-linear', function() {
+    var originalSort = Array.prototype.sort;
+
+    // This sort piggy-backs on the default Array.prototype.sort, but always
+    // orders elements that were compared to be equal in reverse order of their
+    // index in the original array. We do this to simulate browsers who do not
+    // use a stable sort algorithm in their implementation.
+    Array.prototype.sort = function(compareFunction) {
+      return originalSort.call(this, function(a, b) {
+        var comparison = compareFunction ? compareFunction(a, b) : a - b;
+        return comparison || this.indexOf(b) - this.indexOf(a);
+      })
+    };
     var actual = fixture('non-linear').getTabbableIds();
+    Array.prototype.sort = originalSort;
     var expected = [
       // 1
       'input-1',
