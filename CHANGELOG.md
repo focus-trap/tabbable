@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.7
+
+- Ensure stable sort of `tabindex`ed elements even in browsers that have an unstable `Array.prototype.sort`.
+
 ## 1.0.6
 
 - Check `tabindex` attribute (via `getAttribute`), in addition to `node.tabIndex`, to fix handling of SVGs with `tabindex="-1"` in IE.
