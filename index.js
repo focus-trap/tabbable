@@ -21,7 +21,7 @@ module.exports = function(el) {
   var candidate, candidateIndex;
   for (var i = 0, l = candidates.length; i < l; i++) {
     candidate = candidates[i];
-    candidateIndex = candidate.tabIndex;
+    candidateIndex = parseInt(candidate.getAttribute('tabindex'), 10) || candidate.tabIndex;
 
     if (
       candidateIndex < 0

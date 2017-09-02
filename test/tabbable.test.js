@@ -32,6 +32,7 @@ function fixture(fixtureName) {
   fixtureRoots.push(root);
   return {
     getTabbableIds: _getTabbableIds.bind(null, root),
+    getDocument: function() { return document; },
   };
 }
 
@@ -41,6 +42,7 @@ function fixtureWithIframe(fixtureName) {
   fixtureRoots.push(iframe);
   return {
     getTabbableIds: _getTabbableIds.bind(null, _createRootNode(iframe.contentDocument, fixtureName)),
+    getDocument: function() { return iframe.contentDocument; },
   };
 }
 
@@ -62,7 +64,7 @@ describe('tabbable', function() {
   ].forEach(function (assertionSet) {
 
     describe(assertionSet.name, function() {
-      it('basic', function() {
+    it('basic', function() {
         var actual = fixture('basic').getTabbableIds();
         var expected = [
           'tabindex-hrefless-anchor',
@@ -115,7 +117,20 @@ describe('tabbable', function() {
       });
 
       it('non-linear', function() {
+        var originalSort = Array.prototype.sort;
+
+        // This sort piggy-backs on the default Array.prototype.sort, but always
+        // orders elements that were compared to be equal in reverse order of their
+        // index in the original array. We do this to simulate browsers who do not
+        // use a stable sort algorithm in their implementation.
+        Array.prototype.sort = function(compareFunction) {
+          return originalSort.call(this, function(a, b) {
+            var comparison = compareFunction ? compareFunction(a, b) : a - b;
+            return comparison || this.indexOf(b) - this.indexOf(a);
+          })
+        };
         var actual = fixture('non-linear').getTabbableIds();
+        Array.prototype.sort = originalSort;
         var expected = [
           // 1
           'input-1',
@@ -150,7 +165,7 @@ describe('tabbable', function() {
         ];
         assert.deepEqual(actualA, expectedA);
 
-        document.getElementById('initially-hidden').style.display = 'block';
+        loadedFixture.getDocument().getElementById('initially-hidden').style.display = 'block';
 
         var actualB = loadedFixture.getTabbableIds();
         var expectedB = [
@@ -163,6 +178,5 @@ describe('tabbable', function() {
         assert.deepEqual(actualB, expectedB);
       });
     });
-
   });
 });
