@@ -13,7 +13,7 @@ var fixtures = {
 
 var fixtureRoots = [];
 
-function _createRootNode(doc, fixtureName) {
+function createRootNode(doc, fixtureName) {
   var html = fixtures[fixtureName];
   var root = doc.createElement('div');
   root.innerHTML = html;
@@ -21,17 +21,17 @@ function _createRootNode(doc, fixtureName) {
   return root;
 }
 
-function _getTabbableIds(node) {
+function getTabbableIds(node) {
   return tabbable(node).map(function(el) {
     return el.getAttribute('id');
   });
 }
 
 function fixture(fixtureName) {
-  var root = _createRootNode(document, fixtureName);
+  var root = createRootNode(document, fixtureName);
   fixtureRoots.push(root);
   return {
-    getTabbableIds: _getTabbableIds.bind(null, root),
+    getTabbableIds: getTabbableIds.bind(null, root),
     getDocument: function() { return document; },
   };
 }
@@ -41,7 +41,7 @@ function fixtureWithIframe(fixtureName) {
   document.body.appendChild(iframe);
   fixtureRoots.push(iframe);
   return {
-    getTabbableIds: _getTabbableIds.bind(null, _createRootNode(iframe.contentDocument, fixtureName)),
+    getTabbableIds: getTabbableIds.bind(null, createRootNode(iframe.contentDocument, fixtureName)),
     getDocument: function() { return iframe.contentDocument; },
   };
 }
@@ -59,28 +59,28 @@ describe('tabbable', function() {
   });
 
   [
-    { name: 'window', func: fixture },
-    { name: 'iframe\'s window', func: fixtureWithIframe },
+    { name: 'window', getFixture: fixture },
+    { name: 'iframe\'s window', getFixture: fixtureWithIframe },
   ].forEach(function (assertionSet) {
-
     describe(assertionSet.name, function() {
-    it('basic', function() {
-        var actual = fixture('basic').getTabbableIds();
-        var expected = [
-          'tabindex-hrefless-anchor',
-          'input',
-          'select',
-          'href-anchor',
-          'textarea',
-          'button',
-          'tabindex-div',
-          'hiddenParentVisible-button',
-        ];
-        assert.deepEqual(actual, expected);
+
+      it('basic', function() {
+          var actual = assertionSet.getFixture('basic').getTabbableIds();
+          var expected = [
+            'tabindex-hrefless-anchor',
+            'input',
+            'select',
+            'href-anchor',
+            'textarea',
+            'button',
+            'tabindex-div',
+            'hiddenParentVisible-button',
+          ];
+          assert.deepEqual(actual, expected);
       });
 
       it('nested', function() {
-        var actual = fixture('nested').getTabbableIds();
+        var actual = assertionSet.getFixture('nested').getTabbableIds();
         var expected = [
           'tabindex-div-2',
           'tabindex-div-0',
@@ -90,7 +90,7 @@ describe('tabbable', function() {
       });
 
       it('jqueryui', function() {
-        var actual = fixture('jqueryui').getTabbableIds();
+        var actual = assertionSet.getFixture('jqueryui').getTabbableIds();
         var expected = [
           // 1
           'formTabindex',
@@ -129,7 +129,7 @@ describe('tabbable', function() {
             return comparison || this.indexOf(b) - this.indexOf(a);
           })
         };
-        var actual = fixture('non-linear').getTabbableIds();
+        var actual = assertionSet.getFixture('non-linear').getTabbableIds();
         Array.prototype.sort = originalSort;
         var expected = [
           // 1
@@ -156,7 +156,7 @@ describe('tabbable', function() {
       });
 
       it('changing content', function() {
-        var loadedFixture = fixture('changing-content');
+        var loadedFixture = assertionSet.getFixture('changing-content');
         var actualA = loadedFixture.getTabbableIds();
         var expectedA = [
           'visible-button-1',
@@ -177,6 +177,7 @@ describe('tabbable', function() {
         ];
         assert.deepEqual(actualB, expectedB);
       });
+
     });
   });
 });

@@ -89,7 +89,7 @@ function createIsUnavailable(elementDocument) {
     return result;
   }
 
-  return function isUnavailable(node, elementDocument) {
+  return function isUnavailable(node) {
     if (node === elementDocument.documentElement) return false;
 
     var computedStyle = elementDocument.defaultView.getComputedStyle(node);
