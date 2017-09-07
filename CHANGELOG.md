@@ -2,7 +2,7 @@
 
 ## 1.0.8
 
-- Allows operation against elements that reside within iframes, by inspecting the element to determin its correct parent `document` (rather than relying on the global `document` object).
+- Allows operation against elements that reside within iframes, by inspecting the element to determine its correct parent `document` (rather than relying on the global `document` object).
 
 ## 1.0.7
 
