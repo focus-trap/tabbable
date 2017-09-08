@@ -13,18 +13,36 @@ var fixtures = {
 
 var fixtureRoots = [];
 
-function fixture(fixtureName) {
+function createRootNode(doc, fixtureName) {
   var html = fixtures[fixtureName];
-  var root = document.createElement('div');
+  var root = doc.createElement('div');
   root.innerHTML = html;
-  document.body.appendChild(root);
+  doc.body.appendChild(root);
+  return root;
+}
+
+function getTabbableIds(node) {
+  return tabbable(node).map(function(el) {
+    return el.getAttribute('id');
+  });
+}
+
+function fixture(fixtureName) {
+  var root = createRootNode(document, fixtureName);
   fixtureRoots.push(root);
   return {
-    getTabbableIds: function() {
-      return tabbable(root).map(function(el) {
-        return el.getAttribute('id');
-      });
-    },
+    getTabbableIds: getTabbableIds.bind(null, root),
+    getDocument: function() { return document; },
+  };
+}
+
+function fixtureWithIframe(fixtureName) {
+  var iframe = document.createElement('iframe');
+  document.body.appendChild(iframe);
+  fixtureRoots.push(iframe);
+  return {
+    getTabbableIds: getTabbableIds.bind(null, createRootNode(iframe.contentDocument, fixtureName)),
+    getDocument: function() { return iframe.contentDocument; },
   };
 }
 
@@ -40,117 +58,126 @@ describe('tabbable', function() {
     cleanupFixtures();
   });
 
-  it('basic', function() {
-    var actual = fixture('basic').getTabbableIds();
-    var expected = [
-      'tabindex-hrefless-anchor',
-      'input',
-      'select',
-      'href-anchor',
-      'textarea',
-      'button',
-      'tabindex-div',
-      'hiddenParentVisible-button',
-    ];
-    assert.deepEqual(actual, expected);
-  });
+  [
+    { name: 'window', getFixture: fixture },
+    { name: 'iframe\'s window', getFixture: fixtureWithIframe },
+  ].forEach(function (assertionSet) {
+    describe(assertionSet.name, function() {
 
-  it('nested', function() {
-    var actual = fixture('nested').getTabbableIds();
-    var expected = [
-      'tabindex-div-2',
-      'tabindex-div-0',
-      'input',
-    ];
-    assert.deepEqual(actual, expected);
-  });
+      it('basic', function() {
+          var actual = assertionSet.getFixture('basic').getTabbableIds();
+          var expected = [
+            'tabindex-hrefless-anchor',
+            'input',
+            'select',
+            'href-anchor',
+            'textarea',
+            'button',
+            'tabindex-div',
+            'hiddenParentVisible-button',
+          ];
+          assert.deepEqual(actual, expected);
+      });
 
-  it('jqueryui', function() {
-    var actual = fixture('jqueryui').getTabbableIds();
-    var expected = [
-      // 1
-      'formTabindex',
-      'visibleAncestor-spanWithTabindex',
-      // 10
-      'inputTabindex10',
-      'spanTabindex10',
-      // 0
-      'visibleAncestor-inputTypeNone',
-      'visibleAncestor-inputTypeText',
-      'visibleAncestor-inputTypeCheckbox',
-      'visibleAncestor-inputTypeRadio',
-      'visibleAncestor-inputTypeButton',
-      'visibleAncestor-button',
-      'visibleAncestor-select',
-      'visibleAncestor-textarea',
-      'visibleAncestor-anchorWithHref',
-      'inputTabindex0',
-      'spanTabindex0',
-      'dimensionlessParent',
-      'dimensionlessParent-dimensionless',
-    ];
-    assert.deepEqual(actual, expected);
-  });
+      it('nested', function() {
+        var actual = assertionSet.getFixture('nested').getTabbableIds();
+        var expected = [
+          'tabindex-div-2',
+          'tabindex-div-0',
+          'input',
+        ];
+        assert.deepEqual(actual, expected);
+      });
 
-  it('non-linear', function() {
-    var originalSort = Array.prototype.sort;
+      it('jqueryui', function() {
+        var actual = assertionSet.getFixture('jqueryui').getTabbableIds();
+        var expected = [
+          // 1
+          'formTabindex',
+          'visibleAncestor-spanWithTabindex',
+          // 10
+          'inputTabindex10',
+          'spanTabindex10',
+          // 0
+          'visibleAncestor-inputTypeNone',
+          'visibleAncestor-inputTypeText',
+          'visibleAncestor-inputTypeCheckbox',
+          'visibleAncestor-inputTypeRadio',
+          'visibleAncestor-inputTypeButton',
+          'visibleAncestor-button',
+          'visibleAncestor-select',
+          'visibleAncestor-textarea',
+          'visibleAncestor-anchorWithHref',
+          'inputTabindex0',
+          'spanTabindex0',
+          'dimensionlessParent',
+          'dimensionlessParent-dimensionless',
+        ];
+        assert.deepEqual(actual, expected);
+      });
 
-    // This sort piggy-backs on the default Array.prototype.sort, but always
-    // orders elements that were compared to be equal in reverse order of their
-    // index in the original array. We do this to simulate browsers who do not
-    // use a stable sort algorithm in their implementation.
-    Array.prototype.sort = function(compareFunction) {
-      return originalSort.call(this, function(a, b) {
-        var comparison = compareFunction ? compareFunction(a, b) : a - b;
-        return comparison || this.indexOf(b) - this.indexOf(a);
-      })
-    };
-    var actual = fixture('non-linear').getTabbableIds();
-    Array.prototype.sort = originalSort;
-    var expected = [
-      // 1
-      'input-1',
-      'href-anchor-1',
-      // 2
-      'button-2',
-      // 3
-      'select-3',
-      'tabindex-div-3',
-      // 4
-      'tabindex-hrefless-anchor-4',
-      //12
-      'textarea-12',
-      // 0
-      'input',
-      'select',
-      'href-anchor',
-      'textarea',
-      'button',
-      'tabindex-div-0',
-    ];
-    assert.deepEqual(actual, expected);
-  });
+      it('non-linear', function() {
+        var originalSort = Array.prototype.sort;
 
-  it('changing content', function() {
-    var loadedFixture = fixture('changing-content');
-    var actualA = loadedFixture.getTabbableIds();
-    var expectedA = [
-      'visible-button-1',
-      'visible-button-2',
-      'visible-button-3',
-    ];
-    assert.deepEqual(actualA, expectedA);
+        // This sort piggy-backs on the default Array.prototype.sort, but always
+        // orders elements that were compared to be equal in reverse order of their
+        // index in the original array. We do this to simulate browsers who do not
+        // use a stable sort algorithm in their implementation.
+        Array.prototype.sort = function(compareFunction) {
+          return originalSort.call(this, function(a, b) {
+            var comparison = compareFunction ? compareFunction(a, b) : a - b;
+            return comparison || this.indexOf(b) - this.indexOf(a);
+          })
+        };
+        var actual = assertionSet.getFixture('non-linear').getTabbableIds();
+        Array.prototype.sort = originalSort;
+        var expected = [
+          // 1
+          'input-1',
+          'href-anchor-1',
+          // 2
+          'button-2',
+          // 3
+          'select-3',
+          'tabindex-div-3',
+          // 4
+          'tabindex-hrefless-anchor-4',
+          //12
+          'textarea-12',
+          // 0
+          'input',
+          'select',
+          'href-anchor',
+          'textarea',
+          'button',
+          'tabindex-div-0',
+        ];
+        assert.deepEqual(actual, expected);
+      });
 
-    document.getElementById('initially-hidden').style.display = 'block';
+      it('changing content', function() {
+        var loadedFixture = assertionSet.getFixture('changing-content');
+        var actualA = loadedFixture.getTabbableIds();
+        var expectedA = [
+          'visible-button-1',
+          'visible-button-2',
+          'visible-button-3',
+        ];
+        assert.deepEqual(actualA, expectedA);
 
-    var actualB = loadedFixture.getTabbableIds();
-    var expectedB = [
-      'visible-button-1',
-      'visible-button-2',
-      'visible-button-3',
-      'initially-hidden-button-1',
-      'initially-hidden-button-2',
-    ];
-    assert.deepEqual(actualB, expectedB);
+        loadedFixture.getDocument().getElementById('initially-hidden').style.display = 'block';
+
+        var actualB = loadedFixture.getTabbableIds();
+        var expectedB = [
+          'visible-button-1',
+          'visible-button-2',
+          'visible-button-3',
+          'initially-hidden-button-1',
+          'initially-hidden-button-2',
+        ];
+        assert.deepEqual(actualB, expectedB);
+      });
+
+    });
   });
 });

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.8
+
+- Allows operation against elements that reside within iframes, by inspecting the element to determine its correct parent `document` (rather than relying on the global `document` object).
+
 ## 1.0.7
 
 - Ensure stable sort of `tabindex`ed elements even in browsers that have an unstable `Array.prototype.sort`.
