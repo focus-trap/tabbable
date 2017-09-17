@@ -53,6 +53,11 @@ Summary of ordering principles:
 - First include any elements with positive `tabindex` attributes (1 or higher), ordered by ascending `tabindex` and source order.
 - Then include any elements with a zero `tabindex` and any element that by default receives focus (listed above) and does not have a positive `tabindex` set, in source order.
 
+### Options
+
+Second optional argument is options object. Currently there is only one option available:
+- `includeContainer`: if set to true, a tabbable containing node is included in returned array of nodes.
+
 ## Differences from jQuery UI's [`:tabbable` selector](https://api.jqueryui.com/tabbable-selector/)
 
 Doesn't need jQuery. Also: doesn't support all the old IE's.
