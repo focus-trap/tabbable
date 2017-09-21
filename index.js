@@ -1,4 +1,6 @@
-module.exports = function(el) {
+module.exports = function(el, options) {
+  options = options || {};
+
   var elementDocument = el.ownerDocument;
   var basicTabbables = [];
   var orderedTabbables = [];
@@ -17,6 +19,19 @@ module.exports = function(el) {
   ];
 
   var candidates = el.querySelectorAll(candidateSelectors);
+
+  if (options.includeContainer) {
+    var matches = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+
+    if (
+      candidateSelectors.some(function(candidateSelector) {
+        return matches.call(el, candidateSelector);
+      })
+    ) {
+      candidates = Array.prototype.slice.apply(candidates);
+      candidates.unshift(el);
+    }
+  }
 
   var candidate, candidateIndex;
   for (var i = 0, l = candidates.length; i < l; i++) {

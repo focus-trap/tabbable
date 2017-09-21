@@ -21,8 +21,8 @@ function createRootNode(doc, fixtureName) {
   return root;
 }
 
-function getTabbableIds(node) {
-  return tabbable(node).map(function(el) {
+function getTabbableIds(node, options) {
+  return tabbable(node, options).map(function(el) {
     return el.getAttribute('id');
   });
 }
@@ -176,6 +176,26 @@ describe('tabbable', function() {
           'initially-hidden-button-2',
         ];
         assert.deepEqual(actualB, expectedB);
+      });
+
+      it('including container', function() {
+        var loadedFixture = assertionSet.getFixture('nested');
+        var container = loadedFixture.getDocument().getElementById('tabindex-div-0')
+
+        var actualFalse = getTabbableIds(container);
+        var expectedFalse = [
+          'tabindex-div-2',
+          'input',
+        ];
+        assert.deepEqual(actualFalse, expectedFalse);
+
+        var actualTrue = getTabbableIds(container, {includeContainer: true});
+        var expectedTrue = [
+          'tabindex-div-2',
+          'tabindex-div-0',
+          'input',
+        ];
+        assert.deepEqual(actualTrue, expectedTrue);
       });
 
     });
