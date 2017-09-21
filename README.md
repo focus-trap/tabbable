@@ -42,21 +42,29 @@ Dependencies: *none*.
 
 You'll need to be compiling CommonJS (via browserify or webpack).
 
-## Usage
+## API
 
-```js
-var tabbable = require('tabbable');
-var arrayOfTabbableNodesInFoo = tabbable(document.getElementById('foo'));
+```
+tabbable(rootNode, [options])
 ```
 
+Returns an array of ordered tabbable node within the `rootNode`.
+
 Summary of ordering principles:
-- First include any elements with positive `tabindex` attributes (1 or higher), ordered by ascending `tabindex` and source order.
-- Then include any elements with a zero `tabindex` and any element that by default receives focus (listed above) and does not have a positive `tabindex` set, in source order.
+- First include any nodes with positive `tabindex` attributes (1 or higher), ordered by ascending `tabindex` and source order.
+- Then include any nodes with a zero `tabindex` and any element that by default receives focus (listed above) and does not have a positive `tabindex` set, in source order.
 
-### Options
+### rootNode
 
-Second optional argument is options object. Currently there is only one option available:
-- `includeContainer`: if set to true, a tabbable containing node is included in returned array of nodes.
+Type: `Node`. **Required.**
+
+### options
+
+#### includeContainer
+
+Type: `boolean`. Default: `false`.
+
+If set to `true`, `rootNode` will be included in the returned tabbable node array, if `rootNode` is tabbable.
 
 ## Differences from jQuery UI's [`:tabbable` selector](https://api.jqueryui.com/tabbable-selector/)
 
