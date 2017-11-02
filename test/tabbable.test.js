@@ -46,6 +46,15 @@ function fixtureWithIframe(fixtureName) {
   };
 }
 
+function fixtureWithDocument(fixtureName) {
+    var root = createRootNode(document, fixtureName);
+    fixtureRoots.push(root);
+    return {
+        getTabbableIds: getTabbableIds.bind(null, document),
+        getDocument: function() { return document; },
+    }
+}
+
 function cleanupFixtures() {
   fixtureRoots.forEach(function(root) {
     document.body.removeChild(root);
@@ -61,6 +70,7 @@ describe('tabbable', function() {
   [
     { name: 'window', getFixture: fixture },
     { name: 'iframe\'s window', getFixture: fixtureWithIframe },
+    { name: 'document', getFixture: fixtureWithDocument },
   ].forEach(function (assertionSet) {
     describe(assertionSet.name, function() {
 

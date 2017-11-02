@@ -1,7 +1,7 @@
 module.exports = function(el, options) {
   options = options || {};
 
-  var elementDocument = el.ownerDocument;
+  var elementDocument = el.ownerDocument || el;
   var basicTabbables = [];
   var orderedTabbables = [];
 
