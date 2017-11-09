@@ -1,14 +1,15 @@
+
 module.exports = function(el, options) {
   options = options || {};
-
+  
   var elementDocument = el.ownerDocument || el;
   var basicTabbables = [];
   var orderedTabbables = [];
-
+  
   // A node is "available" if
   // - it's computed style
   var isUnavailable = createIsUnavailable(elementDocument);
-
+  
   var candidateSelectors = [
     'input',
     'select',
@@ -16,25 +17,20 @@ module.exports = function(el, options) {
     'textarea',
     'button',
     '[tabindex]',
+    'slot'
   ];
-
   var candidates = el.querySelectorAll(candidateSelectors);
+  var matches = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
 
   if (options.includeContainer) {
-    var matches = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
-
-    if (
-      candidateSelectors.some(function(candidateSelector) {
-        return matches.call(el, candidateSelector);
-      })
-    ) {
+    if (candidateSelectors.some(function(candidateSelector) { return matches.call(el, candidateSelector); })) {
       candidates = Array.prototype.slice.apply(candidates);
       candidates.unshift(el);
     }
   }
 
   var candidate, candidateIndex;
-  for (var i = 0, l = candidates.length; i < l; i++) {
+  for (var i = 0; i < candidates.length; i++) {
     candidate = candidates[i];
     candidateIndex = parseInt(candidate.getAttribute('tabindex'), 10) || candidate.tabIndex;
 
@@ -47,14 +43,44 @@ module.exports = function(el, options) {
       continue;
     }
 
-    if (candidateIndex === 0) {
-      basicTabbables.push(candidate);
-    } else {
-      orderedTabbables.push({
-        index: i,
-        tabIndex: candidateIndex,
-        node: candidate,
+    if (candidate.tagName === 'SLOT') {
+      var slotCandidates = candidate.assignedNodes();
+      var slotChildCandidates = [];
+
+      slotCandidates.forEach(function(node) {
+        var childMatches;
+
+        if (node.shadowRoot) {
+          childMatches = node.shadowRoot.querySelectorAll(candidateSelectors);
+        } else {
+          childMatches = node.querySelectorAll(candidateSelectors);
+        }
+
+        if (childMatches.length) {
+          slotChildCandidates = slotChildCandidates.concat(Array.prototype.slice.apply(childMatches));
+        }
       });
+
+      slotCandidates = slotCandidates.concat(slotChildCandidates);
+
+      slotCandidates = slotCandidates.filter(function(node) {
+        return candidateSelectors.some(function(candidateSelector) {
+          return matches.call(node, candidateSelector);
+        });
+      });
+
+      candidates = Array.prototype.slice.apply(candidates).concat(Array.prototype.slice.apply(slotCandidates));
+      continue;
+    } else {
+      if (candidateIndex === 0) {
+        basicTabbables.push(candidate);
+      } else {
+        orderedTabbables.push({
+          index: i,
+          tabIndex: candidateIndex,
+          node: candidate,
+        });
+      }
     }
   }
 
@@ -82,7 +108,7 @@ function createIsUnavailable(elementDocument) {
   // "off" state, so we need to recursively check parents.
 
   function isOff(node, nodeComputedStyle) {
-    if (node === elementDocument.documentElement) return false;
+    if (node === elementDocument.documentElement || node instanceof ShadowRoot) return false;
 
     // Find the cached node (Array.prototype.find not available in IE9)
     for (var i = 0, length = isOffCache.length; i < length; i++) {
