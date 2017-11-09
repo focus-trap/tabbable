@@ -17,7 +17,7 @@ module.exports = function(el, options) {
     'textarea',
     'button',
     '[tabindex]',
-    'slot'
+    'slot',
   ];
   var candidates = el.querySelectorAll(candidateSelectors);
   var matches = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
@@ -35,10 +35,11 @@ module.exports = function(el, options) {
     candidateIndex = parseInt(candidate.getAttribute('tabindex'), 10) || candidate.tabIndex;
 
     if (
-      candidateIndex < 0
+      candidate.tagName !== 'SLOT' // To support firefox defaulting the tabindex to -1 for slots
+      && (candidateIndex < 0
       || (candidate.tagName === 'INPUT' && candidate.type === 'hidden')
       || candidate.disabled
-      || isUnavailable(candidate, elementDocument)
+      || isUnavailable(candidate, elementDocument))
     ) {
       continue;
     }
@@ -71,16 +72,14 @@ module.exports = function(el, options) {
 
       candidates = Array.prototype.slice.apply(candidates).concat(Array.prototype.slice.apply(slotCandidates));
       continue;
+    } else if (candidateIndex === 0) {
+      basicTabbables.push(candidate);
     } else {
-      if (candidateIndex === 0) {
-        basicTabbables.push(candidate);
-      } else {
-        orderedTabbables.push({
-          index: i,
-          tabIndex: candidateIndex,
-          node: candidate,
-        });
-      }
+      orderedTabbables.push({
+        index: i,
+        tabIndex: candidateIndex,
+        node: candidate,
+      });
     }
   }
 
