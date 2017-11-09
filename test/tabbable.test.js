@@ -3,6 +3,10 @@ var fs = require('fs');
 var assert = require('chai').assert;
 var tabbable = require('..');
 
+if (!window.ShadowRoot) {
+  window.ShadowRoot = function() {};
+}
+
 var fixtures = {
   'basic': fs.readFileSync(path.join(__dirname, 'fixtures/basic.html'), 'utf8'),
   'changing-content': fs.readFileSync(path.join(__dirname, 'fixtures/changing-content.html'), 'utf8'),
