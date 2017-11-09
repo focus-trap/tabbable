@@ -45,7 +45,7 @@ module.exports = function(el, options) {
     }
 
     if (candidate.tagName === 'SLOT') {
-      var slotCandidates = candidate.assignedNodes();
+      var slotCandidates = candidate.assignedNodes().filter(function(node) { return node.nodeType !== Node.TEXT_NODE; });
       var slotChildCandidates = [];
 
       slotCandidates.forEach(function(node) {
@@ -62,7 +62,9 @@ module.exports = function(el, options) {
         }
       });
 
-      slotCandidates = slotCandidates.concat(slotChildCandidates);
+      if (slotChildCandidates.length) {
+        slotCandidates = slotCandidates.concat(slotChildCandidates);
+      }
 
       slotCandidates = slotCandidates.filter(function(node) {
         return candidateSelectors.some(function(candidateSelector) {
@@ -72,14 +74,16 @@ module.exports = function(el, options) {
 
       candidates = Array.prototype.slice.apply(candidates).concat(Array.prototype.slice.apply(slotCandidates));
       continue;
-    } else if (candidateIndex === 0) {
-      basicTabbables.push(candidate);
     } else {
-      orderedTabbables.push({
-        index: i,
-        tabIndex: candidateIndex,
-        node: candidate,
-      });
+      if (candidateIndex === 0) {
+        basicTabbables.push(candidate);
+      } else {
+        orderedTabbables.push({
+          index: i,
+          tabIndex: candidateIndex,
+          node: candidate,
+        });
+      }
     }
   }
 
