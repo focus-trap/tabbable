@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/davidtheclark/tabbable#readme",
   "devDependencies": {
+    "@webcomponents/webcomponentsjs": "^1.0.18",
     "brfs": "^1.4.3",
     "browserify": "^13.1.1",
     "budo": "^9.2.1",
