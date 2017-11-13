@@ -17,73 +17,30 @@ module.exports = function(el, options) {
     'textarea',
     'button',
     '[tabindex]',
-    'slot',
   ];
-  var candidates = el.querySelectorAll(candidateSelectors);
-  var matches = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
-
-  if (options.includeContainer) {
-    if (candidateSelectors.some(function(candidateSelector) { return matches.call(el, candidateSelector); })) {
-      candidates = Array.prototype.slice.apply(candidates);
-      candidates.unshift(el);
-    }
-  }
+  var candidates = deepQuerySelectorAll(el, candidateSelectors, options.includeContainer);
 
   var candidate, candidateIndex;
   for (var i = 0; i < candidates.length; i++) {
     candidate = candidates[i];
     candidateIndex = parseInt(candidate.getAttribute('tabindex'), 10) || candidate.tabIndex;
 
-    if (
-      candidate.tagName !== 'SLOT' // To support firefox defaulting the tabindex to -1 for slots
-      && (candidateIndex < 0
+    if (candidateIndex < 0
       || (candidate.tagName === 'INPUT' && candidate.type === 'hidden')
       || candidate.disabled
-      || isUnavailable(candidate, elementDocument))
+      || isUnavailable(candidate, elementDocument)
     ) {
       continue;
     }
 
-    if (candidate.tagName === 'SLOT') {
-      var slotCandidates = candidate.assignedNodes().filter(function(node) { return node.nodeType !== Node.TEXT_NODE; });
-      var slotChildCandidates = [];
-
-      slotCandidates.forEach(function(node) {
-        var childMatches;
-
-        if (node.shadowRoot) {
-          childMatches = node.shadowRoot.querySelectorAll(candidateSelectors);
-        } else {
-          childMatches = node.querySelectorAll(candidateSelectors);
-        }
-
-        if (childMatches.length) {
-          slotChildCandidates = slotChildCandidates.concat(Array.prototype.slice.apply(childMatches));
-        }
-      });
-
-      if (slotChildCandidates.length) {
-        slotCandidates = slotCandidates.concat(slotChildCandidates);
-      }
-
-      slotCandidates = slotCandidates.filter(function(node) {
-        return candidateSelectors.some(function(candidateSelector) {
-          return matches.call(node, candidateSelector);
-        });
-      });
-
-      candidates = Array.prototype.slice.apply(candidates).concat(Array.prototype.slice.apply(slotCandidates));
-      continue;
+    if (candidateIndex === 0) {
+      basicTabbables.push(candidate);
     } else {
-      if (candidateIndex === 0) {
-        basicTabbables.push(candidate);
-      } else {
-        orderedTabbables.push({
-          index: i,
-          tabIndex: candidateIndex,
-          node: candidate,
-        });
-      }
+      orderedTabbables.push({
+        index: i,
+        tabIndex: candidateIndex,
+        node: candidate,
+      });
     }
   }
 
@@ -98,6 +55,51 @@ module.exports = function(el, options) {
   Array.prototype.push.apply(tabbableNodes, basicTabbables);
 
   return tabbableNodes;
+}
+
+/**
+ * Walks the DOM tree starting at a root element and checks if any of its children 
+ * match the provided selectors. Similar to the native `querySelectorAll` except
+ * that it will traverse the shadow DOM as well as slotted nodes.
+ * @param {Element} rootElement The element to start querying from.
+ * @param {string[]} selectors An array of CSS selectors.
+ * @param {boolean} checkRootElement True if the provided root element is to be matched against the selectors.
+ */
+function deepQuerySelectorAll(rootElement, selectors, checkRootElement) {
+  var nodes = [];
+
+  if (checkRootElement) {
+    if (matchesSelectors(rootElement, selectors) && nodes.indexOf(rootElement) === -1) {
+      nodes.push(rootElement);
+    }
+  }
+
+  if (rootElement.tagName === 'SLOT') {
+    var slotNodes = rootElement.assignedNodes();
+    slotNodes.forEach(function(slottedNode) {
+      nodes = nodes.concat(deepQuerySelectorAll(slottedNode, selectors, true));
+    });
+  } else {
+    if (rootElement.shadowRoot) {
+      rootElement = rootElement.shadowRoot;
+    }
+
+    var node = rootElement.firstElementChild;
+    while (node) {
+      nodes = nodes.concat(deepQuerySelectorAll(node, selectors, true));
+      node = node.nextElementSibling;
+    }
+  }
+
+  return nodes;
+}
+
+function matchesSelectors(el, selectors) {
+  if (el.nodeType === Node.TEXT_NODE) {
+    return false;
+  }
+  var matchesFn = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+  return selectors.some(function(selector) { return matchesFn.call(el, selector); });
 }
 
 function createIsUnavailable(elementDocument) {
