@@ -95,11 +95,15 @@ function deepQuerySelectorAll(rootElement, selectors, checkRootElement) {
 }
 
 function matchesSelectors(el, selectors) {
-  if (el.nodeType === Node.TEXT_NODE) {
+  try {
+    if (el.nodeType === Node.TEXT_NODE) {
+      return false;
+    }
+    var matchesFn = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+    return selectors.some(function(selector) { return matchesFn.call(el, selector); });
+  } catch (e) {
     return false;
   }
-  var matchesFn = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
-  return selectors.some(function(selector) { return matchesFn.call(el, selector); });
 }
 
 function createIsUnavailable(elementDocument) {
