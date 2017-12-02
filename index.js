@@ -16,6 +16,9 @@ module.exports = function(el, options) {
     'textarea',
     'button',
     '[tabindex]',
+    'video[controls]',
+    'audio[controls]',
+    'details>summary',
   ];
 
   var candidates = el.querySelectorAll(candidateSelectors);
