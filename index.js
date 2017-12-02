@@ -18,7 +18,7 @@ module.exports = function(el, options) {
     '[tabindex]',
     'video[controls]',
     'audio[controls]',
-    'details>summary'
+    'details>summary',
   ];
 
   var candidates = el.querySelectorAll(candidateSelectors);
