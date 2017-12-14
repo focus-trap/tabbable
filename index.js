@@ -18,7 +18,7 @@ module.exports = function(el, options) {
     '[tabindex]',
   ];
 
-  var candidates = el.querySelectorAll(candidateSelectors);
+  var candidates = el.querySelectorAll(candidateSelectors.join(','));
 
   if (options.includeContainer) {
     var matches = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
