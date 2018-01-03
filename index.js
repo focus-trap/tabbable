@@ -1,15 +1,14 @@
-
 module.exports = function(el, options) {
   options = options || {};
-  
+
   var elementDocument = el.ownerDocument || el;
   var basicTabbables = [];
   var orderedTabbables = [];
-  
+
   // A node is "available" if
   // - it's computed style
   var isUnavailable = createIsUnavailable(elementDocument);
-  
+
   var candidateSelectors = [
     'input',
     'select',
@@ -18,29 +17,34 @@ module.exports = function(el, options) {
     'button',
     '[tabindex]',
   ];
-  // var candidates = deepQuerySelectorAll(el, candidateSelectors, options.includeContainer);
 
-  var candidates = el.querySelectorAll(candidateSelectors.join(','));
+  var candidates;
+  if (options.deep) {
+    candidates = deepQuerySelectorAll(el, candidateSelectors, options.includeContainer);
+  } else {
+    candidates = el.querySelectorAll(candidateSelectors.join(','));
 
-  if (options.includeContainer) {
-    var matches = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+    if (options.includeContainer) {
+      var matches = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
 
-    if (
-      candidateSelectors.some(function(candidateSelector) {
-        return matches.call(el, candidateSelector);
-      })
-    ) {
-      candidates = Array.prototype.slice.apply(candidates);
-      candidates.unshift(el);
+      if (
+        candidateSelectors.some(function(candidateSelector) {
+          return matches.call(el, candidateSelector);
+        })
+      ) {
+        candidates = Array.prototype.slice.apply(candidates);
+        candidates.unshift(el);
+      }
     }
   }
 
   var candidate, candidateIndex;
-  for (var i = 0; i < candidates.length; i++) {
+  for (var i = 0, l = candidates.length; i < l; i++) {
     candidate = candidates[i];
     candidateIndex = parseInt(candidate.getAttribute('tabindex'), 10) || candidate.tabIndex;
 
-    if (candidateIndex < 0
+    if (
+      candidateIndex < 0
       || (candidate.tagName === 'INPUT' && candidate.type === 'hidden')
       || candidate.disabled
       || isUnavailable(candidate, elementDocument)
@@ -110,15 +114,11 @@ function deepQuerySelectorAll(rootElement, selectors, checkRootElement) {
 }
 
 function matchesSelectors(el, selectors) {
-  try {
-    if (el.nodeType === Node.TEXT_NODE) {
-      return false;
-    }
-    var matchesFn = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
-    return selectors.some(function(selector) { return matchesFn.call(el, selector); });
-  } catch (e) {
+  if (el.nodeType !== Node.ELEMENT_NODE) {
     return false;
   }
+  var matchesFn = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+  return selectors.some(function(selector) { return matchesFn.call(el, selector); });
 }
 
 function createIsUnavailable(elementDocument) {
@@ -132,7 +132,7 @@ function createIsUnavailable(elementDocument) {
   // "off" state, so we need to recursively check parents.
 
   function isOff(node, nodeComputedStyle) {
-    if (node === elementDocument.documentElement || node instanceof ShadowRoot) return false;
+    if (node === elementDocument.documentElement || node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) return false;
 
     // Find the cached node (Array.prototype.find not available in IE9)
     for (var i = 0, length = isOffCache.length; i < length; i++) {

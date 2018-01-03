@@ -2,8 +2,7 @@
   "env": {
     "node": true,
     "browser": true,
-    "mocha": true,
-    "es6": true
+    "mocha": true
   },
   "extends": ["eslint:recommended"],
   "rules": {

@@ -220,7 +220,7 @@ describe('tabbable', function() {
 
       it('web components', function() {
         var loadedFixture = assertionSet.getFixture('web-component');
-        var actual = loadedFixture.getTabbableIds();
+        var actual = loadedFixture.getTabbableIds({ deep: true });
         var expected = [
           'light-dom-button',
           'shadow-button',
