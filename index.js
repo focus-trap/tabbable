@@ -18,7 +18,22 @@ module.exports = function(el, options) {
     'button',
     '[tabindex]',
   ];
-  var candidates = deepQuerySelectorAll(el, candidateSelectors, options.includeContainer);
+  // var candidates = deepQuerySelectorAll(el, candidateSelectors, options.includeContainer);
+
+  var candidates = el.querySelectorAll(candidateSelectors.join(','));
+
+  if (options.includeContainer) {
+    var matches = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+
+    if (
+      candidateSelectors.some(function(candidateSelector) {
+        return matches.call(el, candidateSelector);
+      })
+    ) {
+      candidates = Array.prototype.slice.apply(candidates);
+      candidates.unshift(el);
+    }
+  }
 
   var candidate, candidateIndex;
   for (var i = 0; i < candidates.length; i++) {

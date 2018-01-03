@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2
+
+- Ensure `querySelectorAll` receives a string argument.
+
 ## 1.1.1
 
 - Fix crash when you call `tabbable(document)` (passing the `document` element).
