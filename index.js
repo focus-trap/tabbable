@@ -1,3 +1,5 @@
+var shadowUtils = require('shadow-utils').ShadowUtils;
+
 module.exports = function(el, options) {
   options = options || {};
 
@@ -20,7 +22,7 @@ module.exports = function(el, options) {
 
   var candidates;
   if (options.deep) {
-    candidates = deepQuerySelectorAll(el, candidateSelectors, options.includeContainer);
+    candidates = shadowUtils.deepQuerySelectorAll(el, candidateSelectors, options.includeContainer);
   } else {
     candidates = el.querySelectorAll(candidateSelectors.join(','));
 
@@ -74,51 +76,6 @@ module.exports = function(el, options) {
   Array.prototype.push.apply(tabbableNodes, basicTabbables);
 
   return tabbableNodes;
-}
-
-/**
- * Walks the DOM tree starting at a root element and checks if any of its children 
- * match the provided selectors. Similar to the native `querySelectorAll` except
- * that it will traverse the shadow DOM as well as slotted nodes.
- * @param {Element} rootElement The element to start querying from.
- * @param {string[]} selectors An array of CSS selectors.
- * @param {boolean} checkRootElement True if the provided root element is to be matched against the selectors.
- */
-function deepQuerySelectorAll(rootElement, selectors, checkRootElement) {
-  var nodes = [];
-
-  if (checkRootElement) {
-    if (matchesSelectors(rootElement, selectors) && nodes.indexOf(rootElement) === -1) {
-      nodes.push(rootElement);
-    }
-  }
-
-  if (rootElement.tagName === 'SLOT') {
-    var slotNodes = rootElement.assignedNodes();
-    slotNodes.forEach(function(slottedNode) {
-      nodes = nodes.concat(deepQuerySelectorAll(slottedNode, selectors, true));
-    });
-  } else {
-    if (rootElement.shadowRoot) {
-      rootElement = rootElement.shadowRoot;
-    }
-
-    var node = rootElement.firstElementChild;
-    while (node) {
-      nodes = nodes.concat(deepQuerySelectorAll(node, selectors, true));
-      node = node.nextElementSibling;
-    }
-  }
-
-  return nodes;
-}
-
-function matchesSelectors(el, selectors) {
-  if (el.nodeType !== Node.ELEMENT_NODE) {
-    return false;
-  }
-  var matchesFn = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
-  return selectors.some(function(selector) { return matchesFn.call(el, selector); });
 }
 
 function createIsUnavailable(elementDocument) {
