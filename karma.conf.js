@@ -3,6 +3,8 @@ module.exports = function(config) {
     basePath: '',
     frameworks: ['browserify', 'mocha'],
     files: [
+      'node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js',
+      'node_modules/@webcomponents/webcomponentsjs/webcomponents-lite.js',
       'test/**/*.test.js',
     ],
     preprocessors: {

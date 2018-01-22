@@ -9,6 +9,7 @@ var fixtures = {
   'jqueryui': fs.readFileSync(path.join(__dirname, 'fixtures/jqueryui.html'), 'utf8'),
   'nested': fs.readFileSync(path.join(__dirname, 'fixtures/nested.html'), 'utf8'),
   'non-linear': fs.readFileSync(path.join(__dirname, 'fixtures/non-linear.html'), 'utf8'),
+  'web-component': fs.readFileSync(path.join(__dirname, 'fixtures/web-component.html'), 'utf8'),
 };
 
 var fixtureRoots = [];
@@ -206,6 +207,29 @@ describe('tabbable', function() {
           'input',
         ];
         assert.deepEqual(actualTrue, expectedTrue);
+      });
+
+    });
+  });
+
+  [
+    { name: 'web components window', getFixture: fixture },
+    { name: 'web components document', getFixture: fixtureWithDocument },
+  ].forEach(function (assertionSet) {
+    describe(assertionSet.name, function() {
+
+      it('web components', function() {
+        var loadedFixture = assertionSet.getFixture('web-component');
+        var actual = loadedFixture.getTabbableIds({ deep: true });
+        var expected = [
+          'light-dom-button',
+          'shadow-button',
+          'slot-button',
+          'shadow-button',
+          'shadow-button',
+          'slot-button2',
+        ];
+        assert.deepEqual(actual, expected);
       });
 
     });

@@ -1,3 +1,5 @@
+var shadowUtils = require('shadow-utils').ShadowUtils;
+
 module.exports = function(el, options) {
   options = options || {};
 
@@ -18,18 +20,23 @@ module.exports = function(el, options) {
     '[tabindex]',
   ];
 
-  var candidates = el.querySelectorAll(candidateSelectors.join(','));
+  var candidates;
+  if (options.deep) {
+    candidates = shadowUtils.deepQuerySelectorAll(el, candidateSelectors, options.includeContainer);
+  } else {
+    candidates = el.querySelectorAll(candidateSelectors.join(','));
 
-  if (options.includeContainer) {
-    var matches = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+    if (options.includeContainer) {
+      var matches = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
 
-    if (
-      candidateSelectors.some(function(candidateSelector) {
-        return matches.call(el, candidateSelector);
-      })
-    ) {
-      candidates = Array.prototype.slice.apply(candidates);
-      candidates.unshift(el);
+      if (
+        candidateSelectors.some(function(candidateSelector) {
+          return matches.call(el, candidateSelector);
+        })
+      ) {
+        candidates = Array.prototype.slice.apply(candidates);
+        candidates.unshift(el);
+      }
     }
   }
 
@@ -82,7 +89,7 @@ function createIsUnavailable(elementDocument) {
   // "off" state, so we need to recursively check parents.
 
   function isOff(node, nodeComputedStyle) {
-    if (node === elementDocument.documentElement) return false;
+    if (node === elementDocument.documentElement || node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) return false;
 
     // Find the cached node (Array.prototype.find not available in IE9)
     for (var i = 0, length = isOffCache.length; i < length; i++) {
