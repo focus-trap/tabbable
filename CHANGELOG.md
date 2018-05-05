@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- Fix bug causing SVG elements to precede elements they should follow in the tab order in IE.
+
 ## 1.1.2
 
 - Ensure `querySelectorAll` receives a string argument.

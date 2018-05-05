@@ -33,10 +33,11 @@ module.exports = function(el, options) {
     }
   }
 
-  var candidate, candidateIndex;
+  var candidate, candidateIndexAttr, candidateIndex;
   for (var i = 0, l = candidates.length; i < l; i++) {
     candidate = candidates[i];
-    candidateIndex = parseInt(candidate.getAttribute('tabindex'), 10) || candidate.tabIndex;
+    candidateIndexAttr = parseInt(candidate.getAttribute('tabindex'), 10)
+    candidateIndex = isNaN(candidateIndexAttr) ? candidate.tabIndex : candidateIndexAttr;
 
     if (
       candidateIndex < 0
