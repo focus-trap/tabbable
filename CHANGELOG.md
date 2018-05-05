@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD
+## 1.1.3
 
 - Fix bug causing SVG elements to precede elements they should follow in the tab order in IE.
 
