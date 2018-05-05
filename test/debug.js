@@ -9,6 +9,7 @@ var testCases = {
   jqueryui: fs.readFileSync(path.join(__dirname, 'fixtures/jqueryui.html'), 'utf8'),
   nested: fs.readFileSync(path.join(__dirname, 'fixtures/nested.html'), 'utf8'),
   nonLinear: fs.readFileSync(path.join(__dirname, 'fixtures/non-linear.html'), 'utf8'),
+  svg: fs.readFileSync(path.join(__dirname, 'fixtures/svg.html'), 'utf8'),
 }
 
 var root;
@@ -18,6 +19,7 @@ for (var key in testCases) {
   root = document.createElement('div');
   content = '<h2>' + key + '</h2>';
   content += testCases[key];
+  root.id = key;
   root.innerHTML = content;
   document.body.appendChild(root);
 }
@@ -25,3 +27,8 @@ for (var key in testCases) {
 document.body.addEventListener('focusin', function(event) {
   console.log(event.target); // eslint-disable-line no-console
 });
+
+// Add a clear focus style
+var styleTag = document.createElement('style');
+styleTag.innerHTML = ':focus { outline: 5px solid #b603f6; }';
+document.body.appendChild(styleTag);

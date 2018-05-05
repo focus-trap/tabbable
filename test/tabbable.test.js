@@ -9,6 +9,7 @@ var fixtures = {
   'jqueryui': fs.readFileSync(path.join(__dirname, 'fixtures/jqueryui.html'), 'utf8'),
   'nested': fs.readFileSync(path.join(__dirname, 'fixtures/nested.html'), 'utf8'),
   'non-linear': fs.readFileSync(path.join(__dirname, 'fixtures/non-linear.html'), 'utf8'),
+  'svg': fs.readFileSync(path.join(__dirname, 'fixtures/svg.html'), 'utf8'),
 };
 
 var fixtureRoots = [];
@@ -208,6 +209,14 @@ describe('tabbable', function() {
         assert.deepEqual(actualTrue, expectedTrue);
       });
 
+      it.only('svg', function() {
+        var actual = assertionSet.getFixture('svg').getTabbableIds();
+        var expected = [
+          'svg-btn',
+          'svg-1',
+        ];
+        assert.deepEqual(actual, expected);
+      });
     });
   });
 });
