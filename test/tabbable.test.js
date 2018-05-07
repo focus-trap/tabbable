@@ -209,7 +209,7 @@ describe('tabbable', function() {
         assert.deepEqual(actualTrue, expectedTrue);
       });
 
-      it.only('svg', function() {
+      it('svg', function() {
         var actual = assertionSet.getFixture('svg').getTabbableIds();
         var expected = [
           'svg-btn',
