@@ -87,7 +87,7 @@ function find(list, predicate) {
 }
 
 function isContentEditable(node) {
-  return node.contentEditable === "true";
+  return node.contentEditable === 'true';
 }
 
 function isInput(node) {
