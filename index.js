@@ -1,23 +1,22 @@
-module.exports = function(el, options) {
+var candidateSelectors = [
+  'input',
+  'select',
+  'textarea',
+  'a[href]',
+  'button',
+  '[tabindex]',
+  'audio[controls]',
+  'video[controls]',
+];
+
+module.exports = function tabbable(el, options) {
   options = options || {};
 
   var elementDocument = el.ownerDocument || el;
   var basicTabbables = [];
   var orderedTabbables = [];
 
-  // A node is "available" if
-  // - it's computed style
-  var isUnavailable = createIsUnavailable(elementDocument);
-
-  var candidateSelectors = [
-    'input',
-    'select',
-    'a[href]',
-    'textarea',
-    'button',
-    '[tabindex]',
-  ];
-
+  var isHiddenByCss = createIsHiddenByCssChecker(elementDocument);
   var candidates = el.querySelectorAll(candidateSelectors.join(','));
 
   if (options.includeContainer) {
@@ -33,36 +32,35 @@ module.exports = function(el, options) {
     }
   }
 
-  var candidate, candidateIndexAttr, candidateIndex;
-  for (var i = 0, l = candidates.length; i < l; i++) {
+  var i, candidate, candidateTabindexAttr, candidateTabindex;
+  for (i = 0; i < candidates.length; i++) {
     candidate = candidates[i];
-    candidateIndexAttr = parseInt(candidate.getAttribute('tabindex'), 10)
-    candidateIndex = isNaN(candidateIndexAttr) ? candidate.tabIndex : candidateIndexAttr;
+    candidateTabindexAttr = parseInt(candidate.getAttribute('tabindex'), 10)
+    candidateTabindex = isNaN(candidateTabindexAttr) ? candidate.tabIndex : candidateTabindexAttr;
 
     if (
-      candidateIndex < 0
-      || (candidate.tagName === 'INPUT' && candidate.type === 'hidden')
+      candidateTabindex < 0
+      || isHiddenInput(candidate)
+      || isNonTabbableRadio(candidate)
       || candidate.disabled
-      || isUnavailable(candidate, elementDocument)
+      || isHiddenByCss(candidate, elementDocument)
     ) {
       continue;
     }
 
-    if (candidateIndex === 0) {
+    if (candidateTabindex === 0) {
       basicTabbables.push(candidate);
     } else {
       orderedTabbables.push({
-        index: i,
-        tabIndex: candidateIndex,
+        documentOrder: i,
+        tabIndex: candidateTabindex,
         node: candidate,
       });
     }
   }
 
   var tabbableNodes = orderedTabbables
-    .sort(function(a, b) {
-      return a.tabIndex === b.tabIndex ? a.index - b.index : a.tabIndex - b.tabIndex;
-    })
+    .sort(sortOrderedTabbables)
     .map(function(a) {
       return a.node
     });
@@ -72,23 +70,23 @@ module.exports = function(el, options) {
   return tabbableNodes;
 }
 
-function createIsUnavailable(elementDocument) {
+function createIsHiddenByCssChecker(elementDocument) {
   // Node cache must be refreshed on every check, in case
-  // the content of the element has changed
-  var isOffCache = [];
+  // the content of the element has changed. The cache contains tuples
+  // mapping nodes to their boolean result.
+  var isHiddenByCssCache = [];
 
-  // "off" means `display: none;`, as opposed to "hidden",
-  // which means `visibility: hidden;`. getComputedStyle
-  // accurately reflects visiblity in context but not
-  // "off" state, so we need to recursively check parents.
+  // getComputedStyle accurately reflects `visiblity: "hidden"`
+  // in context but not `display: "none"`, so we need to recursively check parents.
 
-  function isOff(node, nodeComputedStyle) {
+  function hasDisplayNone(node, nodeComputedStyle) {
     if (node === elementDocument.documentElement) return false;
 
-    // Find the cached node (Array.prototype.find not available in IE9)
-    for (var i = 0, length = isOffCache.length; i < length; i++) {
-      if (isOffCache[i][0] === node) return isOffCache[i][1];
-    }
+    // Search for a cached result.
+    var cached = find(isHiddenByCssCache, function(item) {
+      return item === node;
+    });
+    if (cached) return cached[1];
 
     nodeComputedStyle = nodeComputedStyle || elementDocument.defaultView.getComputedStyle(node);
 
@@ -97,21 +95,63 @@ function createIsUnavailable(elementDocument) {
     if (nodeComputedStyle.display === 'none') {
       result = true;
     } else if (node.parentNode) {
-      result = isOff(node.parentNode);
+      result = hasDisplayNone(node.parentNode);
     }
 
-    isOffCache.push([node, result]);
+    isHiddenByCssCache.push([node, result]);
 
     return result;
   }
 
-  return function isUnavailable(node) {
-    if (node === elementDocument.documentElement) return false;
+  return function isHiddenByCss(innerNode) {
+    if (innerNode === elementDocument.documentElement) return false;
 
-    var computedStyle = elementDocument.defaultView.getComputedStyle(node);
+    var computedStyle = elementDocument.defaultView.getComputedStyle(innerNode);
 
-    if (isOff(node, computedStyle)) return true;
+    if (hasDisplayNone(innerNode, computedStyle)) return true;
 
     return computedStyle.visibility === 'hidden';
   }
+}
+
+function sortOrderedTabbables(a, b) {
+  return a.tabIndex === b.tabIndex ? a.documentOrder - b.documentOrder : a.tabIndex - b.tabIndex;
+}
+
+// Array.prototype.find not available in IE
+function find(list, predicate) {
+  for (var i = 0, length = list.length; i < length; i++) {
+    if (predicate(list[i])) return list[i];
+  }
+}
+
+function isInput(node) {
+  return node.tagName === 'INPUT';
+}
+
+function isHiddenInput(node) {
+  return isInput(node) && node.type === 'hidden';
+}
+
+function isRadio(node) {
+  return isInput(node) && node.type === 'radio';
+}
+
+function isNonTabbableRadio(node) {
+  return isRadio(node) && !isTabbableRadio(node);
+}
+
+function getCheckedRadio(nodes) {
+  for (var i = 0; i < nodes.length; i++) {
+    if (nodes[i].checked) {
+      return nodes[i];
+    }
+  }
+}
+
+function isTabbableRadio(node) {
+  if (!node.name) return true;
+  var radioSet = node.ownerDocument.querySelectorAll('input[type="radio"][name="' + node.name + '"]');
+  var checked = getCheckedRadio(radioSet);
+  return !checked || checked === node;
 }

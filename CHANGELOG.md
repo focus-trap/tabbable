@@ -1,5 +1,10 @@
 # Changelog
 
+## HEAD
+
+- Add `<audio>` and `<video>` elements with `controls` attributes.
+- Only consider radio buttons tabbable if they are the `checked` on in their group, or none in their group are `checked`.
+
 ## 1.1.3
 
 - Fix bug causing SVG elements to precede elements they should follow in the tab order in IE.

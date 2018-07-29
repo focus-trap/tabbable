@@ -10,6 +10,7 @@ var fixtures = {
   'nested': fs.readFileSync(path.join(__dirname, 'fixtures/nested.html'), 'utf8'),
   'non-linear': fs.readFileSync(path.join(__dirname, 'fixtures/non-linear.html'), 'utf8'),
   'svg': fs.readFileSync(path.join(__dirname, 'fixtures/svg.html'), 'utf8'),
+  'radio': fs.readFileSync(path.join(__dirname, 'fixtures/radio.html'), 'utf8'),
 };
 
 var fixtureRoots = [];
@@ -80,12 +81,17 @@ describe('tabbable', function() {
           var expected = [
             'tabindex-hrefless-anchor',
             'input',
+            'input-readonly',
             'select',
+            'select-readonly',
             'href-anchor',
             'textarea',
+            'textarea-readonly',
             'button',
             'tabindex-div',
             'hiddenParentVisible-button',
+            'audio-control',
+            'video-control',
           ];
           assert.deepEqual(actual, expected);
       });
@@ -214,6 +220,17 @@ describe('tabbable', function() {
         var expected = [
           'svg-btn',
           'svg-1',
+        ];
+        assert.deepEqual(actual, expected);
+      });
+
+      it('radio', function() {
+        var actual = assertionSet.getFixture('radio').getTabbableIds();
+        var expected = [
+          'radio-a',
+          'radio-d',
+          'radio-e',
+          'radio-f',
         ];
         assert.deepEqual(actual, expected);
       });

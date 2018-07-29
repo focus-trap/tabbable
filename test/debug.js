@@ -10,6 +10,7 @@ var testCases = {
   nested: fs.readFileSync(path.join(__dirname, 'fixtures/nested.html'), 'utf8'),
   nonLinear: fs.readFileSync(path.join(__dirname, 'fixtures/non-linear.html'), 'utf8'),
   svg: fs.readFileSync(path.join(__dirname, 'fixtures/svg.html'), 'utf8'),
+  radio: fs.readFileSync(path.join(__dirname, 'fixtures/radio.html'), 'utf8'),
 }
 
 var root;

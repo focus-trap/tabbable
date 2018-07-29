@@ -1,10 +1,15 @@
 <input id="input" type="text">
+<input id="input-readonly" readonly>
 <select id="select">
+  <option value="foo">foo</option>
+</select>
+<select id="select-readonly" readyonly>
   <option value="foo">foo</option>
 </select>
 <a id="href-anchor" href="#">foo</a>
 <a id="tabindex-hrefless-anchor" tabindex="1">foo</a>
 <textarea id="textarea" cols="30" rows="10"></textarea>
+<textarea id="textarea-readonly" readyonly cols="30" rows="10"></textarea>
 <button id="button">foo</button>
 <div id="tabindex-div" tabindex="0">foo</div>
 
@@ -21,3 +26,9 @@
   <button id="hiddenParentVisible-button" style='visibility:visible;'>bar</button>
 </div>
 <div id="noindex-div">foo</div>
+
+<audio id="audio-control" controls></audio>
+<audio id="audio-nocontrol"></audio>
+
+<video id="video-control" controls></video>
+<video id="video-nocontrol"></video>

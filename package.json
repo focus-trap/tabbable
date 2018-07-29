@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "karma start && npm run lint",
-    "debug": "budo -l -d -o test/debug.js -- -t brfs"
+    "start": "budo -l -d -o test/debug.js -- -t brfs"
   },
   "repository": {
     "type": "git",
