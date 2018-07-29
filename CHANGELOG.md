@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD
+## 3.0.0
 
 - Add `[contenteditable]` elements.
 
