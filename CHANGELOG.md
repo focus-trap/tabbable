@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- Add `[contenteditable]` elements.
+
 ## 2.0.0
 
 - Add `<audio>` and `<video>` elements with `controls` attributes.

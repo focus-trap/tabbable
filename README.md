@@ -2,18 +2,19 @@
 
 [![Build Status](https://travis-ci.org/davidtheclark/tabbable.svg?branch=master)](https://travis-ci.org/davidtheclark/tabbable)
 
-Returns an array of all\* tabbable DOM nodes within a containing node, in their actual tab order (cf. [Sequential focus navigation and the tabindex attribute](http://www.w3.org/TR/html5/editing.html#sequential-focus-navigation-and-the-tabindex-attribute)).
+Returns an array of all\* tabbable DOM nodes within a containing node.
 
-<small>\* "all" has some necessary caveats, which you'll learn about by reading below.</small>
+(\* "all" has some necessary caveats, which you'll learn about by reading below.)
 
 The array of tabbable nodes should include the following:
 
-- `<button>`s,
-- `<input>`s,
-- `<select>`s,
-- `<textarea>`s,
-- `<a>`s and `<area>`s with `href` attributes,
-- `<audio>`s and `<videos>`s with `controls` attributes,
+- `<button>`s
+- `<input>`s
+- `<select>`s
+- `<textarea>`s
+- `<a>`s with `href` or `xlink:href` attributes
+- `<audio>`s and `<videos>`s with `controls` attributes
+- `[contenteditable]` elements
 - anything with a non-negative `tabindex`
 
 Any of the above will *not* be added to the array, though, if any of the following are also true about it:
@@ -21,9 +22,9 @@ Any of the above will *not* be added to the array, though, if any of the followi
 - negative `tabindex`
 - `disabled`
 - either the node itself *or an ancestor of it* is hidden via `display: none` or `visibility: hidden`
-- it's an `<input type="radio">` and a different radio in its group is `checked`.
+- it's an `<input type="radio">` and a different radio in its group is `checked`
 
-**If you think a node should be included in your array of tabbables *but it's not*, all you need to do is add `tabindex="0"` to deliberately include it.** This will also result in more consistent cross-browser behavior. For information about why your special node might *not* be included, see ["More details"](#more-details), below.
+**If you think a node should be included in your array of tabbables *but it's not*, all you need to do is add `tabindex="0"` to deliberately include it.** (Or if it is in your array but you don't want it, you can add `tabindex="-1" to deliberately exclude it.) This will also result in more consistent cross-browser behavior. For information about why your special node might *not* be included, see ["More details"](#more-details), below.
 
 ## Goals
 
@@ -75,10 +76,10 @@ If set to `true`, `rootNode` will be included in the returned tabbable node arra
 ## More details
 
 - **Tabbable tries to identify elements that are reliably tabbable across (not dead) browsers.** Browsers are stupidly inconsistent in their behavior, though — especially for edge-case elements like `<object>` and `<iframe>` — so this means *some* elements that you *can* tab to in *some* browsers will be left out of the results. (To learn more about that stupid inconsistency, see this [amazing table](https://allyjs.io/data-tables/focusable.html)). To provide better consistency across browsers and ensure the elements you *want* in your tabbables list show up there, **try adding `tabindex="0"` to edge-case elements that Tabbable ignores**.
-- (As an example of the above:) Although browsers allow tabbing into elements marked `contenteditable`, outstanding bugs in the `tabIndex` API prevents Tabbable from registering them. If you have `contenteditable` elements that you need included in the array, you'll have to additionally specify `tabindex="0"`. (See [issue #7](https://github.com/davidtheclark/tabbable/issues/7).)
-- Although Tabbable tries to deal with positive tabindexes, **you should not use positive tabindexes**. Accessibility experts seem to be in (rare) unanimous and clear consent about this: rely on the order of elements in the document.
+- (Exemplifying the above ^^:) **The tabbability of `<iframe>`s, `<embed>`s, `<object>`s, and `<svg>`s is [inconsistent across browsers](https://allyjs.io/data-tables/focusable.html), so if you need an accurate read on one of these elements you should give it a `tabindex`. (You'll also need to pay attention to the `focusable` attribute on SVGs in IE & Edge.)
+- **Radio groups have some edge cases, which you can avoid by always having a `checked` one in each group** (and that is what you should usually do anyway). If there is no `checked` radio in the radio group, *all* of the radios will be considered tabbable. (Some browsers do this, otherwise don't — there's not consistency.)
 - If you're thinking, "Why not just use the right `querySelectorAll`?", you *may* be on to something ... but, as with most "just" statements, you're probably not. For example, a simple `querySelectorAll` approach will not figure out whether an element is *hidden*, and therefore not actually tabbable. (That said, if you do think Tabbable can be simplified or otherwise improved, I'd love to hear your idea.)
 - jQuery UI's `:tabbable` selector ignores elements with height and width of `0`. I'm not sure why — because I've found that I can still tab to those elements. So I kept them in. Only elements hidden with `display: none` or `visibility: hidden` are left out.
-- **Radio groups have some edge cases, which you can avoid by always having a `checked` one in each group** (and that is what you should usually do anyway). If there is no `checked` radio in the radio group, *all* of the radios will be considered tabbable. (Some browsers do this, otherwise don't — there's not consistency.)
+- Although Tabbable tries to deal with positive tabindexes, **you should not use positive tabindexes**. Accessibility experts seem to be in (rare) unanimous and clear consent about this: rely on the order of elements in the document.
 
 ***Feedback and contributions more than welcome!***

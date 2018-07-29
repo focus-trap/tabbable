@@ -80,6 +80,8 @@ describe('tabbable', function() {
           var actual = assertionSet.getFixture('basic').getTabbableIds();
           var expected = [
             'tabindex-hrefless-anchor',
+            'contenteditable-true',
+            'contenteditable-nesting',
             'input',
             'input-readonly',
             'select',
