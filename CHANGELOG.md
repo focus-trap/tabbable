@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- Add `focusTrap.isFocusable` and `focusTrap.isTabbable` functions.
+
 ## 3.0.0
 
 - Add `[contenteditable]` elements.

@@ -49,12 +49,12 @@ function fixtureWithIframe(fixtureName) {
 }
 
 function fixtureWithDocument(fixtureName) {
-    var root = createRootNode(document, fixtureName);
-    fixtureRoots.push(root);
-    return {
-        getTabbableIds: getTabbableIds.bind(null, document),
-        getDocument: function() { return document; },
-    }
+  var root = createRootNode(document, fixtureName);
+  fixtureRoots.push(root);
+  return {
+    getTabbableIds: getTabbableIds.bind(null, document),
+    getDocument: function() { return document; },
+  }
 }
 
 function cleanupFixtures() {
@@ -77,25 +77,25 @@ describe('tabbable', function() {
     describe(assertionSet.name, function() {
 
       it('basic', function() {
-          var actual = assertionSet.getFixture('basic').getTabbableIds();
-          var expected = [
-            'tabindex-hrefless-anchor',
-            'contenteditable-true',
-            'contenteditable-nesting',
-            'input',
-            'input-readonly',
-            'select',
-            'select-readonly',
-            'href-anchor',
-            'textarea',
-            'textarea-readonly',
-            'button',
-            'tabindex-div',
-            'hiddenParentVisible-button',
-            'audio-control',
-            'video-control',
-          ];
-          assert.deepEqual(actual, expected);
+        var actual = assertionSet.getFixture('basic').getTabbableIds();
+        var expected = [
+          'tabindex-hrefless-anchor',
+          'contenteditable-true',
+          'contenteditable-nesting',
+          'input',
+          'input-readonly',
+          'select',
+          'select-readonly',
+          'href-anchor',
+          'textarea',
+          'textarea-readonly',
+          'button',
+          'tabindex-div',
+          'hiddenParentVisible-button',
+          'audio-control',
+          'video-control',
+        ];
+        assert.deepEqual(actual, expected);
       });
 
       it('nested', function() {
@@ -236,6 +236,41 @@ describe('tabbable', function() {
         ];
         assert.deepEqual(actual, expected);
       });
+
+      it('tabbable.isTabbable', function() {
+        var n1 = assertionSet.getFixture('basic').getDocument().getElementById('contenteditable-true');
+        assert.ok(tabbable.isTabbable(n1));
+        var n2 = assertionSet.getFixture('basic').getDocument().getElementById('contenteditable-false');
+        assert.notOk(tabbable.isTabbable(n2));
+        var n3 = assertionSet.getFixture('basic').getDocument().getElementById('href-anchor');
+        assert.ok(tabbable.isTabbable(n3));
+        var n4 = assertionSet.getFixture('basic').getDocument().getElementById('hrefless-anchor');
+        assert.notOk(tabbable.isTabbable(n4));
+        var n5 = assertionSet.getFixture('basic').getDocument().getElementById('iframe');
+        assert.notOk(tabbable.isTabbable(n5));
+        var n6 = assertionSet.getFixture('radio').getDocument().getElementById('radio-a');
+        assert.ok(tabbable.isTabbable(n6));
+        var n7 = assertionSet.getFixture('radio').getDocument().getElementById('radio-c');
+        assert.notOk(tabbable.isTabbable(n7));
+      });
+
+      it('tabbable.isFocusable', function() {
+        var n1 = assertionSet.getFixture('basic').getDocument().getElementById('contenteditable-true');
+        assert.ok(tabbable.isFocusable(n1));
+        var n2 = assertionSet.getFixture('basic').getDocument().getElementById('contenteditable-false');
+        assert.notOk(tabbable.isFocusable(n2));
+        var n3 = assertionSet.getFixture('basic').getDocument().getElementById('href-anchor');
+        assert.ok(tabbable.isFocusable(n3));
+        var n4 = assertionSet.getFixture('basic').getDocument().getElementById('hrefless-anchor');
+        assert.notOk(tabbable.isFocusable(n4));
+        var n5 = assertionSet.getFixture('basic').getDocument().getElementById('iframe');
+        assert.ok(tabbable.isFocusable(n5));
+        var n6 = assertionSet.getFixture('radio').getDocument().getElementById('radio-a');
+        assert.ok(tabbable.isFocusable(n6));
+        var n7 = assertionSet.getFixture('radio').getDocument().getElementById('radio-c');
+        assert.ok(tabbable.isFocusable(n7));
+      });
     });
   });
 });
+
