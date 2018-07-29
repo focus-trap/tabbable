@@ -1,9 +1,9 @@
 # Changelog
 
-## HEAD
+## 2.0.0
 
 - Add `<audio>` and `<video>` elements with `controls` attributes.
-- Only consider radio buttons tabbable if they are the `checked` on in their group, or none in their group are `checked`.
+- Only consider radio buttons tabbable if they are the `checked` on in their group, or if none in their group are `checked`.
 
 ## 1.1.3
 
