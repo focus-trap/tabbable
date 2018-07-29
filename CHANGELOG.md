@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD
+## 3.1.0
 
 - Add `focusTrap.isFocusable` and `focusTrap.isTabbable` functions.
 
