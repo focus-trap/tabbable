@@ -2,11 +2,9 @@
 
 [![Build Status](https://travis-ci.org/davidtheclark/tabbable.svg?branch=master)](https://travis-ci.org/davidtheclark/tabbable)
 
-Returns an array of all\* tabbable DOM nodes within a containing node.
+Returns an array of all\* tabbable DOM nodes within a containing node. (\* "all" has some necessary caveats, which you'll learn about by reading below.)
 
-(\* "all" has some necessary caveats, which you'll learn about by reading below.)
-
-The array of tabbable nodes should include the following:
+The following are considered tabbable:
 
 - `<button>`s
 - `<input>`s
@@ -17,18 +15,18 @@ The array of tabbable nodes should include the following:
 - `[contenteditable]` elements
 - anything with a non-negative `tabindex`
 
-Any of the above will *not* be added to the array, though, if any of the following are also true about it:
+Any of the above will *not* be considered tabbable, though, if any of the following are also true about it:
 
 - negative `tabindex`
 - `disabled`
 - either the node itself *or an ancestor of it* is hidden via `display: none` or `visibility: hidden`
 - it's an `<input type="radio">` and a different radio in its group is `checked`
 
-**If you think a node should be included in your array of tabbables *but it's not*, all you need to do is add `tabindex="0"` to deliberately include it.** (Or if it is in your array but you don't want it, you can add `tabindex="-1" to deliberately exclude it.) This will also result in more consistent cross-browser behavior. For information about why your special node might *not* be included, see ["More details"](#more-details), below.
+**If you think a node should be included in your array of tabbables *but it's not*, all you need to do is add `tabindex="0"` to deliberately include it.** (Or if it is in your array but you don't want it, you can add `tabindex="-1"` to deliberately exclude it.) This will also result in more consistent cross-browser behavior. For information about why your special node might *not* be included, see ["More details"](#more-details), below.
 
 ## Goals
 
-- Accurate
+- Accurate (or, as accurate as possible & reasonable)
 - No dependencies
 - Small
 - Fast
@@ -51,6 +49,8 @@ You'll need to be compiling CommonJS (via browserify or webpack).
 
 ## API
 
+### tabbable
+
 ```
 tabbable(rootNode, [options])
 ```
@@ -61,17 +61,35 @@ Summary of ordering principles:
 - First include any nodes with positive `tabindex` attributes (1 or higher), ordered by ascending `tabindex` and source order.
 - Then include any nodes with a zero `tabindex` and any element that by default receives focus (listed above) and does not have a positive `tabindex` set, in source order.
 
-### rootNode
+#### rootNode
 
 Type: `Node`. **Required.**
 
-### options
+#### options
 
-#### includeContainer
+##### includeContainer
 
 Type: `boolean`. Default: `false`.
 
 If set to `true`, `rootNode` will be included in the returned tabbable node array, if `rootNode` is tabbable.
+
+### tabbable.isTabbable
+
+```
+tabbable.isTabbable(node)
+```
+
+Returns a boolean indicating whether the provided node is considered tabbable.
+
+### tabbable.isFocusable
+
+```
+tabbable.isFocusable(node)
+```
+
+Returns a boolean indicating whether the provided node is considered *focusable*.
+
+All tabbable elements are focusable, but not all focusable elements are tabbable. For example, elements with `tabindex="-1"` are focusable but not tabbable.
 
 ## More details
 

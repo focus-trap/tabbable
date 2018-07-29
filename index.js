@@ -9,10 +9,11 @@ var candidateSelectors = [
   'video[controls]',
   '[contenteditable]:not([contenteditable="false"])',
 ];
+var candidateSelector = candidateSelectors.join(',');
 
 var matches = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
 
-module.exports = function tabbable(el, options) {
+function tabbable(el, options) {
   options = options || {};
 
   var elementDocument = el.ownerDocument || el;
@@ -20,13 +21,10 @@ module.exports = function tabbable(el, options) {
   var orderedTabbables = [];
 
   var untouchabilityChecker = new UntouchabilityChecker(elementDocument);
-  var candidates = el.querySelectorAll(candidateSelectors.join(','));
+  var candidates = el.querySelectorAll(candidateSelector);
 
   if (options.includeContainer) {
-    var containerIsCandidate = candidateSelectors.some(function(selector) {
-      return matches.call(el, selector);
-    });
-    if (containerIsCandidate) {
+    if (matches.call(el, candidateSelector)) {
       candidates = Array.prototype.slice.apply(candidates);
       candidates.unshift(el);
     }
@@ -35,18 +33,10 @@ module.exports = function tabbable(el, options) {
   var i, candidate, candidateTabindex;
   for (i = 0; i < candidates.length; i++) {
     candidate = candidates[i];
+
+    if (!isNodeMatchingSelectorTabbable(candidate, untouchabilityChecker)) continue;
+
     candidateTabindex = getTabindex(candidate);
-
-    if (
-      candidateTabindex < 0
-      || candidate.disabled
-      || isHiddenInput(candidate)
-      || isNonTabbableRadio(candidate)
-      || untouchabilityChecker.isUntouchable(candidate)
-    ) {
-      continue;
-    }
-
     if (candidateTabindex === 0) {
       regularTabbables.push(candidate);
     } else {
@@ -64,6 +54,45 @@ module.exports = function tabbable(el, options) {
     .concat(regularTabbables);
 
   return tabbableNodes;
+}
+
+tabbable.isTabbable = isTabbable;
+tabbable.isFocusable = isFocusable;
+
+function isNodeMatchingSelectorTabbable(node, untouchabilityChecker) {
+  if (
+    !isNodeMatchingSelectorFocusable(node, untouchabilityChecker)
+    || isNonTabbableRadio(node)
+    || getTabindex(node) < 0
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function isTabbable(node, untouchabilityChecker) {
+  if (!node) throw new Error('No node provided');
+  if (matches.call(node, candidateSelector) === false) return false;
+  return isNodeMatchingSelectorTabbable(node, untouchabilityChecker);
+}
+
+function isNodeMatchingSelectorFocusable(node, untouchabilityChecker) {
+  untouchabilityChecker = untouchabilityChecker || new UntouchabilityChecker(node.ownerDocument || node);
+  if (
+    node.disabled
+    || isHiddenInput(node)
+    || untouchabilityChecker.isUntouchable(node)
+  ) {
+    return false;
+  }
+  return true;
+}
+
+var focusableCandidateSelector = candidateSelectors.concat('iframe').join(',');
+function isFocusable(node, untouchabilityChecker) {
+  if (!node) throw new Error('No node provided');
+  if (matches.call(node, focusableCandidateSelector) === false) return false;
+  return isNodeMatchingSelectorFocusable(node, untouchabilityChecker);
 }
 
 function getTabindex(node) {
@@ -165,3 +194,5 @@ UntouchabilityChecker.prototype.isUntouchable = function isUntouchable(node) {
   if (this.hasDisplayNone(node, computedStyle)) return true;
   return computedStyle.visibility === 'hidden';
 }
+
+module.exports = tabbable;
