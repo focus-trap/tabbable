@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.1
+
+- Allow module to be imported by non-browser JavaScript.
+
 ## 3.1.0
 
 - Add `tabbable.isFocusable` and `tabbable.isTabbable` functions.
