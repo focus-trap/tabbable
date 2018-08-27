@@ -11,7 +11,9 @@ var candidateSelectors = [
 ];
 var candidateSelector = candidateSelectors.join(',');
 
-var matches = Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+var matches = typeof Element === 'undefined'
+  ? function () {}
+  : Element.prototype.matches || Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
 
 function tabbable(el, options) {
   options = options || {};
