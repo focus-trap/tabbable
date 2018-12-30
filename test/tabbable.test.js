@@ -270,6 +270,16 @@ describe('tabbable', function() {
         var n7 = assertionSet.getFixture('radio').getDocument().getElementById('radio-c');
         assert.ok(tabbable.isFocusable(n7));
       });
+
+      it('supports detached elements', function() {
+        var doc = assertionSet.getFixture('basic').getDocument();
+        var frag = doc.createDocumentFragment();
+        var button = doc.createElement('button');
+        frag.appendChild(button);
+
+        assert.isTrue(tabbable.isTabbable(button));
+        assert.isTrue(tabbable.isFocusable(button));
+      });
     });
   });
 });

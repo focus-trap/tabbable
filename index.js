@@ -167,7 +167,7 @@ function UntouchabilityChecker(elementDocument) {
 // getComputedStyle accurately reflects `visibility: hidden` of ancestors
 // but not `display: none`, so we need to recursively check parents.
 UntouchabilityChecker.prototype.hasDisplayNone = function hasDisplayNone(node, nodeComputedStyle) {
-  if (node === this.doc.documentElement) return false;
+  if (node.nodeType !== Node.ELEMENT_NODE) return false;
 
     // Search for a cached result.
     var cached = find(this.cache, function(item) {
