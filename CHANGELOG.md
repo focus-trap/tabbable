@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.2
+
+- Fix reference to root element that caused errors within Shadow DOM.
+
 ## 3.1.1
 
 - Allow module to be imported by non-browser JavaScript.
