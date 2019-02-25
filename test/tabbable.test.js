@@ -11,6 +11,7 @@ var fixtures = {
   'non-linear': fs.readFileSync(path.join(__dirname, 'fixtures/non-linear.html'), 'utf8'),
   'svg': fs.readFileSync(path.join(__dirname, 'fixtures/svg.html'), 'utf8'),
   'radio': fs.readFileSync(path.join(__dirname, 'fixtures/radio.html'), 'utf8'),
+  'shadow-dom': fs.readFileSync(path.join(__dirname, 'fixtures/shadow-dom.html'), 'utf8'),
 };
 
 var fixtureRoots = [];
@@ -271,15 +272,20 @@ describe('tabbable', function() {
         assert.ok(tabbable.isFocusable(n7));
       });
 
-      it('supports detached elements', function() {
-        var doc = assertionSet.getFixture('basic').getDocument();
-        var frag = doc.createDocumentFragment();
-        var button = doc.createElement('button');
-        frag.appendChild(button);
+      it('supports elements in a shadow root', function() {
+        var loadedFixture = assertionSet.getFixture('shadow-dom')
 
-        assert.isTrue(tabbable.isTabbable(button));
-        assert.isTrue(tabbable.isFocusable(button));
-      });
+        var host = loadedFixture.getDocument().getElementById('shadow-host')
+        var template = loadedFixture.getDocument().getElementById('shadow-root-template')
+        var shadow = host.attachShadow({mode: 'open'});
+        shadow.appendChild(template.content.cloneNode(true))
+
+        var actual = getTabbableIds(shadow.getElementById('container'))
+        var expected = [
+          'input',
+        ];
+        assert.deepEqual(actual, expected);
+      })
     });
   });
 });
