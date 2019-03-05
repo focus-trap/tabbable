@@ -52,6 +52,7 @@ You'll need to be compiling CommonJS (via browserify or webpack).
 ### tabbable
 
 ```
+import tabbable from 'tabbable'
 tabbable(rootNode, [options])
 ```
 
@@ -73,18 +74,20 @@ Type: `boolean`. Default: `false`.
 
 If set to `true`, `rootNode` will be included in the returned tabbable node array, if `rootNode` is tabbable.
 
-### tabbable.isTabbable
+### isTabbable util
 
 ```
-tabbable.isTabbable(node)
+import { isTabbable } from 'tabbable'
+isTabbable(node)
 ```
 
 Returns a boolean indicating whether the provided node is considered tabbable.
 
-### tabbable.isFocusable
+### isFocusable util
 
 ```
-tabbable.isFocusable(node)
+import { isFocusable } from 'tabbable'
+isFocusable(node)
 ```
 
 Returns a boolean indicating whether the provided node is considered *focusable*.

@@ -1,7 +1,10 @@
 var path = require('path');
 var fs = require('fs');
 var assert = require('chai').assert;
-var tabbable = require('..');
+var lib = require('..');
+var tabbable = lib.default;
+var isFocusable = lib.isFocusable;
+var isTabbable = lib.isTabbable;
 
 var fixtures = {
   'basic': fs.readFileSync(path.join(__dirname, 'fixtures/basic.html'), 'utf8'),
@@ -237,38 +240,38 @@ describe('tabbable', function() {
         assert.deepEqual(actual, expected);
       });
 
-      it('tabbable.isTabbable', function() {
+      it('isTabbable', function() {
         var n1 = assertionSet.getFixture('basic').getDocument().getElementById('contenteditable-true');
-        assert.ok(tabbable.isTabbable(n1));
+        assert.ok(isTabbable(n1));
         var n2 = assertionSet.getFixture('basic').getDocument().getElementById('contenteditable-false');
-        assert.notOk(tabbable.isTabbable(n2));
+        assert.notOk(isTabbable(n2));
         var n3 = assertionSet.getFixture('basic').getDocument().getElementById('href-anchor');
-        assert.ok(tabbable.isTabbable(n3));
+        assert.ok(isTabbable(n3));
         var n4 = assertionSet.getFixture('basic').getDocument().getElementById('hrefless-anchor');
-        assert.notOk(tabbable.isTabbable(n4));
+        assert.notOk(isTabbable(n4));
         var n5 = assertionSet.getFixture('basic').getDocument().getElementById('iframe');
-        assert.notOk(tabbable.isTabbable(n5));
+        assert.notOk(isTabbable(n5));
         var n6 = assertionSet.getFixture('radio').getDocument().getElementById('radio-a');
-        assert.ok(tabbable.isTabbable(n6));
+        assert.ok(isTabbable(n6));
         var n7 = assertionSet.getFixture('radio').getDocument().getElementById('radio-c');
-        assert.notOk(tabbable.isTabbable(n7));
+        assert.notOk(isTabbable(n7));
       });
 
-      it('tabbable.isFocusable', function() {
+      it('isFocusable', function() {
         var n1 = assertionSet.getFixture('basic').getDocument().getElementById('contenteditable-true');
-        assert.ok(tabbable.isFocusable(n1));
+        assert.ok(isFocusable(n1));
         var n2 = assertionSet.getFixture('basic').getDocument().getElementById('contenteditable-false');
-        assert.notOk(tabbable.isFocusable(n2));
+        assert.notOk(isFocusable(n2));
         var n3 = assertionSet.getFixture('basic').getDocument().getElementById('href-anchor');
-        assert.ok(tabbable.isFocusable(n3));
+        assert.ok(isFocusable(n3));
         var n4 = assertionSet.getFixture('basic').getDocument().getElementById('hrefless-anchor');
-        assert.notOk(tabbable.isFocusable(n4));
+        assert.notOk(isFocusable(n4));
         var n5 = assertionSet.getFixture('basic').getDocument().getElementById('iframe');
-        assert.ok(tabbable.isFocusable(n5));
+        assert.ok(isFocusable(n5));
         var n6 = assertionSet.getFixture('radio').getDocument().getElementById('radio-a');
-        assert.ok(tabbable.isFocusable(n6));
+        assert.ok(isFocusable(n6));
         var n7 = assertionSet.getFixture('radio').getDocument().getElementById('radio-c');
-        assert.ok(tabbable.isFocusable(n7));
+        assert.ok(isFocusable(n7));
       });
 
       it('supports detached elements', function() {
@@ -277,8 +280,8 @@ describe('tabbable', function() {
         var button = doc.createElement('button');
         frag.appendChild(button);
 
-        assert.isTrue(tabbable.isTabbable(button));
-        assert.isTrue(tabbable.isFocusable(button));
+        assert.isTrue(isTabbable(button));
+        assert.isTrue(isFocusable(button));
       });
     });
   });

@@ -27,5 +27,14 @@
     "space-in-parens": [2, "never"],
     "space-unary-ops": 2,
     "strict": 0
-  }
+  },
+  "overrides": [{
+    "files": ["src/**/*.js", "rollup.config.js"],
+    "parserOptions": {
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "experimentalObjectRestSpread": true
+      }
+    }
+  }]
 }
