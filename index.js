@@ -145,6 +145,8 @@ function isTabbableRadio(node) {
 }
 
 function isHidden(node) {
+  // offsetParent being null will allow detecting cases where an element is invisible or inside an invisible element,
+  // as long as the element does not use position: fixed. For them, their visibility has to be checked directly as well.
   return node.offsetParent === null || getComputedStyle(node).visibility === 'hidden';
 }
 
