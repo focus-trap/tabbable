@@ -18,11 +18,9 @@ var matches = typeof Element === 'undefined'
 function tabbable(el, options) {
   options = options || {};
 
-  var elementDocument = el.ownerDocument || el;
   var regularTabbables = [];
   var orderedTabbables = [];
 
-  var untouchabilityChecker = new UntouchabilityChecker(elementDocument);
   var candidates = el.querySelectorAll(candidateSelector);
 
   if (options.includeContainer) {
@@ -36,7 +34,7 @@ function tabbable(el, options) {
   for (i = 0; i < candidates.length; i++) {
     candidate = candidates[i];
 
-    if (!isNodeMatchingSelectorTabbable(candidate, untouchabilityChecker)) continue;
+    if (!isNodeMatchingSelectorTabbable(candidate)) continue;
 
     candidateTabindex = getTabindex(candidate);
     if (candidateTabindex === 0) {
@@ -61,9 +59,9 @@ function tabbable(el, options) {
 tabbable.isTabbable = isTabbable;
 tabbable.isFocusable = isFocusable;
 
-function isNodeMatchingSelectorTabbable(node, untouchabilityChecker) {
+function isNodeMatchingSelectorTabbable(node) {
   if (
-    !isNodeMatchingSelectorFocusable(node, untouchabilityChecker)
+    !isNodeMatchingSelectorFocusable(node)
     || isNonTabbableRadio(node)
     || getTabindex(node) < 0
   ) {
@@ -72,18 +70,17 @@ function isNodeMatchingSelectorTabbable(node, untouchabilityChecker) {
   return true;
 }
 
-function isTabbable(node, untouchabilityChecker) {
+function isTabbable(node) {
   if (!node) throw new Error('No node provided');
   if (matches.call(node, candidateSelector) === false) return false;
-  return isNodeMatchingSelectorTabbable(node, untouchabilityChecker);
+  return isNodeMatchingSelectorTabbable(node);
 }
 
-function isNodeMatchingSelectorFocusable(node, untouchabilityChecker) {
-  untouchabilityChecker = untouchabilityChecker || new UntouchabilityChecker(node.ownerDocument || node);
+function isNodeMatchingSelectorFocusable(node) {
   if (
     node.disabled
     || isHiddenInput(node)
-    || untouchabilityChecker.isUntouchable(node)
+    || isHidden(node)
   ) {
     return false;
   }
@@ -91,10 +88,10 @@ function isNodeMatchingSelectorFocusable(node, untouchabilityChecker) {
 }
 
 var focusableCandidateSelector = candidateSelectors.concat('iframe').join(',');
-function isFocusable(node, untouchabilityChecker) {
+function isFocusable(node) {
   if (!node) throw new Error('No node provided');
   if (matches.call(node, focusableCandidateSelector) === false) return false;
-  return isNodeMatchingSelectorFocusable(node, untouchabilityChecker);
+  return isNodeMatchingSelectorFocusable(node);
 }
 
 function getTabindex(node) {
@@ -108,13 +105,6 @@ function getTabindex(node) {
 
 function sortOrderedTabbables(a, b) {
   return a.tabIndex === b.tabIndex ? a.documentOrder - b.documentOrder : a.tabIndex - b.tabIndex;
-}
-
-// Array.prototype.find not available in IE.
-function find(list, predicate) {
-  for (var i = 0, length = list.length; i < length; i++) {
-    if (predicate(list[i])) return list[i];
-  }
 }
 
 function isContentEditable(node) {
@@ -154,47 +144,10 @@ function isTabbableRadio(node) {
   return !checked || checked === node;
 }
 
-// An element is "untouchable" if *it or one of its ancestors* has
-// `visibility: hidden` or `display: none`.
-function UntouchabilityChecker(elementDocument) {
-  this.doc = elementDocument;
-  // Node cache must be refreshed on every check, in case
-  // the content of the element has changed. The cache contains tuples
-  // mapping nodes to their boolean result.
-  this.cache = [];
-}
-
-// getComputedStyle accurately reflects `visibility: hidden` of ancestors
-// but not `display: none`, so we need to recursively check parents.
-UntouchabilityChecker.prototype.hasDisplayNone = function hasDisplayNone(node, nodeComputedStyle) {
-  if (node.nodeType !== Node.ELEMENT_NODE) return false;
-
-    // Search for a cached result.
-    var cached = find(this.cache, function(item) {
-      return item === node;
-    });
-    if (cached) return cached[1];
-
-    nodeComputedStyle = nodeComputedStyle || this.doc.defaultView.getComputedStyle(node);
-
-    var result = false;
-
-    if (nodeComputedStyle.display === 'none') {
-      result = true;
-    } else if (node.parentNode) {
-      result = this.hasDisplayNone(node.parentNode);
-    }
-
-    this.cache.push([node, result]);
-
-    return result;
-}
-
-UntouchabilityChecker.prototype.isUntouchable = function isUntouchable(node) {
-  if (node === this.doc.documentElement) return false;
-  var computedStyle = this.doc.defaultView.getComputedStyle(node);
-  if (this.hasDisplayNone(node, computedStyle)) return true;
-  return computedStyle.visibility === 'hidden';
+function isHidden(node) {
+  // offsetParent being null will allow detecting cases where an element is invisible or inside an invisible element,
+  // as long as the element does not use position: fixed. For them, their visibility has to be checked directly as well.
+  return node.offsetParent === null || getComputedStyle(node).visibility === 'hidden';
 }
 
 module.exports = tabbable;
