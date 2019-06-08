@@ -2,6 +2,12 @@
 
 [![Build Status](https://travis-ci.org/davidtheclark/tabbable.svg?branch=master)](https://travis-ci.org/davidtheclark/tabbable)
 
+---
+
+**SEEKING CO-MAINTAINERS!** Continued development of this project is going to require the work of one or more dedicated co-maintainers (or forkers). If you're interested, please comment in [this issue](https://github.com/davidtheclark/tabbable/issues/42).
+
+---
+
 Returns an array of all\* tabbable DOM nodes within a containing node. (\* "all" has some necessary caveats, which you'll learn about by reading below.)
 
 The following are considered tabbable:
