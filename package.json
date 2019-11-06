@@ -23,7 +23,7 @@
     "browserify": "^13.1.1",
     "budo": "^9.2.1",
     "chai": "^3.5.0",
-    "eslint": "^3.9.0",
+    "eslint": "^4.18.2",
     "karma": "^1.3.0",
     "karma-browserify": "^5.1.0",
     "karma-firefox-launcher": "^1.0.0",
