@@ -4,6 +4,6 @@ node_js:
 addons:
   firefox: "70.0"
 cache: yarn
-before_script:
-  - export DISPLAY=:99.0
-  - xvfb-run start
+dist: xenial
+services:
+  - xvfb
