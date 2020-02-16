@@ -1,9 +1,9 @@
 language: node_js
 node_js:
-  - '6'
+  - '8'
 addons:
-  firefox: "65.0"
+  firefox: "70.0"
 cache: yarn
-before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
+dist: xenial
+services:
+  - xvfb

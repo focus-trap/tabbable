@@ -16,7 +16,7 @@ var testCases = {
 var root;
 var content;
 for (var key in testCases) {
-  if (!testCases.hasOwnProperty(key)) continue;
+  if (!Object.hasOwnProperty.call(testCases, key)) continue;
   root = document.createElement('div');
   content = '<h2>' + key + '</h2>';
   content += testCases[key];
