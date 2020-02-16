@@ -2,9 +2,7 @@ module.exports = function(config) {
   config.set({
     basePath: '',
     frameworks: ['browserify', 'mocha'],
-    files: [
-      'test/**/*.test.js',
-    ],
+    files: ['test/**/*.test.js'],
     preprocessors: {
       'test/**/*.test.js': ['browserify'],
     },
@@ -24,4 +22,4 @@ module.exports = function(config) {
     singleRun: true,
     concurrency: Infinity,
   });
-}
+};

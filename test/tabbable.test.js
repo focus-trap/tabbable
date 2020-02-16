@@ -4,14 +4,26 @@ var assert = require('chai').assert;
 var tabbable = require('..');
 
 var fixtures = {
-  'basic': fs.readFileSync(path.join(__dirname, 'fixtures/basic.html'), 'utf8'),
-  'changing-content': fs.readFileSync(path.join(__dirname, 'fixtures/changing-content.html'), 'utf8'),
-  'jqueryui': fs.readFileSync(path.join(__dirname, 'fixtures/jqueryui.html'), 'utf8'),
-  'nested': fs.readFileSync(path.join(__dirname, 'fixtures/nested.html'), 'utf8'),
-  'non-linear': fs.readFileSync(path.join(__dirname, 'fixtures/non-linear.html'), 'utf8'),
-  'svg': fs.readFileSync(path.join(__dirname, 'fixtures/svg.html'), 'utf8'),
-  'radio': fs.readFileSync(path.join(__dirname, 'fixtures/radio.html'), 'utf8'),
-  'shadow-dom': fs.readFileSync(path.join(__dirname, 'fixtures/shadow-dom.html'), 'utf8'),
+  basic: fs.readFileSync(path.join(__dirname, 'fixtures/basic.html'), 'utf8'),
+  'changing-content': fs.readFileSync(
+    path.join(__dirname, 'fixtures/changing-content.html'),
+    'utf8'
+  ),
+  jqueryui: fs.readFileSync(
+    path.join(__dirname, 'fixtures/jqueryui.html'),
+    'utf8'
+  ),
+  nested: fs.readFileSync(path.join(__dirname, 'fixtures/nested.html'), 'utf8'),
+  'non-linear': fs.readFileSync(
+    path.join(__dirname, 'fixtures/non-linear.html'),
+    'utf8'
+  ),
+  svg: fs.readFileSync(path.join(__dirname, 'fixtures/svg.html'), 'utf8'),
+  radio: fs.readFileSync(path.join(__dirname, 'fixtures/radio.html'), 'utf8'),
+  'shadow-dom': fs.readFileSync(
+    path.join(__dirname, 'fixtures/shadow-dom.html'),
+    'utf8'
+  ),
 };
 
 var fixtureRoots = [];
@@ -35,7 +47,9 @@ function fixture(fixtureName) {
   fixtureRoots.push(root);
   return {
     getTabbableIds: getTabbableIds.bind(null, root),
-    getDocument: function() { return document; },
+    getDocument: function() {
+      return document;
+    },
   };
 }
 
@@ -44,8 +58,13 @@ function fixtureWithIframe(fixtureName) {
   document.body.appendChild(iframe);
   fixtureRoots.push(iframe);
   return {
-    getTabbableIds: getTabbableIds.bind(null, createRootNode(iframe.contentDocument, fixtureName)),
-    getDocument: function() { return iframe.contentDocument; },
+    getTabbableIds: getTabbableIds.bind(
+      null,
+      createRootNode(iframe.contentDocument, fixtureName)
+    ),
+    getDocument: function() {
+      return iframe.contentDocument;
+    },
   };
 }
 
@@ -54,8 +73,10 @@ function fixtureWithDocument(fixtureName) {
   fixtureRoots.push(root);
   return {
     getTabbableIds: getTabbableIds.bind(null, document),
-    getDocument: function() { return document; },
-  }
+    getDocument: function() {
+      return document;
+    },
+  };
 }
 
 function cleanupFixtures() {
@@ -72,11 +93,10 @@ describe('tabbable', function() {
 
   [
     { name: 'window', getFixture: fixture },
-    { name: 'iframe\'s window', getFixture: fixtureWithIframe },
+    { name: "iframe's window", getFixture: fixtureWithIframe },
     { name: 'document', getFixture: fixtureWithDocument },
-  ].forEach(function (assertionSet) {
+  ].forEach(function(assertionSet) {
     describe(assertionSet.name, function() {
-
       it('basic', function() {
         var actual = assertionSet.getFixture('basic').getTabbableIds();
         var expected = [
@@ -101,11 +121,7 @@ describe('tabbable', function() {
 
       it('nested', function() {
         var actual = assertionSet.getFixture('nested').getTabbableIds();
-        var expected = [
-          'tabindex-div-2',
-          'tabindex-div-0',
-          'input',
-        ];
+        var expected = ['tabindex-div-2', 'tabindex-div-0', 'input'];
         assert.deepEqual(actual, expected);
       });
 
@@ -147,7 +163,7 @@ describe('tabbable', function() {
           return originalSort.call(this, function(a, b) {
             var comparison = compareFunction ? compareFunction(a, b) : a - b;
             return comparison || this.indexOf(b) - this.indexOf(a);
-          })
+          });
         };
         var actual = assertionSet.getFixture('non-linear').getTabbableIds();
         Array.prototype.sort = originalSort;
@@ -185,7 +201,9 @@ describe('tabbable', function() {
         ];
         assert.deepEqual(actualA, expectedA);
 
-        loadedFixture.getDocument().getElementById('initially-hidden').style.display = 'block';
+        loadedFixture
+          .getDocument()
+          .getElementById('initially-hidden').style.display = 'block';
 
         var actualB = loadedFixture.getTabbableIds();
         var expectedB = [
@@ -200,93 +218,121 @@ describe('tabbable', function() {
 
       it('including container', function() {
         var loadedFixture = assertionSet.getFixture('nested');
-        var container = loadedFixture.getDocument().getElementById('tabindex-div-0')
+        var container = loadedFixture
+          .getDocument()
+          .getElementById('tabindex-div-0');
 
         var actualFalse = getTabbableIds(container);
-        var expectedFalse = [
-          'tabindex-div-2',
-          'input',
-        ];
+        var expectedFalse = ['tabindex-div-2', 'input'];
         assert.deepEqual(actualFalse, expectedFalse);
 
-        var actualTrue = getTabbableIds(container, {includeContainer: true});
-        var expectedTrue = [
-          'tabindex-div-2',
-          'tabindex-div-0',
-          'input',
-        ];
+        var actualTrue = getTabbableIds(container, { includeContainer: true });
+        var expectedTrue = ['tabindex-div-2', 'tabindex-div-0', 'input'];
         assert.deepEqual(actualTrue, expectedTrue);
       });
 
       it('svg', function() {
         var actual = assertionSet.getFixture('svg').getTabbableIds();
-        var expected = [
-          'svg-btn',
-          'svg-1',
-        ];
+        var expected = ['svg-btn', 'svg-1'];
         assert.deepEqual(actual, expected);
       });
 
       it('radio', function() {
         var actual = assertionSet.getFixture('radio').getTabbableIds();
-        var expected = [
-          'radio-a',
-          'radio-d',
-          'radio-e',
-          'radio-f',
-        ];
+        var expected = ['radio-a', 'radio-d', 'radio-e', 'radio-f'];
         assert.deepEqual(actual, expected);
       });
 
       it('tabbable.isTabbable', function() {
-        var n1 = assertionSet.getFixture('basic').getDocument().getElementById('contenteditable-true');
+        var n1 = assertionSet
+          .getFixture('basic')
+          .getDocument()
+          .getElementById('contenteditable-true');
         assert.ok(tabbable.isTabbable(n1));
-        var n2 = assertionSet.getFixture('basic').getDocument().getElementById('contenteditable-false');
+        var n2 = assertionSet
+          .getFixture('basic')
+          .getDocument()
+          .getElementById('contenteditable-false');
         assert.notOk(tabbable.isTabbable(n2));
-        var n3 = assertionSet.getFixture('basic').getDocument().getElementById('href-anchor');
+        var n3 = assertionSet
+          .getFixture('basic')
+          .getDocument()
+          .getElementById('href-anchor');
         assert.ok(tabbable.isTabbable(n3));
-        var n4 = assertionSet.getFixture('basic').getDocument().getElementById('hrefless-anchor');
+        var n4 = assertionSet
+          .getFixture('basic')
+          .getDocument()
+          .getElementById('hrefless-anchor');
         assert.notOk(tabbable.isTabbable(n4));
-        var n5 = assertionSet.getFixture('basic').getDocument().getElementById('iframe');
+        var n5 = assertionSet
+          .getFixture('basic')
+          .getDocument()
+          .getElementById('iframe');
         assert.notOk(tabbable.isTabbable(n5));
-        var n6 = assertionSet.getFixture('radio').getDocument().getElementById('radio-a');
+        var n6 = assertionSet
+          .getFixture('radio')
+          .getDocument()
+          .getElementById('radio-a');
         assert.ok(tabbable.isTabbable(n6));
-        var n7 = assertionSet.getFixture('radio').getDocument().getElementById('radio-c');
+        var n7 = assertionSet
+          .getFixture('radio')
+          .getDocument()
+          .getElementById('radio-c');
         assert.notOk(tabbable.isTabbable(n7));
       });
 
       it('tabbable.isFocusable', function() {
-        var n1 = assertionSet.getFixture('basic').getDocument().getElementById('contenteditable-true');
+        var n1 = assertionSet
+          .getFixture('basic')
+          .getDocument()
+          .getElementById('contenteditable-true');
         assert.ok(tabbable.isFocusable(n1));
-        var n2 = assertionSet.getFixture('basic').getDocument().getElementById('contenteditable-false');
+        var n2 = assertionSet
+          .getFixture('basic')
+          .getDocument()
+          .getElementById('contenteditable-false');
         assert.notOk(tabbable.isFocusable(n2));
-        var n3 = assertionSet.getFixture('basic').getDocument().getElementById('href-anchor');
+        var n3 = assertionSet
+          .getFixture('basic')
+          .getDocument()
+          .getElementById('href-anchor');
         assert.ok(tabbable.isFocusable(n3));
-        var n4 = assertionSet.getFixture('basic').getDocument().getElementById('hrefless-anchor');
+        var n4 = assertionSet
+          .getFixture('basic')
+          .getDocument()
+          .getElementById('hrefless-anchor');
         assert.notOk(tabbable.isFocusable(n4));
-        var n5 = assertionSet.getFixture('basic').getDocument().getElementById('iframe');
+        var n5 = assertionSet
+          .getFixture('basic')
+          .getDocument()
+          .getElementById('iframe');
         assert.ok(tabbable.isFocusable(n5));
-        var n6 = assertionSet.getFixture('radio').getDocument().getElementById('radio-a');
+        var n6 = assertionSet
+          .getFixture('radio')
+          .getDocument()
+          .getElementById('radio-a');
         assert.ok(tabbable.isFocusable(n6));
-        var n7 = assertionSet.getFixture('radio').getDocument().getElementById('radio-c');
+        var n7 = assertionSet
+          .getFixture('radio')
+          .getDocument()
+          .getElementById('radio-c');
         assert.ok(tabbable.isFocusable(n7));
       });
 
       it('supports elements in a shadow root', function() {
-        var loadedFixture = assertionSet.getFixture('shadow-dom')
+        var loadedFixture = assertionSet.getFixture('shadow-dom');
 
-        var host = loadedFixture.getDocument().getElementById('shadow-host')
-        var template = loadedFixture.getDocument().getElementById('shadow-root-template')
-        var shadow = host.attachShadow({mode: 'open'});
-        shadow.appendChild(template.content.cloneNode(true))
+        var host = loadedFixture.getDocument().getElementById('shadow-host');
+        var template = loadedFixture
+          .getDocument()
+          .getElementById('shadow-root-template');
+        var shadow = host.attachShadow({ mode: 'open' });
+        shadow.appendChild(template.content.cloneNode(true));
 
-        var actual = getTabbableIds(shadow.getElementById('container'))
-        var expected = [
-          'input',
-        ];
+        var actual = getTabbableIds(shadow.getElementById('container'));
+        var expected = ['input'];
         assert.deepEqual(actual, expected);
-      })
+      });
     });
   });
 });
-
