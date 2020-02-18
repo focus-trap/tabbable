@@ -1,7 +1,5 @@
-// const path = require('path');
-// const fs = require('fs');
 const assert = require('chai').assert;
-const tabbable = require('..');
+const tabbable = require('../dist/index.min.js');
 const fixtures = require('./fixtures');
 
 let fixtureRoots = [];

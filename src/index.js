@@ -1,4 +1,4 @@
-var candidateSelectors = [
+let candidateSelectors = [
   'input',
   'select',
   'textarea',
@@ -9,9 +9,9 @@ var candidateSelectors = [
   'video[controls]',
   '[contenteditable]:not([contenteditable="false"])',
 ];
-var candidateSelector = candidateSelectors.join(',');
+let candidateSelector = candidateSelectors.join(',');
 
-var matches =
+let matches =
   typeof Element === 'undefined'
     ? function() {}
     : Element.prototype.matches ||
@@ -21,10 +21,10 @@ var matches =
 function tabbable(el, options) {
   options = options || {};
 
-  var regularTabbables = [];
-  var orderedTabbables = [];
+  let regularTabbables = [];
+  let orderedTabbables = [];
 
-  var candidates = el.querySelectorAll(candidateSelector);
+  let candidates = el.querySelectorAll(candidateSelector);
 
   if (options.includeContainer) {
     if (matches.call(el, candidateSelector)) {
@@ -33,11 +33,14 @@ function tabbable(el, options) {
     }
   }
 
-  var i, candidate, candidateTabindex;
-  for (i = 0; i < candidates.length; i++) {
+  let candidate;
+  let candidateTabindex;
+  for (let i = 0; i < candidates.length; i++) {
     candidate = candidates[i];
 
-    if (!isNodeMatchingSelectorTabbable(candidate)) continue;
+    if (!isNodeMatchingSelectorTabbable(candidate)) {
+      continue;
+    }
 
     candidateTabindex = getTabindex(candidate);
     if (candidateTabindex === 0) {
@@ -51,11 +54,9 @@ function tabbable(el, options) {
     }
   }
 
-  var tabbableNodes = orderedTabbables
+  let tabbableNodes = orderedTabbables
     .sort(sortOrderedTabbables)
-    .map(function(a) {
-      return a.node;
-    })
+    .map(a => a.node)
     .concat(regularTabbables);
 
   return tabbableNodes;
@@ -76,8 +77,12 @@ function isNodeMatchingSelectorTabbable(node) {
 }
 
 function isTabbable(node) {
-  if (!node) throw new Error('No node provided');
-  if (matches.call(node, candidateSelector) === false) return false;
+  if (!node) {
+    throw new Error('No node provided');
+  }
+  if (matches.call(node, candidateSelector) === false) {
+    return false;
+  }
   return isNodeMatchingSelectorTabbable(node);
 }
 
@@ -88,19 +93,27 @@ function isNodeMatchingSelectorFocusable(node) {
   return true;
 }
 
-var focusableCandidateSelector = candidateSelectors.concat('iframe').join(',');
+let focusableCandidateSelector = candidateSelectors.concat('iframe').join(',');
 function isFocusable(node) {
-  if (!node) throw new Error('No node provided');
-  if (matches.call(node, focusableCandidateSelector) === false) return false;
+  if (!node) {
+    throw new Error('No node provided');
+  }
+  if (matches.call(node, focusableCandidateSelector) === false) {
+    return false;
+  }
   return isNodeMatchingSelectorFocusable(node);
 }
 
 function getTabindex(node) {
-  var tabindexAttr = parseInt(node.getAttribute('tabindex'), 10);
-  if (!isNaN(tabindexAttr)) return tabindexAttr;
+  let tabindexAttr = parseInt(node.getAttribute('tabindex'), 10);
+  if (!isNaN(tabindexAttr)) {
+    return tabindexAttr;
+  }
   // Browsers do not return `tabIndex` correctly for contentEditable nodes;
   // so if they don't have a tabindex attribute specifically set, assume it's 0.
-  if (isContentEditable(node)) return 0;
+  if (isContentEditable(node)) {
+    return 0;
+  }
   return node.tabIndex;
 }
 
@@ -131,7 +144,7 @@ function isNonTabbableRadio(node) {
 }
 
 function getCheckedRadio(nodes) {
-  for (var i = 0; i < nodes.length; i++) {
+  for (let i = 0; i < nodes.length; i++) {
     if (nodes[i].checked) {
       return nodes[i];
     }
@@ -139,13 +152,15 @@ function getCheckedRadio(nodes) {
 }
 
 function isTabbableRadio(node) {
-  if (!node.name) return true;
+  if (!node.name) {
+    return true;
+  }
   // This won't account for the edge case where you have radio groups with the same
   // in separate forms on the same page.
-  var radioSet = node.ownerDocument.querySelectorAll(
+  let radioSet = node.ownerDocument.querySelectorAll(
     'input[type="radio"][name="' + node.name + '"]'
   );
-  var checked = getCheckedRadio(radioSet);
+  let checked = getCheckedRadio(radioSet);
   return !checked || checked === node;
 }
 
@@ -157,4 +172,4 @@ function isHidden(node) {
   );
 }
 
-module.exports = tabbable;
+export default tabbable;
