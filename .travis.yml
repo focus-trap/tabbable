@@ -2,8 +2,13 @@ language: node_js
 node_js:
   - '8'
 addons:
-  firefox: "70.0"
+  firefox: '70.0'
 cache: yarn
 dist: xenial
 services:
   - xvfb
+jobs:
+  include:
+    - stage: Test
+      before_script: npm run build
+      script: npm run test
