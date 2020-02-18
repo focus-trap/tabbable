@@ -105,3 +105,17 @@ All tabbable elements are focusable, but not all focusable elements are tabbable
 - Safari on Mac OS X does not Tab to `<a>` elements by default: you have to change a setting to get the standard behavior. Tabbable does not know whether you've changed that setting or not, so it will include `<a>` elements in its list.
 
 **_Feedback and contributions more than welcome!_**
+
+## Contributing
+
+1. Clone the repo to your machine and run:
+
+```sh
+npm install
+```
+
+To test in the browser during development, run:
+
+```sh
+npm start
+```

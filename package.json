@@ -17,7 +17,7 @@
     "compile:cjs": "cross-env BUILD_ENV=cjs rollup -c",
     "compile": "npm run compile:esm && npm run compile:cjs",
     "lint": "eslint .",
-    "start": "budo -l -d -o test/debug.js -- -t brfs",
+    "start": "npm run compile:cjs && budo -l -d -o test/debug.js -- -t brfs",
     "test": "karma start && npm run lint"
   },
   "repository": {

@@ -1,5 +1,5 @@
 const { 'shadow-dom': _, ...testCases } = require('./fixtures');
-global.tabbable = require('../dist/index.min.js');
+global.tabbable = require('../dist/index.js');
 
 let root;
 let content;
