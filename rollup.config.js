@@ -72,6 +72,30 @@ const esm = [
   },
 ];
 
+const standalone = [
+  {
+    input,
+    output: {
+      file: 'dist/index.umd.js',
+      format: 'umd',
+      esModule: true,
+      sourcemap: true,
+      name: 'tabbable',
+    },
+  },
+  {
+    input,
+    output: {
+      file: 'dist/index.umd.min.js',
+      format: 'umd',
+      esModule: true,
+      sourcemap: true,
+      name: 'tabbable',
+    },
+    plugins: [...commonPlugins, terser(terserOptions)],
+  },
+];
+
 let config = {};
 console.log(process.env.BUILD_ENV);
 switch (process.env.BUILD_ENV) {
@@ -80,6 +104,9 @@ switch (process.env.BUILD_ENV) {
     break;
   case 'esm':
     config = esm;
+    break;
+  case 'standalone':
+    config = standalone;
     break;
   default:
     throw Error(
