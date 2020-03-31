@@ -72,7 +72,7 @@ const esm = [
   },
 ];
 
-const standalone = [
+const umd = [
   {
     input,
     output: {
@@ -105,8 +105,8 @@ switch (process.env.BUILD_ENV) {
   case 'esm':
     config = esm;
     break;
-  case 'standalone':
-    config = standalone;
+  case 'umd':
+    config = umd;
     break;
   default:
     throw Error(
