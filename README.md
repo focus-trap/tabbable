@@ -47,14 +47,14 @@ npm install tabbable
 
 Dependencies: _none_.
 
-You'll need to be compiling CommonJS with your bundler of choice.
-
 ## API
 
 ### tabbable
 
-```
-tabbable(rootNode, [options])
+```js
+import tabbable from 'tabbable';
+
+tabbable(rootNode, [options]);
 ```
 
 Returns an array of ordered tabbable node within the `rootNode`.
@@ -76,18 +76,22 @@ Type: `boolean`. Default: `false`.
 
 If set to `true`, `rootNode` will be included in the returned tabbable node array, if `rootNode` is tabbable.
 
-### tabbable.isTabbable
+### isTabbable
 
-```
-tabbable.isTabbable(node)
+```js
+import { isTabbable } from 'tabbable';
+
+isTabbable(node);
 ```
 
 Returns a boolean indicating whether the provided node is considered tabbable.
 
-### tabbable.isFocusable
+### isFocusable
 
-```
-tabbable.isFocusable(node)
+```js
+import { isFocusable } from 'tabbable';
+
+isFocusable(node);
 ```
 
 Returns a boolean indicating whether the provided node is considered _focusable_.
