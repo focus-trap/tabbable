@@ -219,6 +219,12 @@ describe('tabbable', () => {
         assert.deepEqual(actual, expected);
       });
 
+      it('details', () => {
+        let actual = assertionSet.getFixture('details').getTabbableIds();
+        let expected = ['details-a-summery', 'details-b-summery'];
+        assert.deepEqual(actual, expected);
+      });
+
       it('tabbable.isTabbable', () => {
         let n1 = assertionSet
           .getFixture('basic')
@@ -255,6 +261,11 @@ describe('tabbable', () => {
           .getDocument()
           .getElementById('radio-c');
         assert.notOk(tabbable.isTabbable(n7));
+        let n8 = assertionSet
+          .getFixture('details')
+          .getDocument()
+          .getElementById('details-a-summery');
+        assert.ok(tabbable.isTabbable(n8));
       });
 
       it('tabbable.isFocusable', () => {
@@ -293,6 +304,11 @@ describe('tabbable', () => {
           .getDocument()
           .getElementById('radio-c');
         assert.ok(tabbable.isFocusable(n7));
+        let n8 = assertionSet
+          .getFixture('details')
+          .getDocument()
+          .getElementById('details-a-summery');
+        assert.ok(tabbable.isFocusable(n8));
       });
 
       it('supports elements in a shadow root', () => {
