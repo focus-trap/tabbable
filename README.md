@@ -14,6 +14,7 @@ The following are considered tabbable:
 - `<textarea>` elements
 - `<a>` elements with `href` or `xlink:href` attributes
 - `<audio>` and `<videos>` elements with `controls` attributes
+- `<summary>` element directly under a `<details>` element
 - elements with the `[contenteditable]` attribute
 - anything with a non-negative `tabindex` attribute
 
