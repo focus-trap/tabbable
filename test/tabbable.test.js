@@ -215,7 +215,14 @@ describe('tabbable', () => {
 
       it('radio', () => {
         let actual = assertionSet.getFixture('radio').getTabbableIds();
-        let expected = ['radio-a', 'radio-d', 'radio-e', 'radio-f'];
+        let expected = [
+          'formA-radioA',
+          'formB-radioA',
+          'formB-radioB',
+          'noform-radioA',
+          'noform-other-group-radioA',
+          'noform-other-group-radioB',
+        ];
         assert.deepEqual(actual, expected);
       });
 
@@ -254,12 +261,12 @@ describe('tabbable', () => {
         let n6 = assertionSet
           .getFixture('radio')
           .getDocument()
-          .getElementById('radio-a');
+          .getElementById('formA-radioA');
         assert.ok(tabbable.isTabbable(n6));
         let n7 = assertionSet
           .getFixture('radio')
           .getDocument()
-          .getElementById('radio-c');
+          .getElementById('formA-radioB');
         assert.notOk(tabbable.isTabbable(n7));
         let n8 = assertionSet
           .getFixture('details')
@@ -297,12 +304,12 @@ describe('tabbable', () => {
         let n6 = assertionSet
           .getFixture('radio')
           .getDocument()
-          .getElementById('radio-a');
+          .getElementById('formA-radioA');
         assert.ok(tabbable.isFocusable(n6));
         let n7 = assertionSet
           .getFixture('radio')
           .getDocument()
-          .getElementById('radio-c');
+          .getElementById('formA-radioB');
         assert.ok(tabbable.isFocusable(n7));
         let n8 = assertionSet
           .getFixture('details')

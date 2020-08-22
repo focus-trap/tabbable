@@ -1,14 +1,39 @@
-<form>
+<div>
+  <form>
+    <fieldset>
+      <legend>form 1 groupA - initial checked</legend>
+      <input type="radio" name="groupA" checked value="a" id="formA-radioA" />
+      <input type="radio" name="groupA" value="b" id="formA-radioB" />
+    </fieldset>
+  </form>
+
+  <form>
+    <fieldset>
+      <legend>form 2 groupA - no checked</legend>
+      <input type="radio" name="groupA" value="a" id="formB-radioA" />
+      <input type="radio" name="groupA" value="b" id="formB-radioB" />
+    </fieldset>
+  </form>
+
   <fieldset>
-    <legend>a-c radio group</legend>
-    <input type="radio" name="a-c" checked value="a" id="radio-a" />
-    <input type="radio" name="a-c" value="b" id="radio-b" />
-    <input type="radio" name="a-c" value="c" id="radio-c" />
+    <legend>no form groupA - initial checked</legend>
+    <input type="radio" name="groupA" value="a" checked id="noform-radioA" />
+    <input type="radio" name="groupA" value="b" id="noform-radioB" />
   </fieldset>
+
   <fieldset>
-    <legend>d-f radio group</legend>
-    <input type="radio" name="d-f" value="d" id="radio-d" />
-    <input type="radio" name="d-f" value="e" id="radio-e" />
-    <input type="radio" name="d-f" value="f" id="radio-f" />
+    <legend>no form groupB - no checked</legend>
+    <input
+      type="radio"
+      name="groupB"
+      value="a"
+      id="noform-other-group-radioA"
+    />
+    <input
+      type="radio"
+      name="groupB"
+      value="b"
+      id="noform-other-group-radioB"
+    />
   </fieldset>
-</form>
+</div>

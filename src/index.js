@@ -144,9 +144,9 @@ function isNonTabbableRadio(node) {
   return isRadio(node) && !isTabbableRadio(node);
 }
 
-function getCheckedRadio(nodes) {
+function getCheckedRadio(nodes, form) {
   for (let i = 0; i < nodes.length; i++) {
-    if (nodes[i].checked) {
+    if (nodes[i].checked && nodes[i].form === form) {
       return nodes[i];
     }
   }
@@ -156,12 +156,11 @@ function isTabbableRadio(node) {
   if (!node.name) {
     return true;
   }
-  // This won't account for the edge case where you have radio groups with the same
-  // in separate forms on the same page.
-  let radioSet = node.ownerDocument.querySelectorAll(
+  const radioScope = node.form || node.ownerDocument;
+  let radioSet = radioScope.querySelectorAll(
     'input[type="radio"][name="' + node.name + '"]'
   );
-  let checked = getCheckedRadio(radioSet);
+  let checked = getCheckedRadio(radioSet, node.form);
   return !checked || checked === node;
 }
 
