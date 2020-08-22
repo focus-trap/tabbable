@@ -1,5 +1,9 @@
 # Changelog
 
+## UNRELEASED
+
+- Add any `<summary>` element directly under a `<details>` element as tabbable and focusable.
+
 ## 4.0.0
 
 - Improve performance by changing the method for detecting whether a DOM node is focusable or not. It's expected that this change will *not* affect results; but this is a major version bump as a warning for you to check your edge cases before upgrading.
