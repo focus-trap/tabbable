@@ -14,7 +14,7 @@ function createRootNode(doc, fixtureName) {
 }
 
 function getTabbableIds(node, options) {
-  return tabbable(node, options).map(el => el.getAttribute('id'));
+  return tabbable(node, options).map((el) => el.getAttribute('id'));
 }
 
 function fixture(fixtureName) {
@@ -55,7 +55,7 @@ function fixtureWithDocument(fixtureName) {
 }
 
 function cleanupFixtures() {
-  fixtureRoots.forEach(root => {
+  fixtureRoots.forEach((root) => {
     document.body.removeChild(root);
   });
   fixtureRoots = [];
@@ -70,7 +70,7 @@ describe('tabbable', () => {
     { name: 'window', getFixture: fixture },
     { name: "iframe's window", getFixture: fixtureWithIframe },
     { name: 'document', getFixture: fixtureWithDocument },
-  ].forEach(assertionSet => {
+  ].forEach((assertionSet) => {
     describe(assertionSet.name, () => {
       it('basic', () => {
         let actual = assertionSet.getFixture('basic').getTabbableIds();
@@ -135,8 +135,8 @@ describe('tabbable', () => {
         // index in the original array. We do this to simulate browsers who do not
         // use a stable sort algorithm in their implementation.
         // eslint-disable-next-line no-extend-native
-        Array.prototype.sort = function(compareFunction) {
-          return originalSort.call(this, function(a, b) {
+        Array.prototype.sort = function (compareFunction) {
+          return originalSort.call(this, function (a, b) {
             let comparison = compareFunction ? compareFunction(a, b) : a - b;
             return comparison || this.indexOf(b) - this.indexOf(a);
           });

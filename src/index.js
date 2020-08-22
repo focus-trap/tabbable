@@ -14,7 +14,7 @@ let candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
 
 let matches =
   typeof Element === 'undefined'
-    ? function() {}
+    ? function () {}
     : Element.prototype.matches ||
       Element.prototype.msMatchesSelector ||
       Element.prototype.webkitMatchesSelector;
@@ -57,7 +57,7 @@ function tabbable(el, options) {
 
   let tabbableNodes = orderedTabbables
     .sort(sortOrderedTabbables)
-    .map(a => a.node)
+    .map((a) => a.node)
     .concat(regularTabbables);
 
   return tabbableNodes;
@@ -104,14 +104,29 @@ function isFocusable(node) {
 
 function getTabindex(node) {
   let tabindexAttr = parseInt(node.getAttribute('tabindex'), 10);
+
   if (!isNaN(tabindexAttr)) {
     return tabindexAttr;
   }
+
   // Browsers do not return `tabIndex` correctly for contentEditable nodes;
   // so if they don't have a tabindex attribute specifically set, assume it's 0.
   if (isContentEditable(node)) {
     return 0;
   }
+
+  // in Chrome, <audio controls/> and <video controls/> elements get a default
+  //  `tabIndex` of -1 when the 'tabindex' attribute isn't specified in the DOM,
+  //  yet they are still part of the regular tab order; in FF, they get a default
+  //  `tabIndex` of 0; since Chrome still puts those elements in the regular tab
+  //  order, consider their tab index to be 0
+  if (
+    (node.nodeName === 'AUDIO' || node.nodeName === 'VIDEO') &&
+    node.getAttribute('tabindex') === null
+  ) {
+    return 0;
+  }
+
   return node.tabIndex;
 }
 

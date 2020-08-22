@@ -6,70 +6,83 @@
   "module": "dist/index.esm.min.js",
   "types": "index.d.ts",
   "files": [
+    "package.json",
     "dist",
     "src",
+    "index.d.ts",
     "README.md",
-    "LICENSE",
-    "index.d.ts"
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "scripts": {
-    "build": "npm run clean && npm run compile",
+    "build": "yarn clean && yarn compile",
     "clean": "rm -rf ./dist",
-    "compile:esm": "cross-env BUILD_ENV=esm rollup -c",
-    "compile:cjs": "cross-env BUILD_ENV=cjs rollup -c",
-    "compile:umd": "cross-env BUILD_ENV=umd rollup -c",
-    "compile": "npm run compile:esm && npm run compile:cjs && npm run compile:umd",
-    "lint": "eslint .",
-    "start": "npm run compile:cjs && budo -l -d -o test/debug.js -- -t brfs",
-    "test": "karma start && npm run lint"
+    "compile-esm": "cross-env BUILD_ENV=esm rollup -c",
+    "compile-cjs": "cross-env BUILD_ENV=cjs rollup -c",
+    "compile-umd": "cross-env BUILD_ENV=umd rollup -c",
+    "compile": "yarn compile-esm && yarn compile-cjs && yarn compile-umd",
+    "format": "prettier --write \"{*,src/**/*,test/**/*,.github/workflows/*}.+(js|yml)\"",
+    "format-check": "prettier --check \"{*,src/**/*,test/**/*,.github/workflows/*}.+(js|yml)\"",
+    "lint": "eslint \"*.js\" \"src/**/*.js\" \"test/**/*.js\"",
+    "start": "yarn compile-cjs && budo -l -d -o test/debug.js -- -t brfs",
+    "test-unit": "yarn compile-cjs && karma start",
+    "test-types": "tsc index.d.ts",
+    "test": "yarn format-check && yarn lint && yarn test-unit && yarn test-types",
+    "prepublishOnly": "yarn build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/davidtheclark/tabbable.git"
   },
   "author": "David Clark",
+  "contributors": [
+    {
+      "name": "David Clark",
+      "url": "http://davidtheclark.com/"
+    },
+    {
+      "name": "Stefan Cameron",
+      "url": "https://stefancameron.com/"
+    },
+    {
+      "name": "Mateusz Burzyński",
+      "url": "https://github.com/Andarist"
+    }
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/davidtheclark/tabbable/issues"
+    "url": "https://github.com/focus-trap/tabbable/issues"
   },
-  "homepage": "https://github.com/davidtheclark/tabbable#readme",
+  "homepage": "https://github.com/focus-trap/tabbable#readme",
   "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.8.3",
-    "@babel/plugin-proposal-optional-chaining": "^7.8.3",
-    "@babel/preset-env": "^7.8.4",
-    "@rollup/plugin-node-resolve": "^7.1.1",
-    "babel-eslint": "^10.0.3",
-    "babel-plugin-dev-expression": "^0.2.2",
+    "@babel/core": "^7.11.4",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.10.4",
+    "@babel/plugin-proposal-optional-chaining": "^7.11.0",
+    "@babel/preset-env": "^7.11.0",
+    "@rollup/plugin-babel": "^5.2.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "@types/node": "^14.6.2",
+    "babel-eslint": "^10.1.0",
     "brfs": "^2.0.2",
-    "browserify": "^16.5.0",
-    "budo": "^11.6.3",
+    "browserify": "^16.5.2",
+    "budo": "^11.6.4",
     "chai": "^4.2.0",
-    "cross-env": "^7.0.0",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint": "^6.8.0",
-    "husky": "^4.2.3",
+    "cross-env": "^7.0.2",
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "karma": "^5.1.1",
     "karma-browserify": "^7.0.0",
+    "karma-chrome-launcher": "^3.1.0",
     "karma-firefox-launcher": "^1.3.0",
+    "karma-mocha": "^2.0.1",
     "karma-mocha-reporter": "^2.2.5",
-    "karma-mocha": "^1.3.0",
-    "karma": "^4.4.1",
-    "mocha": "^7.0.1",
-    "prettier": "^1.19.1",
-    "pretty-quick": "^2.0.1",
-    "rollup-plugin-babel": "^4.3.3",
-    "rollup-plugin-sourcemaps": "^0.5.0",
-    "rollup-plugin-terser": "^5.2.0",
-    "rollup": "^1.31.1",
+    "mocha": "^8.1.3",
+    "prettier": "^2.1.1",
+    "rollup": "^2.26.8",
+    "rollup-plugin-sourcemaps": "^0.6.2",
+    "rollup-plugin-terser": "^7.0.1",
+    "typescript": "^4.0.2",
     "watchify": "^3.11.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
-  },
-  "prettier": {
-    "trailingComma": "es5",
-    "singleQuote": true
   }
 }
