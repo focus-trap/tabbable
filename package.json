@@ -15,7 +15,8 @@
     "clean": "rm -rf ./dist",
     "compile:esm": "cross-env BUILD_ENV=esm rollup -c",
     "compile:cjs": "cross-env BUILD_ENV=cjs rollup -c",
-    "compile": "npm run compile:esm && npm run compile:cjs",
+    "compile:umd": "cross-env BUILD_ENV=umd rollup -c",
+    "compile": "npm run compile:esm && npm run compile:cjs && npm run compile:umd",
     "lint": "eslint .",
     "start": "npm run compile:cjs && budo -l -d -o test/debug.js -- -t brfs",
     "test": "karma start && npm run lint"
