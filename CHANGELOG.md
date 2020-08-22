@@ -3,6 +3,10 @@
 ## UNRELEASED
 
 - Add any `<summary>` element directly under a `<details>` element as tabbable and focusable.
+- **BREAKING**: Changes to the `isTabbableRadio()` internal function in order to better support nested radio buttons:
+    - In case a form parent element exists, include only nested radio inputs from that form.
+    - Ignore checked radio elements from forms different from the one the validated node belongs to.
+    - NOTE: This may result in *less* radio elements being flagged as tabbable depending on context from the "root" node given to `tabbable()`.
 
 ## 4.0.0
 
