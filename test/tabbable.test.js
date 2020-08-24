@@ -1,6 +1,7 @@
 const assert = require('chai').assert;
 const tabbable = require('../dist/index.min.js').default;
 const { isFocusable, isTabbable } = require('../dist/index.min.js');
+
 const fixtures = require('./fixtures');
 
 let fixtureRoots = [];
@@ -216,7 +217,20 @@ describe('tabbable', () => {
 
       it('radio', () => {
         let actual = assertionSet.getFixture('radio').getTabbableIds();
-        let expected = ['radio-a', 'radio-d', 'radio-e', 'radio-f'];
+        let expected = [
+          'formA-radioA',
+          'formB-radioA',
+          'formB-radioB',
+          'noform-radioA',
+          'noform-other-group-radioA',
+          'noform-other-group-radioB',
+        ];
+        assert.deepEqual(actual, expected);
+      });
+
+      it('details', () => {
+        let actual = assertionSet.getFixture('details').getTabbableIds();
+        let expected = ['details-a-summery', 'details-b-summery'];
         assert.deepEqual(actual, expected);
       });
 
@@ -249,13 +263,18 @@ describe('tabbable', () => {
         let n6 = assertionSet
           .getFixture('radio')
           .getDocument()
-          .getElementById('radio-a');
+          .getElementById('formA-radioA');
         assert.ok(isTabbable(n6));
         let n7 = assertionSet
           .getFixture('radio')
           .getDocument()
-          .getElementById('radio-c');
+          .getElementById('formA-radioB');
         assert.notOk(isTabbable(n7));
+        let n8 = assertionSet
+          .getFixture('details')
+          .getDocument()
+          .getElementById('details-a-summery');
+        assert.ok(isTabbable(n8));
       });
 
       it('isFocusable', () => {
@@ -287,13 +306,18 @@ describe('tabbable', () => {
         let n6 = assertionSet
           .getFixture('radio')
           .getDocument()
-          .getElementById('radio-a');
+          .getElementById('formA-radioA');
         assert.ok(isFocusable(n6));
         let n7 = assertionSet
           .getFixture('radio')
           .getDocument()
-          .getElementById('radio-c');
+          .getElementById('formA-radioB');
         assert.ok(isFocusable(n7));
+        let n8 = assertionSet
+          .getFixture('details')
+          .getDocument()
+          .getElementById('details-a-summery');
+        assert.ok(isFocusable(n8));
       });
 
       it('supports elements in a shadow root', () => {

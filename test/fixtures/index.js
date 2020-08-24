@@ -15,6 +15,7 @@ module.exports = {
   ),
   svg: fs.readFileSync(path.join(__dirname, 'svg.html'), 'utf8'),
   radio: fs.readFileSync(path.join(__dirname, 'radio.html'), 'utf8'),
+  details: fs.readFileSync(path.join(__dirname, 'details.html'), 'utf8'),
   'shadow-dom': fs.readFileSync(
     path.join(__dirname, 'shadow-dom.html'),
     'utf8'
