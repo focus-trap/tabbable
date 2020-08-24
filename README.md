@@ -53,7 +53,7 @@ Dependencies: _none_.
 ### tabbable
 
 ```js
-import tabbable from 'tabbable';
+import { tabbable } from 'tabbable';
 
 tabbable(rootNode, [options]);
 ```

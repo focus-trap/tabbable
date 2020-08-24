@@ -1,6 +1,5 @@
 const assert = require('chai').assert;
-const tabbable = require('../dist/index.min.js').default;
-const { isFocusable, isTabbable } = require('../dist/index.min.js');
+const { tabbable, isFocusable, isTabbable } = require('../dist/index.min.js');
 
 const fixtures = require('./fixtures');
 

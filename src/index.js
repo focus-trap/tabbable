@@ -169,5 +169,4 @@ function isHidden(node) {
   );
 }
 
-export default tabbable;
-export { isTabbable, isFocusable };
+export { tabbable, isTabbable, isFocusable };

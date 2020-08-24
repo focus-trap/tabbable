@@ -36,7 +36,6 @@ const cjs = [
       format: 'cjs',
       esModule: false,
       sourcemap: true,
-      exports: 'named',
     },
   },
   {
@@ -46,7 +45,6 @@ const cjs = [
       format: 'cjs',
       esModule: false,
       sourcemap: true,
-      exports: 'named',
     },
     plugins: [...commonPlugins, terser({ ...terserOptions, toplevel: true })],
   },
