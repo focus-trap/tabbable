@@ -10,7 +10,7 @@ let candidateSelectors = [
   '[contenteditable]:not([contenteditable="false"])',
   'details>summary',
 ];
-let candidateSelector = candidateSelectors.join(',');
+let candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
 
 let matches =
   typeof Element === 'undefined'
