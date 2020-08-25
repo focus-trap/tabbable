@@ -1,5 +1,6 @@
 const assert = require('chai').assert;
-const tabbable = require('../dist/index.min.js');
+const { tabbable, isFocusable, isTabbable } = require('../dist/index.min.js');
+
 const fixtures = require('./fixtures');
 
 let fixtureRoots = [];
@@ -232,90 +233,90 @@ describe('tabbable', () => {
         assert.deepEqual(actual, expected);
       });
 
-      it('tabbable.isTabbable', () => {
+      it('isTabbable', () => {
         let n1 = assertionSet
           .getFixture('basic')
           .getDocument()
           .getElementById('contenteditable-true');
-        assert.ok(tabbable.isTabbable(n1));
+        assert.ok(isTabbable(n1));
         let n2 = assertionSet
           .getFixture('basic')
           .getDocument()
           .getElementById('contenteditable-false');
-        assert.notOk(tabbable.isTabbable(n2));
+        assert.notOk(isTabbable(n2));
         let n3 = assertionSet
           .getFixture('basic')
           .getDocument()
           .getElementById('href-anchor');
-        assert.ok(tabbable.isTabbable(n3));
+        assert.ok(isTabbable(n3));
         let n4 = assertionSet
           .getFixture('basic')
           .getDocument()
           .getElementById('hrefless-anchor');
-        assert.notOk(tabbable.isTabbable(n4));
+        assert.notOk(isTabbable(n4));
         let n5 = assertionSet
           .getFixture('basic')
           .getDocument()
           .getElementById('iframe');
-        assert.notOk(tabbable.isTabbable(n5));
+        assert.notOk(isTabbable(n5));
         let n6 = assertionSet
           .getFixture('radio')
           .getDocument()
           .getElementById('formA-radioA');
-        assert.ok(tabbable.isTabbable(n6));
+        assert.ok(isTabbable(n6));
         let n7 = assertionSet
           .getFixture('radio')
           .getDocument()
           .getElementById('formA-radioB');
-        assert.notOk(tabbable.isTabbable(n7));
+        assert.notOk(isTabbable(n7));
         let n8 = assertionSet
           .getFixture('details')
           .getDocument()
           .getElementById('details-a-summery');
-        assert.ok(tabbable.isTabbable(n8));
+        assert.ok(isTabbable(n8));
       });
 
-      it('tabbable.isFocusable', () => {
+      it('isFocusable', () => {
         let n1 = assertionSet
           .getFixture('basic')
           .getDocument()
           .getElementById('contenteditable-true');
-        assert.ok(tabbable.isFocusable(n1));
+        assert.ok(isFocusable(n1));
         let n2 = assertionSet
           .getFixture('basic')
           .getDocument()
           .getElementById('contenteditable-false');
-        assert.notOk(tabbable.isFocusable(n2));
+        assert.notOk(isFocusable(n2));
         let n3 = assertionSet
           .getFixture('basic')
           .getDocument()
           .getElementById('href-anchor');
-        assert.ok(tabbable.isFocusable(n3));
+        assert.ok(isFocusable(n3));
         let n4 = assertionSet
           .getFixture('basic')
           .getDocument()
           .getElementById('hrefless-anchor');
-        assert.notOk(tabbable.isFocusable(n4));
+        assert.notOk(isFocusable(n4));
         let n5 = assertionSet
           .getFixture('basic')
           .getDocument()
           .getElementById('iframe');
-        assert.ok(tabbable.isFocusable(n5));
+        assert.ok(isFocusable(n5));
         let n6 = assertionSet
           .getFixture('radio')
           .getDocument()
           .getElementById('formA-radioA');
-        assert.ok(tabbable.isFocusable(n6));
+        assert.ok(isFocusable(n6));
         let n7 = assertionSet
           .getFixture('radio')
           .getDocument()
           .getElementById('formA-radioB');
-        assert.ok(tabbable.isFocusable(n7));
+        assert.ok(isFocusable(n7));
         let n8 = assertionSet
           .getFixture('details')
           .getDocument()
           .getElementById('details-a-summery');
-        assert.ok(tabbable.isFocusable(n8));
+        assert.ok(isFocusable(n8));
       });
 
       it('supports elements in a shadow root', () => {

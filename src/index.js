@@ -63,9 +63,6 @@ function tabbable(el, options) {
   return tabbableNodes;
 }
 
-tabbable.isTabbable = isTabbable;
-tabbable.isFocusable = isFocusable;
-
 function isNodeMatchingSelectorTabbable(node) {
   if (
     !isNodeMatchingSelectorFocusable(node) ||
@@ -172,4 +169,4 @@ function isHidden(node) {
   );
 }
 
-export default tabbable;
+export { tabbable, isTabbable, isFocusable };
