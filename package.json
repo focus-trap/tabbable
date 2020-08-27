@@ -19,7 +19,8 @@
     "compile": "npm run compile:esm && npm run compile:cjs && npm run compile:umd",
     "lint": "eslint .",
     "start": "npm run compile:cjs && budo -l -d -o test/debug.js -- -t brfs",
-    "test": "karma start && npm run lint"
+    "test": "karma start && npm run lint",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
