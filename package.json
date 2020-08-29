@@ -4,11 +4,13 @@
   "description": "Returns an array of all tabbable DOM nodes within a containing node.",
   "main": "dist/index.min.js",
   "module": "dist/index.esm.min.js",
+  "types": "index.d.ts",
   "files": [
     "dist",
     "src",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "index.d.ts"
   ],
   "scripts": {
     "build": "npm run clean && npm run compile",
