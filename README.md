@@ -1,6 +1,4 @@
-# tabbable
-
-[![Build Status](https://travis-ci.org/davidtheclark/tabbable.svg?branch=master)](https://travis-ci.org/davidtheclark/tabbable) [![Stable Release](https://img.shields.io/npm/v/tabbable.svg)](https://npm.im/tabbable) [![gzip size](http://img.badgesize.io/https://unpkg.com/tabbable@latest/index.js?compression=gzip)](https://unpkg.com/tabbable@latest/index.js) [![license](https://badgen.now.sh/badge/license/MIT)](./LICENSE)
+# tabbable [![CI](https://github.com/focus-trap/tabbable/workflows/CI/badge.svg?branch=master&event=push)](https://github.com/focus-trap/tabbable/actions?query=workflow:CI+branch:master) [![license](https://badgen.now.sh/badge/license/MIT)](./LICENSE)
 
 Small utility that returns an array of all\* tabbable DOM nodes within a containing node.
 
