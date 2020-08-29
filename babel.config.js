@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 module.exports = {
   presets: [
     [
@@ -9,7 +11,6 @@ module.exports = {
     ],
   ],
   plugins: [
-    'babel-plugin-dev-expression',
     '@babel/plugin-proposal-nullish-coalescing-operator',
     '@babel/plugin-proposal-optional-chaining',
   ],

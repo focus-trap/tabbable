@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+- Changed code formatting to use dangling commas where ES5 supports them.
+- Fixed a bug where `<audio controls />` and `<video controls />` elements *without `tabindex` attribute specified* would be deemed **NOT** tabbable in Chrome, but would be in FireFox, because Chrome has `tabIndex` (the DOM Element property) returning -1 (focusable, but not tabbable), while FireFox has `tabIndex` returning 0 (focusable, and tabbable), yet **both** browsers include these elements in the *regular tab order* (as if `tabIndex` was 0 for both browsers). Now these elements are considered tabbable in Chrome too!
 - Add any `<summary>` element directly under a `<details>` element as tabbable and focusable.
 - **BREAKING**: Changes to the `isTabbableRadio()` internal function in order to better support nested radio buttons:
   - In case a form parent element exists, include only nested radio inputs from that form.

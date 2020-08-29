@@ -1,0 +1,33 @@
+{
+  "root": true,
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "impliedStrict": true
+    },
+    "ecmaVersion": 2019,
+    "sourceType": "module"
+  },
+  "extends": [
+    "eslint:recommended",
+    "prettier" // ALWAYS LAST: disable style rules that conflict with prettier
+  ],
+  "plugins": [
+    "import"
+  ],
+  "env": {
+    "es6": true,
+    "commonjs": true,
+    "browser": true,
+    "mocha": true
+  },
+  "rules": {
+    "no-warning-comments": [
+      "error",
+      {
+        "terms": ["DEBUG", "FIXME", "HACK"],
+        "location": "start"
+      }
+    ]
+  }
+}

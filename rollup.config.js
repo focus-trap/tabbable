@@ -1,12 +1,13 @@
-import babel from 'rollup-plugin-babel';
+/* eslint-env node */
+
+import babel from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 
-// process.env.BUILD_ENV: "esm" | "cjs"
+// REQUIRED: process.env.BUILD_ENV: "esm" | "cjs" | "umd"
 
 const terserOptions = {
-  sourcemap: true,
   output: { comments: false },
   compress: {
     keep_infinity: true,
@@ -19,7 +20,7 @@ const terserOptions = {
 };
 
 const commonPlugins = [
-  babel({ exclude: /node_modules/ }),
+  babel({ exclude: /node_modules/, babelHelpers: 'bundled' }),
   resolve({
     mainFields: ['module', 'main', 'browser'],
   }),
