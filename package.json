@@ -28,7 +28,8 @@
     "test-unit": "yarn compile-cjs && karma start",
     "test-types": "tsc index.d.ts",
     "test": "yarn format-check && yarn lint && yarn test-unit && yarn test-types",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "release": "yarn build && changeset publish"
   },
   "repository": {
     "type": "git",
@@ -59,6 +60,7 @@
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.10.4",
     "@babel/plugin-proposal-optional-chaining": "^7.11.0",
     "@babel/preset-env": "^7.11.0",
+    "@changesets/cli": "^2.10.2",
     "@rollup/plugin-babel": "^5.2.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
     "@types/node": "^14.6.2",
