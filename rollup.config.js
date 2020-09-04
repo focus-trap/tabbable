@@ -61,16 +61,6 @@ const esm = [
       sourcemap: true,
     },
   },
-  {
-    input,
-    output: {
-      file: 'dist/index.esm.min.js',
-      format: 'esm',
-      esModule: true,
-      sourcemap: true,
-    },
-    plugins: [...commonPlugins, terser(terserOptions)],
-  },
 ];
 
 const umd = [
