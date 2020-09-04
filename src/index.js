@@ -14,7 +14,7 @@ let candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
 
 let matches =
   typeof Element === 'undefined'
-    ? function () {}
+    ? function() {}
     : Element.prototype.matches ||
       Element.prototype.msMatchesSelector ||
       Element.prototype.webkitMatchesSelector;
@@ -91,7 +91,9 @@ function isNodeMatchingSelectorFocusable(node) {
   return true;
 }
 
-let focusableCandidateSelector = candidateSelectors.concat('iframe').join(',');
+let focusableCandidateSelector = /* #__PURE__ */ candidateSelectors
+  .concat('iframe')
+  .join(',');
 function isFocusable(node) {
   if (!node) {
     throw new Error('No node provided');
