@@ -14,7 +14,7 @@ let candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
 
 let matches =
   typeof Element === 'undefined'
-    ? function() {}
+    ? function () {}
     : Element.prototype.matches ||
       Element.prototype.msMatchesSelector ||
       Element.prototype.webkitMatchesSelector;
