@@ -1,6 +1,6 @@
 # Changelog
 
-## UNRELEASED
+## 5.0.0
 
 - Changed code formatting to use dangling commas where ES5 supports them.
 - Fixed a bug where `<audio controls />` and `<video controls />` elements *without `tabindex` attribute specified* would be deemed **NOT** tabbable in Chrome, but would be in FireFox, because Chrome has `tabIndex` (the DOM Element property) returning -1 (focusable, but not tabbable), while FireFox has `tabIndex` returning 0 (focusable, and tabbable), yet **both** browsers include these elements in the *regular tab order* (as if `tabIndex` was 0 for both browsers). Now these elements are considered tabbable in Chrome too!
@@ -14,6 +14,7 @@
   - `tabbable.isTabbable` -> `import { isTabbable } from 'tabbable';
   - `tabbable.isFocusable` -> `import { isFocusable } from 'tabbable';
 - Also to help with tree shaking, `package.json` now states `sideEffects: false` to mark this module as having no side effects as a result of merely importing it.
+- Added new UMD build, see `./dist/index.umd.*`.
 
 ## 4.0.0
 
