@@ -97,6 +97,28 @@ Returns a boolean indicating whether the provided node is considered _focusable_
 
 All tabbable elements are focusable, but not all focusable elements are tabbable. For example, elements with `tabindex="-1"` are focusable but not tabbable.
 
+### focusable
+
+```js
+import { focusable } from 'tabbable';
+
+focusable(rootNode, [options]);
+```
+
+Returns an array of focusable nodes within the `rootNode`.
+
+#### rootNode
+
+Type: `Node`. **Required.**
+
+#### options
+
+##### includeContainer
+
+Type: `boolean`. Default: `false`.
+
+If set to `true`, `rootNode` will be included in the returned focusable node array, if `rootNode` is focusable.
+
 ## More details
 
 - **Tabbable tries to identify elements that are reliably tabbable across (not dead) browsers.** Browsers are inconsistent in their behavior, though — especially for edge-case elements like `<object>` and `<iframe>` — so this means _some_ elements that you _can_ tab to in _some_ browsers will be left out of the results. (To learn more about this inconsistency, see this [amazing table](https://allyjs.io/data-tables/focusable.html)). To provide better consistency across browsers and ensure the elements you _want_ in your tabbables list show up there, **try adding `tabindex="0"` to edge-case elements that Tabbable ignores**.
