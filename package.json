@@ -2,8 +2,8 @@
   "name": "tabbable",
   "version": "5.0.0",
   "description": "Returns an array of all tabbable DOM nodes within a containing node.",
-  "main": "dist/index.min.js",
-  "module": "dist/index.esm.min.js",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
   "types": "index.d.ts",
   "sideEffects": false,
   "files": [
@@ -34,7 +34,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/davidtheclark/tabbable.git"
+    "url": "git+https://github.com/focus-trap/tabbable.git"
   },
   "author": "David Clark",
   "contributors": [
@@ -63,6 +63,7 @@
     "@babel/preset-env": "^7.11.5",
     "@changesets/cli": "^2.10.2",
     "@rollup/plugin-babel": "^5.2.0",
+    "@rollup/plugin-commonjs": "^15.0.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
     "@types/node": "^14.6.4",
     "babel-eslint": "^10.1.0",

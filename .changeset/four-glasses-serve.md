@@ -2,4 +2,4 @@
 'tabbable': patch
 ---
 
-Add focusable() type definition
+Add `focusable()` type definition.

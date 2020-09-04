@@ -2,4 +2,4 @@
 'tabbable': minor
 ---
 
-Add `focusable` for getting focusable nodes
+Add `focusable()` for getting all focusable nodes.
