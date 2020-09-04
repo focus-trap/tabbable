@@ -5,6 +5,7 @@
   "main": "dist/index.min.js",
   "module": "dist/index.esm.min.js",
   "types": "index.d.ts",
+  "sideEffects": false,
   "files": [
     "package.json",
     "dist",

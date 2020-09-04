@@ -9,10 +9,11 @@
   - In case a form parent element exists, include only nested radio inputs from that form.
   - Ignore checked radio elements from forms different from the one the validated node belongs to.
   - NOTE: This may result in *less* radio elements being flagged as tabbable depending on context from the "root" node given to `tabbable()`.
-- **BREAKING**: The exports have changed to be all named, and separate, as follows in order to help make the module more compatible with tree shaking (some minor tweaks still remain, but this should help a lot; see [issue 39](https://github.com/focus-trap/tabbable/issues/39) for more):
+- **BREAKING**: The exports have changed to be all named, and separate, as follows in order to help make the module more compatible with tree shaking:
   - `tabbable` -> `import { tabbable } from 'tabbable';
   - `tabbable.isTabbable` -> `import { isTabbable } from 'tabbable';
   - `tabbable.isFocusable` -> `import { isFocusable } from 'tabbable';
+- Also to help with tree shaking, `package.json` now states `sideEffects: false` to mark this module as having no side effects as a result of merely importing it.
 
 ## 4.0.0
 
