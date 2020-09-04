@@ -25,25 +25,14 @@ function tabbable(el, options) {
   let regularTabbables = [];
   let orderedTabbables = [];
 
-  let candidates = el.querySelectorAll(candidateSelector);
+  let candidates = getCandidates(
+    el,
+    options.includeContainer,
+    isNodeMatchingSelectorTabbable
+  );
 
-  if (options.includeContainer) {
-    if (matches.call(el, candidateSelector)) {
-      candidates = Array.prototype.slice.apply(candidates);
-      candidates.unshift(el);
-    }
-  }
-
-  let candidate;
-  let candidateTabindex;
-  for (let i = 0; i < candidates.length; i++) {
-    candidate = candidates[i];
-
-    if (!isNodeMatchingSelectorTabbable(candidate)) {
-      continue;
-    }
-
-    candidateTabindex = getTabindex(candidate);
+  candidates.forEach(function (candidate, i) {
+    let candidateTabindex = getTabindex(candidate);
     if (candidateTabindex === 0) {
       regularTabbables.push(candidate);
     } else {
@@ -53,7 +42,7 @@ function tabbable(el, options) {
         node: candidate,
       });
     }
-  }
+  });
 
   let tabbableNodes = orderedTabbables
     .sort(sortOrderedTabbables)
@@ -61,6 +50,29 @@ function tabbable(el, options) {
     .concat(regularTabbables);
 
   return tabbableNodes;
+}
+
+function focusable(el, options) {
+  options = options || {};
+
+  let candidates = getCandidates(
+    el,
+    options.includeContainer,
+    isNodeMatchingSelectorFocusable
+  );
+
+  return candidates;
+}
+
+function getCandidates(el, includeContainer, filter) {
+  let candidates = Array.prototype.slice.apply(
+    el.querySelectorAll(candidateSelector)
+  );
+  if (includeContainer && matches.call(el, candidateSelector)) {
+    candidates.unshift(el);
+  }
+  candidates = candidates.filter(filter);
+  return candidates;
 }
 
 function isNodeMatchingSelectorTabbable(node) {
@@ -184,4 +196,4 @@ function isHidden(node) {
   );
 }
 
-export { tabbable, isTabbable, isFocusable };
+export { tabbable, focusable, isTabbable, isFocusable };
