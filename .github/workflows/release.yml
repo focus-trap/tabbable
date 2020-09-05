@@ -41,7 +41,11 @@ jobs:
       - name: Create Release or Publish
         uses: changesets/action@master
         with:
-          publish: yarn release
+          # NOTE: use npm to run the release script (which is currently failing
+          #  with some cryptic error in focus-trap and focus-trap-react) under
+          #  the assumption we're running into this issue when running `yarn release`:
+          #  https://github.com/yarnpkg/yarn/issues/2935
+          publish: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
