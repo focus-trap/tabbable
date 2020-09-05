@@ -56,7 +56,7 @@ import { tabbable } from 'tabbable';
 tabbable(rootNode, [options]);
 ```
 
-Returns an array of ordered tabbable node within the `rootNode`.
+Returns an array of ordered tabbable nodes (i.e. in tab order) within the `rootNode`.
 
 Summary of ordering principles:
 
@@ -105,7 +105,7 @@ import { focusable } from 'tabbable';
 focusable(rootNode, [options]);
 ```
 
-Returns an array of focusable nodes within the `rootNode`.
+Returns an array of focusable nodes within the `rootNode`, in DOM order. This will not match the order in which `tabbable()` returns nodes.
 
 #### rootNode
 
