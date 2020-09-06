@@ -7,6 +7,11 @@ export declare function tabbable(
   options?: TabbableOptions
 ): Element[];
 
+export declare function focusable(
+  container: Element,
+  options?: TabbableOptions
+): Element[];
+
 export declare function isTabbable(element: Element): boolean;
 
 export declare function isFocusable(element: Element): boolean;
