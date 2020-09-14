@@ -1,10 +1,10 @@
 const assert = require('chai').assert;
 const {
   tabbable,
+  isTabbable,
   focusable,
   isFocusable,
-  isTabbable,
-} = require('../dist/index.min.js');
+} = require('../dist/index.js');
 
 const fixtures = require('./fixtures');
 

@@ -2,96 +2,131 @@
 
 import babel from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
+
+const pkg = require('./package.json');
 
 // REQUIRED: process.env.BUILD_ENV: "esm" | "cjs" | "umd"
 
 const terserOptions = {
-  output: { comments: false },
-  compress: {
-    keep_infinity: true,
-    pure_getters: true,
-    passes: 10,
+  output: {
+    comments(node, comment) {
+      const text = comment.value;
+      const type = comment.type;
+      if (type === 'comment2') {
+        // multiline comment: keep if it starts with a bang or contains
+        //  some common preservation keywords
+        return (
+          text.indexOf('!') === 0 || /@preserve|@license|@cc_on/i.test(text)
+        );
+      }
+    },
   },
-  ecma: 5,
-  toplevel: false,
-  warnings: true,
 };
 
 const commonPlugins = [
-  babel({ exclude: /node_modules/, babelHelpers: 'bundled' }),
-  resolve({
-    mainFields: ['module', 'main', 'browser'],
+  resolve(),
+  commonjs({
+    include: 'node_modules/**',
+  }),
+  babel({
+    exclude: 'node_modules/**',
+    babelHelpers: 'bundled',
   }),
   sourceMaps(),
 ];
 
-const input = 'src/index.js';
+const banner = `/*!
+* ${pkg.name} ${pkg.version}
+* @license ${pkg.license}, ${pkg.homepage.replace(
+  '#readme',
+  '/blob/master/LICENSE'
+)}
+*/`;
+
+const commonConfig = {
+  input: './src/index.js',
+};
+
+const commonOutput = {
+  preserveModules: false, // NOTE: must be false to 'roll-up' all code into one file
+  sourcemap: true,
+  banner,
+};
+
+// TODO: would be nice for it to be 'tabbable' (for 'tabbable.js', 'tabbable.min.js',
+//  etc.), but that would risk breaking consumer assumptions about the file name, and
+//  would require another new major release
+const libName = 'index';
 
 const cjs = [
+  // NOTE: non-minified does NOT bundle dependencies
   {
-    input,
+    ...commonConfig,
+    external: [],
     output: {
-      file: 'dist/index.js',
+      file: `dist/${libName}.js`,
       format: 'cjs',
-      esModule: false,
-      sourcemap: true,
+      ...commonOutput,
     },
   },
   {
-    input,
+    ...commonConfig,
     output: {
-      file: 'dist/index.min.js',
+      file: `dist/${libName}.min.js`,
       format: 'cjs',
-      esModule: false,
-      sourcemap: true,
+      ...commonOutput,
     },
-    plugins: [...commonPlugins, terser({ ...terserOptions, toplevel: true })],
+    plugins: [...commonPlugins, terser(terserOptions)],
   },
 ];
 
 const esm = [
+  // NOTE: non-minified does NOT bundle dependencies
   {
-    input,
+    ...commonConfig,
+    external: [],
     output: {
-      file: 'dist/index.esm.js',
+      file: `dist/${libName}.esm.js`,
       format: 'esm',
-      esModule: true,
-      sourcemap: true,
+      ...commonOutput,
     },
   },
   {
-    input,
+    ...commonConfig,
     output: {
-      file: 'dist/index.esm.min.js',
+      file: `dist/${libName}.esm.min.js`,
       format: 'esm',
-      esModule: true,
-      sourcemap: true,
+      ...commonOutput,
     },
     plugins: [...commonPlugins, terser(terserOptions)],
   },
 ];
 
 const umd = [
+  // NOTE: non-minified does NOT bundle dependencies
   {
-    input,
+    ...commonConfig,
+    external: [],
     output: {
-      file: 'dist/index.umd.js',
+      file: `dist/${libName}.umd.js`,
       format: 'umd',
-      esModule: true,
-      sourcemap: true,
-      name: 'tabbable',
+      noConflict: true,
+      name: 'focusTrap',
+      ...commonOutput,
+      globals: {},
     },
   },
   {
-    input,
+    ...commonConfig,
     output: {
-      file: 'dist/index.umd.min.js',
+      file: `dist/${libName}.umd.min.js`,
       format: 'umd',
-      esModule: true,
-      sourcemap: true,
-      name: 'tabbable',
+      noConflict: true,
+      name: 'focusTrap',
+      ...commonOutput,
     },
     plugins: [...commonPlugins, terser(terserOptions)],
   },
