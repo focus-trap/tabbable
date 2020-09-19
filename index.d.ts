@@ -1,3 +1,5 @@
+type FocusableElement = HTMLElement | SVGElement;
+
 export type TabbableOptions = {
   includeContainer?: boolean;
 };
@@ -5,12 +7,12 @@ export type TabbableOptions = {
 export declare function tabbable(
   container: Element,
   options?: TabbableOptions
-): Element[];
+): FocusableElement[];
 
 export declare function focusable(
   container: Element,
   options?: TabbableOptions
-): Element[];
+): FocusableElement[];
 
 export declare function isTabbable(element: Element): boolean;
 
