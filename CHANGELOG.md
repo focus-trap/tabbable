@@ -1,16 +1,20 @@
 # Changelog
 
-## UNRELEASED
+## 5.0.0
 
+- Changed code formatting to use dangling commas where ES5 supports them.
+- Fixed a bug where `<audio controls />` and `<video controls />` elements *without `tabindex` attribute specified* would be deemed **NOT** tabbable in Chrome, but would be in FireFox, because Chrome has `tabIndex` (the DOM Element property) returning -1 (focusable, but not tabbable), while FireFox has `tabIndex` returning 0 (focusable, and tabbable), yet **both** browsers include these elements in the *regular tab order* (as if `tabIndex` was 0 for both browsers). Now these elements are considered tabbable in Chrome too!
 - Add any `<summary>` element directly under a `<details>` element as tabbable and focusable.
 - **BREAKING**: Changes to the `isTabbableRadio()` internal function in order to better support nested radio buttons:
   - In case a form parent element exists, include only nested radio inputs from that form.
   - Ignore checked radio elements from forms different from the one the validated node belongs to.
   - NOTE: This may result in *less* radio elements being flagged as tabbable depending on context from the "root" node given to `tabbable()`.
-- **BREAKING**: The exports have changed to be all named, and separate, as follows in order to help make the module more compatible with tree shaking (some minor tweaks still remain, but this should help a lot; see [issue 39](https://github.com/focus-trap/tabbable/issues/39) for more):
+- **BREAKING**: The exports have changed to be all named, and separate, as follows in order to help make the module more compatible with tree shaking:
   - `tabbable` -> `import { tabbable } from 'tabbable';
   - `tabbable.isTabbable` -> `import { isTabbable } from 'tabbable';
   - `tabbable.isFocusable` -> `import { isFocusable } from 'tabbable';
+- Also to help with tree shaking, `package.json` now states `sideEffects: false` to mark this module as having no side effects as a result of merely importing it.
+- Added new UMD build, see `./dist/index.umd.*`.
 
 ## 4.0.0
 

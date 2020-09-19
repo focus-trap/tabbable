@@ -1,6 +1,4 @@
-# tabbable
-
-[![Build Status](https://travis-ci.org/davidtheclark/tabbable.svg?branch=master)](https://travis-ci.org/davidtheclark/tabbable) [![Stable Release](https://img.shields.io/npm/v/tabbable.svg)](https://npm.im/tabbable) [![gzip size](http://img.badgesize.io/https://unpkg.com/tabbable@latest/index.js?compression=gzip)](https://unpkg.com/tabbable@latest/index.js) [![license](https://badgen.now.sh/badge/license/MIT)](./LICENSE)
+# tabbable [![CI](https://github.com/focus-trap/tabbable/workflows/CI/badge.svg?branch=master&event=push)](https://github.com/focus-trap/tabbable/actions?query=workflow:CI+branch:master) [![license](https://badgen.now.sh/badge/license/MIT)](./LICENSE)
 
 Small utility that returns an array of all\* tabbable DOM nodes within a containing node.
 
@@ -58,7 +56,7 @@ import { tabbable } from 'tabbable';
 tabbable(rootNode, [options]);
 ```
 
-Returns an array of ordered tabbable node within the `rootNode`.
+Returns an array of ordered tabbable nodes (i.e. in tab order) within the `rootNode`.
 
 Summary of ordering principles:
 
@@ -98,6 +96,28 @@ isFocusable(node);
 Returns a boolean indicating whether the provided node is considered _focusable_.
 
 All tabbable elements are focusable, but not all focusable elements are tabbable. For example, elements with `tabindex="-1"` are focusable but not tabbable.
+
+### focusable
+
+```js
+import { focusable } from 'tabbable';
+
+focusable(rootNode, [options]);
+```
+
+Returns an array of focusable nodes within the `rootNode`, in DOM order. This will not match the order in which `tabbable()` returns nodes.
+
+#### rootNode
+
+Type: `Node`. **Required.**
+
+#### options
+
+##### includeContainer
+
+Type: `boolean`. Default: `false`.
+
+If set to `true`, `rootNode` will be included in the returned focusable node array, if `rootNode` is focusable.
 
 ## More details
 

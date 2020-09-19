@@ -1,4 +1,6 @@
-module.exports = function(config) {
+/* eslint-env node */
+
+module.exports = function (config) {
   config.set({
     basePath: '',
     frameworks: ['browserify', 'mocha'],
@@ -18,7 +20,7 @@ module.exports = function(config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Firefox'],
+    browsers: ['ChromeHeadless', 'FirefoxHeadless'],
     singleRun: true,
     concurrency: Infinity,
   });

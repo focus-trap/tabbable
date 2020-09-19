@@ -14,7 +14,7 @@ let candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
 
 let matches =
   typeof Element === 'undefined'
-    ? function() {}
+    ? function () {}
     : Element.prototype.matches ||
       Element.prototype.msMatchesSelector ||
       Element.prototype.webkitMatchesSelector;
@@ -25,25 +25,14 @@ function tabbable(el, options) {
   let regularTabbables = [];
   let orderedTabbables = [];
 
-  let candidates = el.querySelectorAll(candidateSelector);
+  let candidates = getCandidates(
+    el,
+    options.includeContainer,
+    isNodeMatchingSelectorTabbable
+  );
 
-  if (options.includeContainer) {
-    if (matches.call(el, candidateSelector)) {
-      candidates = Array.prototype.slice.apply(candidates);
-      candidates.unshift(el);
-    }
-  }
-
-  let candidate;
-  let candidateTabindex;
-  for (let i = 0; i < candidates.length; i++) {
-    candidate = candidates[i];
-
-    if (!isNodeMatchingSelectorTabbable(candidate)) {
-      continue;
-    }
-
-    candidateTabindex = getTabindex(candidate);
+  candidates.forEach(function (candidate, i) {
+    let candidateTabindex = getTabindex(candidate);
     if (candidateTabindex === 0) {
       regularTabbables.push(candidate);
     } else {
@@ -53,14 +42,37 @@ function tabbable(el, options) {
         node: candidate,
       });
     }
-  }
+  });
 
   let tabbableNodes = orderedTabbables
     .sort(sortOrderedTabbables)
-    .map(a => a.node)
+    .map((a) => a.node)
     .concat(regularTabbables);
 
   return tabbableNodes;
+}
+
+function focusable(el, options) {
+  options = options || {};
+
+  let candidates = getCandidates(
+    el,
+    options.includeContainer,
+    isNodeMatchingSelectorFocusable
+  );
+
+  return candidates;
+}
+
+function getCandidates(el, includeContainer, filter) {
+  let candidates = Array.prototype.slice.apply(
+    el.querySelectorAll(candidateSelector)
+  );
+  if (includeContainer && matches.call(el, candidateSelector)) {
+    candidates.unshift(el);
+  }
+  candidates = candidates.filter(filter);
+  return candidates;
 }
 
 function isNodeMatchingSelectorTabbable(node) {
@@ -91,7 +103,9 @@ function isNodeMatchingSelectorFocusable(node) {
   return true;
 }
 
-let focusableCandidateSelector = candidateSelectors.concat('iframe').join(',');
+let focusableCandidateSelector = /* #__PURE__ */ candidateSelectors
+  .concat('iframe')
+  .join(',');
 function isFocusable(node) {
   if (!node) {
     throw new Error('No node provided');
@@ -104,14 +118,29 @@ function isFocusable(node) {
 
 function getTabindex(node) {
   let tabindexAttr = parseInt(node.getAttribute('tabindex'), 10);
+
   if (!isNaN(tabindexAttr)) {
     return tabindexAttr;
   }
+
   // Browsers do not return `tabIndex` correctly for contentEditable nodes;
   // so if they don't have a tabindex attribute specifically set, assume it's 0.
   if (isContentEditable(node)) {
     return 0;
   }
+
+  // in Chrome, <audio controls/> and <video controls/> elements get a default
+  //  `tabIndex` of -1 when the 'tabindex' attribute isn't specified in the DOM,
+  //  yet they are still part of the regular tab order; in FF, they get a default
+  //  `tabIndex` of 0; since Chrome still puts those elements in the regular tab
+  //  order, consider their tab index to be 0
+  if (
+    (node.nodeName === 'AUDIO' || node.nodeName === 'VIDEO') &&
+    node.getAttribute('tabindex') === null
+  ) {
+    return 0;
+  }
+
   return node.tabIndex;
 }
 
@@ -162,11 +191,14 @@ function isTabbableRadio(node) {
 }
 
 function isHidden(node) {
-  // offsetParent being null will allow detecting cases where an element is invisible or inside an invisible element,
-  // as long as the element does not use position: fixed. For them, their visibility has to be checked directly as well.
-  return (
-    node.offsetParent === null || getComputedStyle(node).visibility === 'hidden'
-  );
+  if (getComputedStyle(node).visibility === 'hidden') return true;
+
+  while (node) {
+    if (getComputedStyle(node).display === 'none') return true;
+    node = node.parentElement;
+  }
+
+  return false;
 }
 
-export { tabbable, isTabbable, isFocusable };
+export { tabbable, focusable, isTabbable, isFocusable };

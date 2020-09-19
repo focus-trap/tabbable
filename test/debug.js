@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars -- we don't use shadow-dom on purpose
 const { 'shadow-dom': _, ...testCases } = require('./fixtures');
 global.tabbable = require('../dist/index.js');
 
@@ -15,7 +16,7 @@ for (let key in testCases) {
   document.body.appendChild(root);
 }
 
-document.body.addEventListener('focusin', event => {
+document.body.addEventListener('focusin', (event) => {
   console.log(event.target);
 });
 
