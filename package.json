@@ -29,7 +29,7 @@
     "test-unit": "yarn compile-cjs && karma start",
     "test-types": "tsc index.d.ts",
     "test": "yarn format-check && yarn lint && yarn test-unit && yarn test-types",
-    "prepublishOnly": "yarn build",
+    "prepare": "yarn build",
     "release": "yarn build && changeset publish"
   },
   "repository": {
