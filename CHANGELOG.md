@@ -1,14 +1,28 @@
 # Changelog
 
+## 5.1.0
+
+### Minor Changes
+
+- bd21d91: Add `focusable()` for getting all focusable nodes.
+
+### Patch Changes
+
+- 3665d0b: The TypeScript return type of `tabbable` has been fixed: Was `Array<Element>` (an `Element` is technically not focusable), is now `Array<HTMLElement | SVGElement>` (which are both still/also `Element` instances).
+- 8a25135: Fixed: Tabbable elements in fixed-position (`position: fixed`) containers should now be consistently found in supported browsers.
+- 9544de2: Replace `prepublishOnly` script with `prepare` script. This has the added benefit of running automatically when installing the package from GitHub (as supported by NPM) where the published `./dist` directory is not automatically included.
+- 672f4a2: Add `focusable()` type definition.
+- 2424c0f: Small improvements for improving tree-shakeability of this package. A missing `#__PURE__` annotation has been added to allow dropping one of the top-level calls (if its result stays unused) and removed minification of the file referenced as `package.json#module` to avoid dropping the comments (including existing `#__PURE__` annotations).
+
 ## 5.0.0
 
 - Changed code formatting to use dangling commas where ES5 supports them.
-- Fixed a bug where `<audio controls />` and `<video controls />` elements *without `tabindex` attribute specified* would be deemed **NOT** tabbable in Chrome, but would be in FireFox, because Chrome has `tabIndex` (the DOM Element property) returning -1 (focusable, but not tabbable), while FireFox has `tabIndex` returning 0 (focusable, and tabbable), yet **both** browsers include these elements in the *regular tab order* (as if `tabIndex` was 0 for both browsers). Now these elements are considered tabbable in Chrome too!
+- Fixed a bug where `<audio controls />` and `<video controls />` elements _without `tabindex` attribute specified_ would be deemed **NOT** tabbable in Chrome, but would be in FireFox, because Chrome has `tabIndex` (the DOM Element property) returning -1 (focusable, but not tabbable), while FireFox has `tabIndex` returning 0 (focusable, and tabbable), yet **both** browsers include these elements in the _regular tab order_ (as if `tabIndex` was 0 for both browsers). Now these elements are considered tabbable in Chrome too!
 - Add any `<summary>` element directly under a `<details>` element as tabbable and focusable.
 - **BREAKING**: Changes to the `isTabbableRadio()` internal function in order to better support nested radio buttons:
   - In case a form parent element exists, include only nested radio inputs from that form.
   - Ignore checked radio elements from forms different from the one the validated node belongs to.
-  - NOTE: This may result in *less* radio elements being flagged as tabbable depending on context from the "root" node given to `tabbable()`.
+  - NOTE: This may result in _less_ radio elements being flagged as tabbable depending on context from the "root" node given to `tabbable()`.
 - **BREAKING**: The exports have changed to be all named, and separate, as follows in order to help make the module more compatible with tree shaking:
   - `tabbable` -> `import { tabbable } from 'tabbable';
   - `tabbable.isTabbable` -> `import { isTabbable } from 'tabbable';
@@ -18,7 +32,7 @@
 
 ## 4.0.0
 
-- Improve performance by changing the method for detecting whether a DOM node is focusable or not. It's expected that this change will *not* affect results; but this is a major version bump as a warning for you to check your edge cases before upgrading.
+- Improve performance by changing the method for detecting whether a DOM node is focusable or not. It's expected that this change will _not_ affect results; but this is a major version bump as a warning for you to check your edge cases before upgrading.
 
 ## 3.1.2
 
