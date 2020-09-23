@@ -86,7 +86,7 @@
     "rollup": "^2.26.11",
     "rollup-plugin-sourcemaps": "^0.6.2",
     "rollup-plugin-terser": "^7.0.2",
-    "typescript": "^4.0.2",
+    "typescript": "^4.0.3",
     "watchify": "^3.11.1"
   }
 }
