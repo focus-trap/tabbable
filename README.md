@@ -133,14 +133,4 @@ If set to `true`, `rootNode` will be included in the returned focusable node arr
 
 ## Contributing
 
-1. Clone the repo to your machine and run:
-
-```sh
-npm install
-```
-
-To test in the browser during development, run:
-
-```sh
-npm start
-```
+See [CONTRIBUTING](CONTRIBUTING.md).
