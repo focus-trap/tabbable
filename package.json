@@ -36,21 +36,10 @@
     "type": "git",
     "url": "git+https://github.com/focus-trap/tabbable.git"
   },
-  "author": "David Clark",
-  "contributors": [
-    {
-      "name": "David Clark",
-      "url": "http://davidtheclark.com/"
-    },
-    {
-      "name": "Stefan Cameron",
-      "url": "https://stefancameron.com/"
-    },
-    {
-      "name": "Mateusz Burzyński",
-      "url": "https://github.com/Andarist"
-    }
-  ],
+  "author": {
+    "name": "David Clark",
+    "url": "http://davidtheclark.com/"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/focus-trap/tabbable/issues"
