@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.1
+
+### Patch Changes
+
+- fb49d23: Fix #96: Transpile non-minified bundles for expected browser targets.
+
 ## 5.1.0
 
 ### Minor Changes
