@@ -1,6 +1,6 @@
 {
   "projectName": "tabbable",
-  "projectOwner": "stefcameron",
+  "projectOwner": "focus-trap",
   "repoType": "github",
   "repoHost": "https://github.com",
   "files": [
@@ -58,8 +58,18 @@
       "contributions": [
         "maintenance"
       ]
+    },
+    {
+      "login": "khamiltonuk",
+      "name": "Kristian Hamilton",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/4013283?v=4",
+      "profile": "http://www.khamilton.co.uk",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
-  "contributorsSortAlphabetically": true
+  "contributorsSortAlphabetically": true,
+  "skipCi": true
 }
