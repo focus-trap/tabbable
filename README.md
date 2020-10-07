@@ -1,7 +1,7 @@
 # tabbable [![CI](https://github.com/focus-trap/tabbable/workflows/CI/badge.svg?branch=master&event=push)](https://github.com/focus-trap/tabbable/actions?query=workflow:CI+branch:master) [![license](https://badgen.now.sh/badge/license/MIT)](./LICENSE)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Small utility that returns an array of all\* tabbable DOM nodes within a containing node.
@@ -148,14 +148,14 @@ In alphabetical order:
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="http://davidtheclark.com/"><img src="https://avatars2.githubusercontent.com/u/628431?v=4?s=100" width="100px;" alt=""/><br /><sub><b>David Clark</b></sub></a><br /><a href="https://github.com/stefcameron/tabbable/commits?author=davidtheclark" title="Code">💻</a> <a href="https://github.com/stefcameron/tabbable/issues?q=author%3Adavidtheclark" title="Bug reports">🐛</a> <a href="#infra-davidtheclark" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/stefcameron/tabbable/commits?author=davidtheclark" title="Tests">⚠️</a> <a href="https://github.com/stefcameron/tabbable/commits?author=davidtheclark" title="Documentation">📖</a> <a href="#maintenance-davidtheclark" title="Maintenance">🚧</a></td>
-    <td align="center"><a href="https://github.com/features/security"><img src="https://avatars1.githubusercontent.com/u/27347476?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dependabot</b></sub></a><br /><a href="#maintenance-dependabot" title="Maintenance">🚧</a></td>
-    <td align="center"><a href="https://github.com/Andarist"><img src="https://avatars2.githubusercontent.com/u/9800850?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mateusz Burzyński</b></sub></a><br /><a href="https://github.com/stefcameron/tabbable/commits?author=Andarist" title="Code">💻</a> <a href="https://github.com/stefcameron/tabbable/issues?q=author%3AAndarist" title="Bug reports">🐛</a> <a href="https://github.com/stefcameron/tabbable/commits?author=Andarist" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://stefancameron.com/"><img src="https://avatars3.githubusercontent.com/u/2855350?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Stefan Cameron</b></sub></a><br /><a href="https://github.com/stefcameron/tabbable/commits?author=stefcameron" title="Code">💻</a> <a href="https://github.com/stefcameron/tabbable/issues?q=author%3Astefcameron" title="Bug reports">🐛</a> <a href="#infra-stefcameron" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/stefcameron/tabbable/commits?author=stefcameron" title="Tests">⚠️</a> <a href="https://github.com/stefcameron/tabbable/commits?author=stefcameron" title="Documentation">📖</a> <a href="#maintenance-stefcameron" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="http://davidtheclark.com/"><img src="https://avatars2.githubusercontent.com/u/628431?v=4" width="100px;" alt=""/><br /><sub><b>David Clark</b></sub></a><br /><a href="https://github.com/focus-trap/tabbable/commits?author=davidtheclark" title="Code">💻</a> <a href="https://github.com/focus-trap/tabbable/issues?q=author%3Adavidtheclark" title="Bug reports">🐛</a> <a href="#infra-davidtheclark" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/focus-trap/tabbable/commits?author=davidtheclark" title="Tests">⚠️</a> <a href="https://github.com/focus-trap/tabbable/commits?author=davidtheclark" title="Documentation">📖</a> <a href="#maintenance-davidtheclark" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://stefancameron.com/"><img src="https://avatars3.githubusercontent.com/u/2855350?v=4" width="100px;" alt=""/><br /><sub><b>Stefan Cameron</b></sub></a><br /><a href="https://github.com/focus-trap/tabbable/commits?author=stefcameron" title="Code">💻</a> <a href="https://github.com/focus-trap/tabbable/issues?q=author%3Astefcameron" title="Bug reports">🐛</a> <a href="#infra-stefcameron" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/focus-trap/tabbable/commits?author=stefcameron" title="Tests">⚠️</a> <a href="https://github.com/focus-trap/tabbable/commits?author=stefcameron" title="Documentation">📖</a> <a href="#maintenance-stefcameron" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/Andarist"><img src="https://avatars2.githubusercontent.com/u/9800850?v=4" width="100px;" alt=""/><br /><sub><b>Mateusz Burzyński</b></sub></a><br /><a href="https://github.com/focus-trap/tabbable/commits?author=Andarist" title="Code">💻</a> <a href="https://github.com/focus-trap/tabbable/issues?q=author%3AAndarist" title="Bug reports">🐛</a> <a href="https://github.com/focus-trap/tabbable/commits?author=Andarist" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/features/security"><img src="https://avatars1.githubusercontent.com/u/27347476?v=4" width="100px;" alt=""/><br /><sub><b>Dependabot</b></sub></a><br /><a href="#maintenance-dependabot" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="http://www.khamilton.co.uk"><img src="https://avatars1.githubusercontent.com/u/4013283?v=4" width="100px;" alt=""/><br /><sub><b>Kristian Hamilton</b></sub></a><br /><a href="https://github.com/focus-trap/tabbable/issues?q=author%3Akhamiltonuk" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
-<!-- markdownlint-restore -->
+<!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
