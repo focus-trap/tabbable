@@ -46,7 +46,9 @@ function tabbable(el, options) {
 
   let tabbableNodes = orderedTabbables
     .sort(sortOrderedTabbables)
-    .map((a) => a.node)
+    .map(function (a) {
+      return a.node;
+    })
     .concat(regularTabbables);
 
   return tabbableNodes;
