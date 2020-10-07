@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- d3c6514: fix umd build incorrectly using `focusTrap` as output name
+- d3c6514: Fix UMD build incorrectly using `focusTrap` as output name.
 - 95563c2: Fix #99: Transpile ESM bundle down to the same browser target used for the CJS and UMD bundles. ESM is just the module system, not the browser target.
 
 ## 5.1.1
