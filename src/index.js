@@ -8,7 +8,7 @@ let candidateSelectors = [
   'audio[controls]',
   'video[controls]',
   '[contenteditable]:not([contenteditable="false"])',
-  'details>summary',
+  'details>summary:first-of-type',
 ];
 let candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
 
