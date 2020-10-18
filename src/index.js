@@ -193,6 +193,12 @@ function isTabbableRadio(node) {
 function isHidden(node) {
   if (getComputedStyle(node).visibility === 'hidden') return true;
 
+  const isDirectSummary = node.matches('details>summary:first-of-type');
+  const nodeUnderDetails = isDirectSummary ? node.parentElement : node;
+  if (nodeUnderDetails.matches('details:not([open]) *')) {
+    return true;
+  }
+
   while (node) {
     if (getComputedStyle(node).display === 'none') return true;
     node = node.parentElement;

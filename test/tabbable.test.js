@@ -243,7 +243,7 @@ describe('tabbable', () => {
 
         it('details', () => {
           let actual = assertionSet.getFixture('details').getTabbableIds();
-          let expected = ['details-a-summery', 'details-b-summery'];
+          let expected = ['details-a-summery', 'details-b-summery', 'visible-input'];
           assert.deepEqual(actual, expected);
         });
 
@@ -408,7 +408,7 @@ describe('tabbable', () => {
 
         it('details', () => {
           let actual = assertionSet.getFixture('details').getFocusableIds();
-          let expected = ['details-a-summery', 'details-b-summery'];
+          let expected = ['details-a-summery', 'details-b-summery', 'visible-input'];
           assert.deepEqual(actual.sort(), expected.sort());
         });
 
