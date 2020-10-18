@@ -16,7 +16,7 @@ The following are considered tabbable:
 - `<textarea>` elements
 - `<a>` elements with `href` or `xlink:href` attributes
 - `<audio>` and `<videos>` elements with `controls` attributes
-- `<summary>` element directly under a `<details>` element
+- the first `<summary>` element directly under a `<details>` element
 - elements with the `[contenteditable]` attribute
 - anything with a non-negative `tabindex` attribute
 
@@ -25,6 +25,7 @@ Any of the above will _not_ be considered tabbable, though, if any of the follow
 - has a negative `tabindex` attribute
 - has a `disabled` attribute
 - either the node itself _or an ancestor of it_ is hidden via `display: none` or `visibility: hidden`
+- is nested under a closed `<detailed>` element (with the exception of the first `<summary>` element)
 - is an `<input type="radio">` element and a different radio in its group is `checked`
 
 **If you think a node should be included in your array of tabbables _but it's not_, all you need to do is add `tabindex="0"` to deliberately include it.** (Or if it is in your array but you don't want it, you can add `tabindex="-1"` to deliberately exclude it.) This will also result in more consistent cross-browser behavior. For information about why your special node might _not_ be included, see ["More details"](#more-details), below.
