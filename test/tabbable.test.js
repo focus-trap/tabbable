@@ -247,6 +247,7 @@ describe('tabbable', () => {
             'details-a-summary',
             'details-b-summary',
             'visible-input',
+            'details-c',
           ];
           assert.deepEqual(actual, expected);
         });
@@ -416,6 +417,7 @@ describe('tabbable', () => {
             'details-a-summary',
             'details-b-summary',
             'visible-input',
+            'details-c',
           ];
           assert.deepEqual(actual.sort(), expected.sort());
         });
@@ -478,6 +480,11 @@ describe('tabbable', () => {
             .getDocument()
             .getElementById('details-a-summary');
           assert.ok(isTabbable(n8));
+          let n9 = assertionSet
+            .getFixture('details')
+            .getDocument()
+            .getElementById('details-c');
+          assert.ok(isTabbable(n9));
         });
       });
 
@@ -523,6 +530,11 @@ describe('tabbable', () => {
             .getDocument()
             .getElementById('details-a-summary');
           assert.ok(isFocusable(n8));
+          let n9 = assertionSet
+            .getFixture('details')
+            .getDocument()
+            .getElementById('details-c');
+          assert.ok(isFocusable(n9));
         });
       });
     });
