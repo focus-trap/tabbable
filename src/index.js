@@ -103,7 +103,7 @@ function isNodeMatchingSelectorFocusable(node) {
     isHiddenInput(node) ||
     isHidden(node) ||
     /* For a details element with a summary, the summary element gets the focused  */
-    isDetailsWithSummary(node) 
+    isDetailsWithSummary(node)
   ) {
     return false;
   }
