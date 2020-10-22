@@ -243,7 +243,12 @@ describe('tabbable', () => {
 
         it('details', () => {
           let actual = assertionSet.getFixture('details').getTabbableIds();
-          let expected = ['details-a-summery', 'details-b-summery'];
+          let expected = [
+            'details-a-summary',
+            'details-b-summary',
+            'visible-input',
+            'details-c',
+          ];
           assert.deepEqual(actual, expected);
         });
 
@@ -408,7 +413,12 @@ describe('tabbable', () => {
 
         it('details', () => {
           let actual = assertionSet.getFixture('details').getFocusableIds();
-          let expected = ['details-a-summery', 'details-b-summery'];
+          let expected = [
+            'details-a-summary',
+            'details-b-summary',
+            'visible-input',
+            'details-c',
+          ];
           assert.deepEqual(actual.sort(), expected.sort());
         });
 
@@ -468,8 +478,13 @@ describe('tabbable', () => {
           let n8 = assertionSet
             .getFixture('details')
             .getDocument()
-            .getElementById('details-a-summery');
+            .getElementById('details-a-summary');
           assert.ok(isTabbable(n8));
+          let n9 = assertionSet
+            .getFixture('details')
+            .getDocument()
+            .getElementById('details-c');
+          assert.ok(isTabbable(n9));
         });
       });
 
@@ -513,8 +528,13 @@ describe('tabbable', () => {
           let n8 = assertionSet
             .getFixture('details')
             .getDocument()
-            .getElementById('details-a-summery');
+            .getElementById('details-a-summary');
           assert.ok(isFocusable(n8));
+          let n9 = assertionSet
+            .getFixture('details')
+            .getDocument()
+            .getElementById('details-c');
+          assert.ok(isFocusable(n9));
         });
       });
     });

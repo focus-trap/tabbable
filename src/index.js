@@ -8,7 +8,8 @@ let candidateSelectors = [
   'audio[controls]',
   'video[controls]',
   '[contenteditable]:not([contenteditable="false"])',
-  'details>summary',
+  'details>summary:first-of-type',
+  'details',
 ];
 let candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
 
@@ -97,7 +98,13 @@ function isTabbable(node) {
 }
 
 function isNodeMatchingSelectorFocusable(node) {
-  if (node.disabled || isHiddenInput(node) || isHidden(node)) {
+  if (
+    node.disabled ||
+    isHiddenInput(node) ||
+    isHidden(node) ||
+    /* For a details element with a summary, the summary element gets the focused  */
+    isDetailsWithSummary(node)
+  ) {
     return false;
   }
   return true;
@@ -129,13 +136,15 @@ function getTabindex(node) {
     return 0;
   }
 
-  // in Chrome, <audio controls/> and <video controls/> elements get a default
+  // in Chrome, <details/>, <audio controls/> and <video controls/> elements get a default
   //  `tabIndex` of -1 when the 'tabindex' attribute isn't specified in the DOM,
   //  yet they are still part of the regular tab order; in FF, they get a default
   //  `tabIndex` of 0; since Chrome still puts those elements in the regular tab
-  //  order, consider their tab index to be 0
+  //  order, consider their tab index to be 0.
   if (
-    (node.nodeName === 'AUDIO' || node.nodeName === 'VIDEO') &&
+    (node.nodeName === 'AUDIO' ||
+      node.nodeName === 'VIDEO' ||
+      node.nodeName === 'DETAILS') &&
     node.getAttribute('tabindex') === null
   ) {
     return 0;
@@ -160,6 +169,15 @@ function isInput(node) {
 
 function isHiddenInput(node) {
   return isInput(node) && node.type === 'hidden';
+}
+
+function isDetailsWithSummary(node) {
+  const r =
+    node.tagName === 'DETAILS' &&
+    Array.prototype.slice
+      .apply(node.children)
+      .some((child) => child.tagName === 'SUMMARY');
+  return r;
 }
 
 function isRadio(node) {
@@ -192,6 +210,12 @@ function isTabbableRadio(node) {
 
 function isHidden(node) {
   if (getComputedStyle(node).visibility === 'hidden') return true;
+
+  const isDirectSummary = node.matches('details>summary:first-of-type');
+  const nodeUnderDetails = isDirectSummary ? node.parentElement : node;
+  if (nodeUnderDetails.matches('details:not([open]) *')) {
+    return true;
+  }
 
   while (node) {
     if (getComputedStyle(node).display === 'none') return true;
