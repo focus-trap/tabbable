@@ -67,6 +67,16 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "idoros",
+      "name": "Ido Rosenthal",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/574751?v=4",
+      "profile": "https://github.com/idoros",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
