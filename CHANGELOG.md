@@ -1,5 +1,14 @@
 # Changelog
 
+## 5.1.3
+
+### Patch Changes
+
+- 5579825: fixes to details elements
+  - ignore elements nested under a closed details element
+  - ignore any extra summary elements after the first summary element
+  - add details element as tabbable in case it has no direct summary element
+
 ## 5.1.2
 
 ### Patch Changes
