@@ -20,7 +20,7 @@ const matches =
       Element.prototype.msMatchesSelector ||
       Element.prototype.webkitMatchesSelector;
 
-function getCandidates(el, includeContainer, filter) {
+const getCandidates = function (el, includeContainer, filter) {
   let candidates = Array.prototype.slice.apply(
     el.querySelectorAll(candidateSelector)
   );
@@ -29,13 +29,13 @@ function getCandidates(el, includeContainer, filter) {
   }
   candidates = candidates.filter(filter);
   return candidates;
-}
+};
 
-function isContentEditable(node) {
+const isContentEditable = function (node) {
   return node.contentEditable === 'true';
-}
+};
 
-function getTabindex(node) {
+const getTabindex = function (node) {
   const tabindexAttr = parseInt(node.getAttribute('tabindex'), 10);
 
   if (!isNaN(tabindexAttr)) {
@@ -63,40 +63,40 @@ function getTabindex(node) {
   }
 
   return node.tabIndex;
-}
+};
 
-function sortOrderedTabbables(a, b) {
+const sortOrderedTabbables = function (a, b) {
   return a.tabIndex === b.tabIndex
     ? a.documentOrder - b.documentOrder
     : a.tabIndex - b.tabIndex;
-}
+};
 
-function isInput(node) {
+const isInput = function (node) {
   return node.tagName === 'INPUT';
-}
+};
 
-function isHiddenInput(node) {
+const isHiddenInput = function (node) {
   return isInput(node) && node.type === 'hidden';
-}
+};
 
-function isDetailsWithSummary(node) {
+const isDetailsWithSummary = function (node) {
   const r =
     node.tagName === 'DETAILS' &&
     Array.prototype.slice
       .apply(node.children)
       .some((child) => child.tagName === 'SUMMARY');
   return r;
-}
+};
 
-function getCheckedRadio(nodes, form) {
+const getCheckedRadio = function (nodes, form) {
   for (let i = 0; i < nodes.length; i++) {
     if (nodes[i].checked && nodes[i].form === form) {
       return nodes[i];
     }
   }
-}
+};
 
-function isTabbableRadio(node) {
+const isTabbableRadio = function (node) {
   if (!node.name) {
     return true;
   }
@@ -106,17 +106,17 @@ function isTabbableRadio(node) {
   );
   const checked = getCheckedRadio(radioSet, node.form);
   return !checked || checked === node;
-}
+};
 
-function isRadio(node) {
+const isRadio = function (node) {
   return isInput(node) && node.type === 'radio';
-}
+};
 
-function isNonTabbableRadio(node) {
+const isNonTabbableRadio = function (node) {
   return isRadio(node) && !isTabbableRadio(node);
-}
+};
 
-function isHidden(node) {
+const isHidden = function (node) {
   if (getComputedStyle(node).visibility === 'hidden') {
     return true;
   }
@@ -135,9 +135,9 @@ function isHidden(node) {
   }
 
   return false;
-}
+};
 
-function isNodeMatchingSelectorFocusable(node) {
+const isNodeMatchingSelectorFocusable = function (node) {
   if (
     node.disabled ||
     isHiddenInput(node) ||
@@ -148,9 +148,9 @@ function isNodeMatchingSelectorFocusable(node) {
     return false;
   }
   return true;
-}
+};
 
-function isNodeMatchingSelectorTabbable(node) {
+const isNodeMatchingSelectorTabbable = function (node) {
   if (
     !isNodeMatchingSelectorFocusable(node) ||
     isNonTabbableRadio(node) ||
@@ -159,9 +159,9 @@ function isNodeMatchingSelectorTabbable(node) {
     return false;
   }
   return true;
-}
+};
 
-function tabbable(el, options) {
+const tabbable = function (el, options) {
   options = options || {};
 
   const regularTabbables = [];
@@ -192,9 +192,9 @@ function tabbable(el, options) {
     .concat(regularTabbables);
 
   return tabbableNodes;
-}
+};
 
-function focusable(el, options) {
+const focusable = function (el, options) {
   options = options || {};
 
   const candidates = getCandidates(
@@ -204,9 +204,9 @@ function focusable(el, options) {
   );
 
   return candidates;
-}
+};
 
-function isTabbable(node) {
+const isTabbable = function (node) {
   if (!node) {
     throw new Error('No node provided');
   }
@@ -214,13 +214,13 @@ function isTabbable(node) {
     return false;
   }
   return isNodeMatchingSelectorTabbable(node);
-}
+};
 
 const focusableCandidateSelector = /* #__PURE__ */ candidateSelectors
   .concat('iframe')
   .join(',');
 
-function isFocusable(node) {
+const isFocusable = function (node) {
   if (!node) {
     throw new Error('No node provided');
   }
@@ -228,6 +228,6 @@ function isFocusable(node) {
     return false;
   }
   return isNodeMatchingSelectorFocusable(node);
-}
+};
 
 export { tabbable, focusable, isTabbable, isFocusable };
