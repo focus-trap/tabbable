@@ -1,4 +1,4 @@
-let candidateSelectors = [
+const candidateSelectors = [
   'input',
   'select',
   'textarea',
@@ -11,59 +11,14 @@ let candidateSelectors = [
   'details>summary:first-of-type',
   'details',
 ];
-let candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
+const candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
 
-let matches =
+const matches =
   typeof Element === 'undefined'
     ? function () {}
     : Element.prototype.matches ||
       Element.prototype.msMatchesSelector ||
       Element.prototype.webkitMatchesSelector;
-
-function tabbable(el, options) {
-  options = options || {};
-
-  let regularTabbables = [];
-  let orderedTabbables = [];
-
-  let candidates = getCandidates(
-    el,
-    options.includeContainer,
-    isNodeMatchingSelectorTabbable
-  );
-
-  candidates.forEach(function (candidate, i) {
-    let candidateTabindex = getTabindex(candidate);
-    if (candidateTabindex === 0) {
-      regularTabbables.push(candidate);
-    } else {
-      orderedTabbables.push({
-        documentOrder: i,
-        tabIndex: candidateTabindex,
-        node: candidate,
-      });
-    }
-  });
-
-  let tabbableNodes = orderedTabbables
-    .sort(sortOrderedTabbables)
-    .map((a) => a.node)
-    .concat(regularTabbables);
-
-  return tabbableNodes;
-}
-
-function focusable(el, options) {
-  options = options || {};
-
-  let candidates = getCandidates(
-    el,
-    options.includeContainer,
-    isNodeMatchingSelectorFocusable
-  );
-
-  return candidates;
-}
 
 function getCandidates(el, includeContainer, filter) {
   let candidates = Array.prototype.slice.apply(
@@ -76,55 +31,12 @@ function getCandidates(el, includeContainer, filter) {
   return candidates;
 }
 
-function isNodeMatchingSelectorTabbable(node) {
-  if (
-    !isNodeMatchingSelectorFocusable(node) ||
-    isNonTabbableRadio(node) ||
-    getTabindex(node) < 0
-  ) {
-    return false;
-  }
-  return true;
-}
-
-function isTabbable(node) {
-  if (!node) {
-    throw new Error('No node provided');
-  }
-  if (matches.call(node, candidateSelector) === false) {
-    return false;
-  }
-  return isNodeMatchingSelectorTabbable(node);
-}
-
-function isNodeMatchingSelectorFocusable(node) {
-  if (
-    node.disabled ||
-    isHiddenInput(node) ||
-    isHidden(node) ||
-    /* For a details element with a summary, the summary element gets the focused  */
-    isDetailsWithSummary(node)
-  ) {
-    return false;
-  }
-  return true;
-}
-
-let focusableCandidateSelector = /* #__PURE__ */ candidateSelectors
-  .concat('iframe')
-  .join(',');
-function isFocusable(node) {
-  if (!node) {
-    throw new Error('No node provided');
-  }
-  if (matches.call(node, focusableCandidateSelector) === false) {
-    return false;
-  }
-  return isNodeMatchingSelectorFocusable(node);
+function isContentEditable(node) {
+  return node.contentEditable === 'true';
 }
 
 function getTabindex(node) {
-  let tabindexAttr = parseInt(node.getAttribute('tabindex'), 10);
+  const tabindexAttr = parseInt(node.getAttribute('tabindex'), 10);
 
   if (!isNaN(tabindexAttr)) {
     return tabindexAttr;
@@ -159,10 +71,6 @@ function sortOrderedTabbables(a, b) {
     : a.tabIndex - b.tabIndex;
 }
 
-function isContentEditable(node) {
-  return node.contentEditable === 'true';
-}
-
 function isInput(node) {
   return node.tagName === 'INPUT';
 }
@@ -180,14 +88,6 @@ function isDetailsWithSummary(node) {
   return r;
 }
 
-function isRadio(node) {
-  return isInput(node) && node.type === 'radio';
-}
-
-function isNonTabbableRadio(node) {
-  return isRadio(node) && !isTabbableRadio(node);
-}
-
 function getCheckedRadio(nodes, form) {
   for (let i = 0; i < nodes.length; i++) {
     if (nodes[i].checked && nodes[i].form === form) {
@@ -201,15 +101,25 @@ function isTabbableRadio(node) {
     return true;
   }
   const radioScope = node.form || node.ownerDocument;
-  let radioSet = radioScope.querySelectorAll(
+  const radioSet = radioScope.querySelectorAll(
     'input[type="radio"][name="' + node.name + '"]'
   );
-  let checked = getCheckedRadio(radioSet, node.form);
+  const checked = getCheckedRadio(radioSet, node.form);
   return !checked || checked === node;
 }
 
+function isRadio(node) {
+  return isInput(node) && node.type === 'radio';
+}
+
+function isNonTabbableRadio(node) {
+  return isRadio(node) && !isTabbableRadio(node);
+}
+
 function isHidden(node) {
-  if (getComputedStyle(node).visibility === 'hidden') return true;
+  if (getComputedStyle(node).visibility === 'hidden') {
+    return true;
+  }
 
   const isDirectSummary = node.matches('details>summary:first-of-type');
   const nodeUnderDetails = isDirectSummary ? node.parentElement : node;
@@ -218,11 +128,106 @@ function isHidden(node) {
   }
 
   while (node) {
-    if (getComputedStyle(node).display === 'none') return true;
+    if (getComputedStyle(node).display === 'none') {
+      return true;
+    }
     node = node.parentElement;
   }
 
   return false;
+}
+
+function isNodeMatchingSelectorFocusable(node) {
+  if (
+    node.disabled ||
+    isHiddenInput(node) ||
+    isHidden(node) ||
+    /* For a details element with a summary, the summary element gets the focused  */
+    isDetailsWithSummary(node)
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function isNodeMatchingSelectorTabbable(node) {
+  if (
+    !isNodeMatchingSelectorFocusable(node) ||
+    isNonTabbableRadio(node) ||
+    getTabindex(node) < 0
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function tabbable(el, options) {
+  options = options || {};
+
+  const regularTabbables = [];
+  const orderedTabbables = [];
+
+  const candidates = getCandidates(
+    el,
+    options.includeContainer,
+    isNodeMatchingSelectorTabbable
+  );
+
+  candidates.forEach(function (candidate, i) {
+    const candidateTabindex = getTabindex(candidate);
+    if (candidateTabindex === 0) {
+      regularTabbables.push(candidate);
+    } else {
+      orderedTabbables.push({
+        documentOrder: i,
+        tabIndex: candidateTabindex,
+        node: candidate,
+      });
+    }
+  });
+
+  const tabbableNodes = orderedTabbables
+    .sort(sortOrderedTabbables)
+    .map((a) => a.node)
+    .concat(regularTabbables);
+
+  return tabbableNodes;
+}
+
+function focusable(el, options) {
+  options = options || {};
+
+  const candidates = getCandidates(
+    el,
+    options.includeContainer,
+    isNodeMatchingSelectorFocusable
+  );
+
+  return candidates;
+}
+
+function isTabbable(node) {
+  if (!node) {
+    throw new Error('No node provided');
+  }
+  if (matches.call(node, candidateSelector) === false) {
+    return false;
+  }
+  return isNodeMatchingSelectorTabbable(node);
+}
+
+const focusableCandidateSelector = /* #__PURE__ */ candidateSelectors
+  .concat('iframe')
+  .join(',');
+
+function isFocusable(node) {
+  if (!node) {
+    throw new Error('No node provided');
+  }
+  if (matches.call(node, focusableCandidateSelector) === false) {
+    return false;
+  }
+  return isNodeMatchingSelectorFocusable(node);
 }
 
 export { tabbable, focusable, isTabbable, isFocusable };
