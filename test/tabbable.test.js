@@ -11,8 +11,8 @@ const fixtures = require('./fixtures');
 let fixtureRoots = [];
 
 function createRootNode(doc, fixtureName) {
-  let html = fixtures[fixtureName];
-  let root = doc.createElement('div');
+  const html = fixtures[fixtureName];
+  const root = doc.createElement('div');
   root.innerHTML = html;
   doc.body.appendChild(root);
   return root;
@@ -27,7 +27,7 @@ function getFocusableIds(node, options) {
 }
 
 function fixture(fixtureName) {
-  let root = createRootNode(document, fixtureName);
+  const root = createRootNode(document, fixtureName);
   fixtureRoots.push(root);
   return {
     getTabbableIds: getTabbableIds.bind(null, root),
@@ -39,7 +39,7 @@ function fixture(fixtureName) {
 }
 
 function fixtureWithIframe(fixtureName) {
-  let iframe = document.createElement('iframe');
+  const iframe = document.createElement('iframe');
   document.body.appendChild(iframe);
   fixtureRoots.push(iframe);
   const rootNode = createRootNode(iframe.contentDocument, fixtureName);
@@ -53,7 +53,7 @@ function fixtureWithIframe(fixtureName) {
 }
 
 function fixtureWithDocument(fixtureName) {
-  let root = createRootNode(document, fixtureName);
+  const root = createRootNode(document, fixtureName);
   fixtureRoots.push(root);
   return {
     getTabbableIds: getTabbableIds.bind(null, document),
@@ -84,8 +84,8 @@ describe('tabbable', () => {
     describe(assertionSet.name, () => {
       describe('#tabbable', () => {
         it('basic', () => {
-          let actual = assertionSet.getFixture('basic').getTabbableIds();
-          let expected = [
+          const actual = assertionSet.getFixture('basic').getTabbableIds();
+          const expected = [
             'tabindex-hrefless-anchor',
             'contenteditable-true',
             'contenteditable-nesting',
@@ -106,14 +106,14 @@ describe('tabbable', () => {
         });
 
         it('nested', () => {
-          let actual = assertionSet.getFixture('nested').getTabbableIds();
-          let expected = ['tabindex-div-2', 'tabindex-div-0', 'input'];
+          const actual = assertionSet.getFixture('nested').getTabbableIds();
+          const expected = ['tabindex-div-2', 'tabindex-div-0', 'input'];
           assert.deepEqual(actual, expected);
         });
 
         it('jqueryui', () => {
-          let actual = assertionSet.getFixture('jqueryui').getTabbableIds();
-          let expected = [
+          const actual = assertionSet.getFixture('jqueryui').getTabbableIds();
+          const expected = [
             // 1
             'formTabindex',
             'visibleAncestor-spanWithTabindex',
@@ -140,7 +140,7 @@ describe('tabbable', () => {
         });
 
         it('non-linear', () => {
-          let originalSort = Array.prototype.sort;
+          const originalSort = Array.prototype.sort;
 
           // This sort piggy-backs on the default Array.prototype.sort, but always
           // orders elements that were compared to be equal in reverse order of their
@@ -149,14 +149,16 @@ describe('tabbable', () => {
           // eslint-disable-next-line no-extend-native
           Array.prototype.sort = function (compareFunction) {
             return originalSort.call(this, function (a, b) {
-              let comparison = compareFunction ? compareFunction(a, b) : a - b;
+              const comparison = compareFunction
+                ? compareFunction(a, b)
+                : a - b;
               return comparison || this.indexOf(b) - this.indexOf(a);
             });
           };
-          let actual = assertionSet.getFixture('non-linear').getTabbableIds();
+          const actual = assertionSet.getFixture('non-linear').getTabbableIds();
           // eslint-disable-next-line no-extend-native
           Array.prototype.sort = originalSort;
-          let expected = [
+          const expected = [
             // 1
             'input-1',
             'href-anchor-1',
@@ -181,9 +183,9 @@ describe('tabbable', () => {
         });
 
         it('changing content', () => {
-          let loadedFixture = assertionSet.getFixture('changing-content');
-          let actualA = loadedFixture.getTabbableIds();
-          let expectedA = [
+          const loadedFixture = assertionSet.getFixture('changing-content');
+          const actualA = loadedFixture.getTabbableIds();
+          const expectedA = [
             'visible-button-1',
             'visible-button-2',
             'visible-button-3',
@@ -194,8 +196,8 @@ describe('tabbable', () => {
             .getDocument()
             .getElementById('initially-hidden').style.display = 'block';
 
-          let actualB = loadedFixture.getTabbableIds();
-          let expectedB = [
+          const actualB = loadedFixture.getTabbableIds();
+          const expectedB = [
             'visible-button-1',
             'visible-button-2',
             'visible-button-3',
@@ -206,31 +208,31 @@ describe('tabbable', () => {
         });
 
         it('including container', () => {
-          let loadedFixture = assertionSet.getFixture('nested');
-          let container = loadedFixture
+          const loadedFixture = assertionSet.getFixture('nested');
+          const container = loadedFixture
             .getDocument()
             .getElementById('tabindex-div-0');
 
-          let actualFalse = getTabbableIds(container);
-          let expectedFalse = ['tabindex-div-2', 'input'];
+          const actualFalse = getTabbableIds(container);
+          const expectedFalse = ['tabindex-div-2', 'input'];
           assert.deepEqual(actualFalse, expectedFalse);
 
-          let actualTrue = getTabbableIds(container, {
+          const actualTrue = getTabbableIds(container, {
             includeContainer: true,
           });
-          let expectedTrue = ['tabindex-div-2', 'tabindex-div-0', 'input'];
+          const expectedTrue = ['tabindex-div-2', 'tabindex-div-0', 'input'];
           assert.deepEqual(actualTrue, expectedTrue);
         });
 
         it('svg', () => {
-          let actual = assertionSet.getFixture('svg').getTabbableIds();
-          let expected = ['svg-btn', 'svg-1'];
+          const actual = assertionSet.getFixture('svg').getTabbableIds();
+          const expected = ['svg-btn', 'svg-1'];
           assert.deepEqual(actual, expected);
         });
 
         it('radio', () => {
-          let actual = assertionSet.getFixture('radio').getTabbableIds();
-          let expected = [
+          const actual = assertionSet.getFixture('radio').getTabbableIds();
+          const expected = [
             'formA-radioA',
             'formB-radioA',
             'formB-radioB',
@@ -242,8 +244,8 @@ describe('tabbable', () => {
         });
 
         it('details', () => {
-          let actual = assertionSet.getFixture('details').getTabbableIds();
-          let expected = [
+          const actual = assertionSet.getFixture('details').getTabbableIds();
+          const expected = [
             'details-a-summary',
             'details-b-summary',
             'visible-input',
@@ -253,25 +255,27 @@ describe('tabbable', () => {
         });
 
         it('supports elements in a shadow root', () => {
-          let loadedFixture = assertionSet.getFixture('shadow-dom');
+          const loadedFixture = assertionSet.getFixture('shadow-dom');
 
-          let host = loadedFixture.getDocument().getElementById('shadow-host');
-          let template = loadedFixture
+          const host = loadedFixture
+            .getDocument()
+            .getElementById('shadow-host');
+          const template = loadedFixture
             .getDocument()
             .getElementById('shadow-root-template');
-          let shadow = host.attachShadow({ mode: 'open' });
+          const shadow = host.attachShadow({ mode: 'open' });
           shadow.appendChild(template.content.cloneNode(true));
 
-          let actual = getTabbableIds(shadow.getElementById('container'));
-          let expected = ['input'];
+          const actual = getTabbableIds(shadow.getElementById('container'));
+          const expected = ['input'];
           assert.deepEqual(actual, expected);
         });
       });
 
       describe('#focusable', () => {
         it('basic', () => {
-          let actual = assertionSet.getFixture('basic').getFocusableIds();
-          let expected = [
+          const actual = assertionSet.getFixture('basic').getFocusableIds();
+          const expected = [
             'tabindex-hrefless-anchor',
             'contenteditable-true',
             'contenteditable-nesting',
@@ -293,14 +297,14 @@ describe('tabbable', () => {
         });
 
         it('nested', () => {
-          let actual = assertionSet.getFixture('nested').getFocusableIds();
-          let expected = ['tabindex-div-2', 'tabindex-div-0', 'input'];
+          const actual = assertionSet.getFixture('nested').getFocusableIds();
+          const expected = ['tabindex-div-2', 'tabindex-div-0', 'input'];
           assert.deepEqual(actual.sort(), expected.sort());
         });
 
         it('jqueryui', () => {
-          let actual = assertionSet.getFixture('jqueryui').getFocusableIds();
-          let expected = [
+          const actual = assertionSet.getFixture('jqueryui').getFocusableIds();
+          const expected = [
             'formTabindex',
             'visibleAncestor-spanWithTabindex',
             'inputTabindex0',
@@ -329,8 +333,10 @@ describe('tabbable', () => {
         });
 
         it('non-linear', () => {
-          let actual = assertionSet.getFixture('non-linear').getFocusableIds();
-          let expected = [
+          const actual = assertionSet
+            .getFixture('non-linear')
+            .getFocusableIds();
+          const expected = [
             'input-1',
             'href-anchor-1',
             'button-2',
@@ -349,9 +355,9 @@ describe('tabbable', () => {
         });
 
         it('changing content', () => {
-          let loadedFixture = assertionSet.getFixture('changing-content');
-          let actualA = loadedFixture.getFocusableIds();
-          let expectedA = [
+          const loadedFixture = assertionSet.getFixture('changing-content');
+          const actualA = loadedFixture.getFocusableIds();
+          const expectedA = [
             'visible-button-1',
             'visible-button-2',
             'visible-button-3',
@@ -362,8 +368,8 @@ describe('tabbable', () => {
             .getDocument()
             .getElementById('initially-hidden').style.display = 'block';
 
-          let actualB = loadedFixture.getFocusableIds();
-          let expectedB = [
+          const actualB = loadedFixture.getFocusableIds();
+          const expectedB = [
             'visible-button-1',
             'visible-button-2',
             'visible-button-3',
@@ -374,31 +380,31 @@ describe('tabbable', () => {
         });
 
         it('including container', () => {
-          let loadedFixture = assertionSet.getFixture('nested');
-          let container = loadedFixture
+          const loadedFixture = assertionSet.getFixture('nested');
+          const container = loadedFixture
             .getDocument()
             .getElementById('tabindex-div-0');
 
-          let actualFalse = getFocusableIds(container);
-          let expectedFalse = ['tabindex-div-2', 'input'];
+          const actualFalse = getFocusableIds(container);
+          const expectedFalse = ['tabindex-div-2', 'input'];
           assert.deepEqual(actualFalse.sort(), expectedFalse.sort());
 
-          let actualTrue = getFocusableIds(container, {
+          const actualTrue = getFocusableIds(container, {
             includeContainer: true,
           });
-          let expectedTrue = ['tabindex-div-2', 'tabindex-div-0', 'input'];
+          const expectedTrue = ['tabindex-div-2', 'tabindex-div-0', 'input'];
           assert.deepEqual(actualTrue.sort(), expectedTrue.sort());
         });
 
         it('svg', () => {
-          let actual = assertionSet.getFixture('svg').getFocusableIds();
-          let expected = ['svg-btn', 'svg-1', 'svg-2'];
+          const actual = assertionSet.getFixture('svg').getFocusableIds();
+          const expected = ['svg-btn', 'svg-1', 'svg-2'];
           assert.deepEqual(actual.sort(), expected.sort());
         });
 
         it('radio', () => {
-          let actual = assertionSet.getFixture('radio').getFocusableIds();
-          let expected = [
+          const actual = assertionSet.getFixture('radio').getFocusableIds();
+          const expected = [
             'formA-radioA',
             'formA-radioB',
             'formB-radioA',
@@ -412,8 +418,8 @@ describe('tabbable', () => {
         });
 
         it('details', () => {
-          let actual = assertionSet.getFixture('details').getFocusableIds();
-          let expected = [
+          const actual = assertionSet.getFixture('details').getFocusableIds();
+          const expected = [
             'details-a-summary',
             'details-b-summary',
             'visible-input',
@@ -423,64 +429,66 @@ describe('tabbable', () => {
         });
 
         it('supports elements in a shadow root', () => {
-          let loadedFixture = assertionSet.getFixture('shadow-dom');
+          const loadedFixture = assertionSet.getFixture('shadow-dom');
 
-          let host = loadedFixture.getDocument().getElementById('shadow-host');
-          let template = loadedFixture
+          const host = loadedFixture
+            .getDocument()
+            .getElementById('shadow-host');
+          const template = loadedFixture
             .getDocument()
             .getElementById('shadow-root-template');
-          let shadow = host.attachShadow({ mode: 'open' });
+          const shadow = host.attachShadow({ mode: 'open' });
           shadow.appendChild(template.content.cloneNode(true));
 
-          let actual = getFocusableIds(shadow.getElementById('container'));
-          let expected = ['input'];
+          const actual = getFocusableIds(shadow.getElementById('container'));
+          const expected = ['input'];
           assert.deepEqual(actual.sort(), expected.sort());
         });
       });
 
       describe('#isTabbable', () => {
         it('isTabbable', () => {
-          let n1 = assertionSet
+          const n1 = assertionSet
             .getFixture('basic')
             .getDocument()
             .getElementById('contenteditable-true');
           assert.ok(isTabbable(n1));
-          let n2 = assertionSet
+          const n2 = assertionSet
             .getFixture('basic')
             .getDocument()
             .getElementById('contenteditable-false');
           assert.notOk(isTabbable(n2));
-          let n3 = assertionSet
+          const n3 = assertionSet
             .getFixture('basic')
             .getDocument()
             .getElementById('href-anchor');
           assert.ok(isTabbable(n3));
-          let n4 = assertionSet
+          const n4 = assertionSet
             .getFixture('basic')
             .getDocument()
             .getElementById('hrefless-anchor');
           assert.notOk(isTabbable(n4));
-          let n5 = assertionSet
+          const n5 = assertionSet
             .getFixture('basic')
             .getDocument()
             .getElementById('iframe');
           assert.notOk(isTabbable(n5));
-          let n6 = assertionSet
+          const n6 = assertionSet
             .getFixture('radio')
             .getDocument()
             .getElementById('formA-radioA');
           assert.ok(isTabbable(n6));
-          let n7 = assertionSet
+          const n7 = assertionSet
             .getFixture('radio')
             .getDocument()
             .getElementById('formA-radioB');
           assert.notOk(isTabbable(n7));
-          let n8 = assertionSet
+          const n8 = assertionSet
             .getFixture('details')
             .getDocument()
             .getElementById('details-a-summary');
           assert.ok(isTabbable(n8));
-          let n9 = assertionSet
+          const n9 = assertionSet
             .getFixture('details')
             .getDocument()
             .getElementById('details-c');
@@ -490,47 +498,47 @@ describe('tabbable', () => {
 
       describe('#isFocusable', () => {
         it('isFocusable', () => {
-          let n1 = assertionSet
+          const n1 = assertionSet
             .getFixture('basic')
             .getDocument()
             .getElementById('contenteditable-true');
           assert.ok(isFocusable(n1));
-          let n2 = assertionSet
+          const n2 = assertionSet
             .getFixture('basic')
             .getDocument()
             .getElementById('contenteditable-false');
           assert.notOk(isFocusable(n2));
-          let n3 = assertionSet
+          const n3 = assertionSet
             .getFixture('basic')
             .getDocument()
             .getElementById('href-anchor');
           assert.ok(isFocusable(n3));
-          let n4 = assertionSet
+          const n4 = assertionSet
             .getFixture('basic')
             .getDocument()
             .getElementById('hrefless-anchor');
           assert.notOk(isFocusable(n4));
-          let n5 = assertionSet
+          const n5 = assertionSet
             .getFixture('basic')
             .getDocument()
             .getElementById('iframe');
           assert.ok(isFocusable(n5));
-          let n6 = assertionSet
+          const n6 = assertionSet
             .getFixture('radio')
             .getDocument()
             .getElementById('formA-radioA');
           assert.ok(isFocusable(n6));
-          let n7 = assertionSet
+          const n7 = assertionSet
             .getFixture('radio')
             .getDocument()
             .getElementById('formA-radioB');
           assert.ok(isFocusable(n7));
-          let n8 = assertionSet
+          const n8 = assertionSet
             .getFixture('details')
             .getDocument()
             .getElementById('details-a-summary');
           assert.ok(isFocusable(n8));
-          let n9 = assertionSet
+          const n9 = assertionSet
             .getFixture('details')
             .getDocument()
             .getElementById('details-c');

@@ -4,7 +4,7 @@ global.tabbable = require('../dist/index.js');
 
 let root;
 let content;
-for (let key in testCases) {
+for (const key in testCases) {
   if (!Object.hasOwnProperty.call(testCases, key)) {
     continue;
   }
@@ -17,10 +17,11 @@ for (let key in testCases) {
 }
 
 document.body.addEventListener('focusin', (event) => {
+  // eslint-disable-next-line no-console
   console.log(event.target);
 });
 
 // Add a clear focus style
-let styleTag = document.createElement('style');
+const styleTag = document.createElement('style');
 styleTag.innerHTML = ':focus { outline: 5px solid #b603f6; }';
 document.body.appendChild(styleTag);
