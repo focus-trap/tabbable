@@ -77,6 +77,15 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "pebble2050",
+      "name": "pebble2050",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/47210889?v=4",
+      "profile": "https://github.com/pebble2050",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
