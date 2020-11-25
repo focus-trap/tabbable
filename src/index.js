@@ -121,9 +121,9 @@ const isHidden = function (node) {
     return true;
   }
 
-  const isDirectSummary = node.matches('details>summary:first-of-type');
+  const isDirectSummary = matches.call(node, 'details>summary:first-of-type');
   const nodeUnderDetails = isDirectSummary ? node.parentElement : node;
-  if (nodeUnderDetails.matches('details:not([open]) *')) {
+  if (matches.call(nodeUnderDetails, 'details:not([open]) *')) {
     return true;
   }
 
