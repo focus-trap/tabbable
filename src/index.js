@@ -98,7 +98,9 @@ const getCheckedRadio = function (nodes, form) {
 
 const escapeCSS =
   typeof CSS === 'undefined' || typeof CSS.escape !== 'function'
-    ? function () {}
+    ? function (string) {
+        return string;
+      }
     : CSS.escape;
 
 const isTabbableRadio = function (node) {
