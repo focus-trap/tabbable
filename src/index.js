@@ -96,13 +96,18 @@ const getCheckedRadio = function (nodes, form) {
   }
 };
 
+const escapeCSS =
+  typeof CSS === 'undefined' || typeof CSS.escape !== 'function'
+    ? function () {}
+    : CSS.escape;
+
 const isTabbableRadio = function (node) {
   if (!node.name) {
     return true;
   }
   const radioScope = node.form || node.ownerDocument;
   const radioSet = radioScope.querySelectorAll(
-    'input[type="radio"][name="' + node.name + '"]'
+    'input[type="radio"][name="' + escapeCSS(node.name) + '"]'
   );
   const checked = getCheckedRadio(radioSet, node.form);
   return !checked || checked === node;

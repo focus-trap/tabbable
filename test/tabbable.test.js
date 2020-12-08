@@ -237,8 +237,9 @@ describe('tabbable', () => {
             'formB-radioA',
             'formB-radioB',
             'noform-radioA',
-            'noform-other-group-radioA',
-            'noform-other-group-radioB',
+            'noform-groupB-radioA',
+            'noform-groupB-radioB',
+            'noform-groupC-radioA',
           ];
           assert.deepEqual(actual, expected);
         });
@@ -411,8 +412,10 @@ describe('tabbable', () => {
             'formB-radioB',
             'noform-radioA',
             'noform-radioB',
-            'noform-other-group-radioA',
-            'noform-other-group-radioB',
+            'noform-groupB-radioA',
+            'noform-groupB-radioB',
+            'noform-groupC-radioA',
+            'noform-groupC-radioB',
           ];
           assert.deepEqual(actual.sort(), expected.sort());
         });
