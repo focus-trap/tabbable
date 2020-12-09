@@ -44,7 +44,7 @@ Basically IE9+.
 
 Why? It uses [Element.querySelectorAll()](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll) and [Window.getComputedStyle()](https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle).
 
-**Note:** When used with any version of IE, [CSS.escape](https://developer.mozilla.org/en-US/docs/Web/API/CSS/escape) needs [polyfilled](https://www.npmjs.com/package/css.escape) for tabbable to work properly with radio buttons that have `name` attributes containing special characters.
+**Note:** When used with any version of IE, [CSS.escape](https://developer.mozilla.org/en-US/docs/Web/API/CSS/escape) needs a [polyfill](https://www.npmjs.com/package/css.escape) for tabbable to work properly with radio buttons that have `name` attributes containing special characters.
 
 ## Installation
 
