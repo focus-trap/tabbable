@@ -97,12 +97,13 @@ const getCheckedRadio = function (nodes, form) {
 };
 
 const escapeCSS =
-  typeof window !== 'undefined' &&
-  (typeof CSS === 'undefined' || typeof CSS.escape !== 'function')
+  typeof window === 'undefined' ||
+  typeof window.CSS === 'undefined' ||
+  typeof window.CSS.escape !== 'function'
     ? function (string) {
         return string;
       }
-    : CSS.escape;
+    : window.CSS.escape;
 
 const isTabbableRadio = function (node) {
   if (!node.name) {
