@@ -1,7 +1,7 @@
 # tabbable [![CI](https://github.com/focus-trap/tabbable/workflows/CI/badge.svg?branch=master&event=push)](https://github.com/focus-trap/tabbable/actions?query=workflow:CI+branch:master) [![license](https://badgen.now.sh/badge/license/MIT)](./LICENSE)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Small utility that returns an array of all\* tabbable DOM nodes within a containing node.
@@ -157,6 +157,9 @@ In alphabetical order:
     <td align="center"><a href="http://www.khamilton.co.uk"><img src="https://avatars1.githubusercontent.com/u/4013283?v=4" width="100px;" alt=""/><br /><sub><b>Kristian Hamilton</b></sub></a><br /><a href="https://github.com/focus-trap/tabbable/issues?q=author%3Akhamiltonuk" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/idoros"><img src="https://avatars1.githubusercontent.com/u/574751?v=4" width="100px;" alt=""/><br /><sub><b>Ido Rosenthal</b></sub></a><br /><a href="https://github.com/focus-trap/tabbable/issues?q=author%3Aidoros" title="Bug reports">🐛</a> <a href="https://github.com/focus-trap/tabbable/commits?author=idoros" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/pebble2050"><img src="https://avatars1.githubusercontent.com/u/47210889?v=4" width="100px;" alt=""/><br /><sub><b>pebble2050</b></sub></a><br /><a href="https://github.com/focus-trap/tabbable/issues?q=author%3Apebble2050" title="Bug reports">🐛</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/tidychips"><img src="https://avatars2.githubusercontent.com/u/11446636?v=4" width="100px;" alt=""/><br /><sub><b>Bryan Murphy</b></sub></a><br /><a href="https://github.com/focus-trap/tabbable/issues?q=author%3Atidychips" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
