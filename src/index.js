@@ -97,7 +97,8 @@ const getCheckedRadio = function (nodes, form) {
 };
 
 const escapeCSS =
-  typeof CSS === 'undefined' || typeof CSS.escape !== 'function'
+  typeof window !== 'undefined' &&
+  (typeof CSS === 'undefined' || typeof CSS.escape !== 'function')
     ? function (string) {
         return string;
       }
