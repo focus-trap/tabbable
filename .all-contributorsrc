@@ -86,6 +86,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "tidychips",
+      "name": "Bryan Murphy",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/11446636?v=4",
+      "profile": "https://github.com/tidychips",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
