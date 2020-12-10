@@ -100,8 +100,8 @@ const escapeCSS =
   typeof window === 'undefined' ||
   typeof window.CSS === 'undefined' ||
   typeof window.CSS.escape !== 'function'
-    ? function (value) {
-        return typeof value === 'string' ? value.replace(/"/g, '\\"') : value;
+    ? function (string) {
+        return string;
       }
     : window.CSS.escape;
 
