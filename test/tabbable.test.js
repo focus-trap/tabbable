@@ -1,4 +1,5 @@
 const assert = require('chai').assert;
+const sinon = require('sinon');
 const {
   tabbable,
   isTabbable,
@@ -242,6 +243,33 @@ describe('tabbable', () => {
             'noform-groupC-radioA',
           ];
           assert.deepEqual(actual, expected);
+        });
+
+        it('radio without CSS.escape', () => {
+          const actualEscape = CSS.escape;
+          CSS.escape = undefined;
+          const consoleError = sinon.stub(console, 'error');
+
+          try {
+            const actual = assertionSet.getFixture('radio').getTabbableIds();
+            const expected = [
+              'formA-radioA',
+              'formB-radioA',
+              'formB-radioB',
+              'noform-radioA',
+              'noform-groupB-radioA',
+              'noform-groupB-radioB',
+            ];
+            assert.deepEqual(actual, expected);
+            // console.error should be called once per radio button with a name
+            // containing invalid CSS selector characters.
+            sinon.assert.calledTwice(consoleError);
+          } finally {
+            if (actualEscape) {
+              CSS.escape = actualEscape;
+            }
+            consoleError.restore();
+          }
         });
 
         it('details', () => {
