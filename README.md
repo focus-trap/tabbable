@@ -159,7 +159,7 @@ In alphabetical order:
     <td align="center"><a href="https://github.com/pebble2050"><img src="https://avatars1.githubusercontent.com/u/47210889?v=4" width="100px;" alt=""/><br /><sub><b>pebble2050</b></sub></a><br /><a href="https://github.com/focus-trap/tabbable/issues?q=author%3Apebble2050" title="Bug reports">🐛</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/tidychips"><img src="https://avatars2.githubusercontent.com/u/11446636?v=4" width="100px;" alt=""/><br /><sub><b>Bryan Murphy</b></sub></a><br /><a href="https://github.com/focus-trap/tabbable/issues?q=author%3Atidychips" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/tidychips"><img src="https://avatars2.githubusercontent.com/u/11446636?v=4" width="100px;" alt=""/><br /><sub><b>Bryan Murphy</b></sub></a><br /><a href="https://github.com/focus-trap/tabbable/issues?q=author%3Atidychips" title="Bug reports">🐛</a> <a href="https://github.com/focus-trap/tabbable/commits?author=tidychips" title="Code">💻</a></td>
   </tr>
 </table>
 
