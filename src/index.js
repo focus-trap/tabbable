@@ -96,31 +96,36 @@ const getCheckedRadio = function (nodes, form) {
   }
 };
 
-const escapeCSS = function (string) {
-  return typeof window === 'undefined' ||
-    typeof window.CSS === 'undefined' ||
-    typeof window.CSS.escape !== 'function'
-    ? string
-    : window.CSS.escape(string);
-};
-
 const isTabbableRadio = function (node) {
   if (!node.name) {
     return true;
   }
   const radioScope = node.form || node.ownerDocument;
+
+  const queryRadios = function (name) {
+    return radioScope.querySelectorAll(
+      'input[type="radio"][name="' + name + '"]'
+    );
+  };
+
   let radioSet;
-  try {
-    radioSet = radioScope.querySelectorAll(
-      'input[type="radio"][name="' + escapeCSS(node.name) + '"]'
-    );
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error(
-      'Looks like you have a radio button with a name attribute containing invalid CSS selector characters and need the CSS.escape polyfill: %s',
-      err.message
-    );
-    return false;
+  if (
+    typeof window !== 'undefined' &&
+    typeof window.CSS !== 'undefined' &&
+    typeof window.CSS.escape === 'function'
+  ) {
+    radioSet = queryRadios(window.CSS.escape(node.name));
+  } else {
+    try {
+      radioSet = queryRadios(node.name);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(
+        'Looks like you have a radio button with a name attribute containing invalid CSS selector characters and need the CSS.escape polyfill: %s',
+        err.message
+      );
+      return false;
+    }
   }
 
   const checked = getCheckedRadio(radioSet, node.form);
