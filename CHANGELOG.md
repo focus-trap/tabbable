@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.5
+
+### Patch Changes
+
+- c048203: fix crash when radio button name attributes contain CSS selector special characters (#168)
+
 ## 5.1.4
 
 ### Patch Changes
