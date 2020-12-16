@@ -101,9 +101,33 @@ const isTabbableRadio = function (node) {
     return true;
   }
   const radioScope = node.form || node.ownerDocument;
-  const radioSet = radioScope.querySelectorAll(
-    'input[type="radio"][name="' + node.name + '"]'
-  );
+
+  const queryRadios = function (name) {
+    return radioScope.querySelectorAll(
+      'input[type="radio"][name="' + name + '"]'
+    );
+  };
+
+  let radioSet;
+  if (
+    typeof window !== 'undefined' &&
+    typeof window.CSS !== 'undefined' &&
+    typeof window.CSS.escape === 'function'
+  ) {
+    radioSet = queryRadios(window.CSS.escape(node.name));
+  } else {
+    try {
+      radioSet = queryRadios(node.name);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(
+        'Looks like you have a radio button with a name attribute containing invalid CSS selector characters and need the CSS.escape polyfill: %s',
+        err.message
+      );
+      return false;
+    }
+  }
+
   const checked = getCheckedRadio(radioSet, node.form);
   return !checked || checked === node;
 };
