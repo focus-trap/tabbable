@@ -88,6 +88,12 @@ const isDetailsWithSummary = function (node) {
   return r;
 };
 
+const isFirstDirectSummaryInsideClosedDetails = function (node) {
+  const isDirectSummary = matches.call(node, 'details>summary:first-of-type');
+  const nodeUnderDetails = isDirectSummary ? node.parentElement : node;
+  return matches.call(nodeUnderDetails, 'details:not([open]) *');
+};
+
 const getCheckedRadio = function (nodes, form) {
   for (let i = 0; i < nodes.length; i++) {
     if (nodes[i].checked && nodes[i].form === form) {
@@ -140,25 +146,21 @@ const isNonTabbableRadio = function (node) {
   return isRadio(node) && !isTabbableRadio(node);
 };
 
+const hasZeroSize = function (node) {
+  const { width, height } = node.getBoundingClientRect();
+  return width === 0 && height === 0;
+};
+
+const isVisuallyHidden = function (node) {
+  return getComputedStyle(node).visibility === 'hidden';
+};
+
 const isHidden = function (node) {
-  if (getComputedStyle(node).visibility === 'hidden') {
-    return true;
-  }
-
-  const isDirectSummary = matches.call(node, 'details>summary:first-of-type');
-  const nodeUnderDetails = isDirectSummary ? node.parentElement : node;
-  if (matches.call(nodeUnderDetails, 'details:not([open]) *')) {
-    return true;
-  }
-
-  while (node) {
-    if (getComputedStyle(node).display === 'none') {
-      return true;
-    }
-    node = node.parentElement;
-  }
-
-  return false;
+  return (
+    isFirstDirectSummaryInsideClosedDetails(node) ||
+    hasZeroSize(node) ||
+    isVisuallyHidden(node)
+  );
 };
 
 const isNodeMatchingSelectorFocusable = function (node) {
