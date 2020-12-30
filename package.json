@@ -55,7 +55,7 @@
     "@rollup/plugin-babel": "^5.2.2",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.1",
-    "@types/node": "^14.14.14",
+    "@types/node": "^14.14.16",
     "all-contributors-cli": "^6.19.0",
     "babel-eslint": "^10.1.0",
     "brfs": "^2.0.2",
