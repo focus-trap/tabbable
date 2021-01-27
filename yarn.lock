@@ -4343,10 +4343,10 @@ karma-mocha@^2.0.1:
   dependencies:
     minimist "^1.2.3"
 
-karma@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/karma/-/karma-6.0.0.tgz#7333193406e23d2b8071025c89b5e8d8ec000d48"
-  integrity sha512-Tc9VlrmAlOUjsi+5tyNlo18TWiOps3wo4HJYqfZImyTrek2gUASmW6q+bEIE1U5w9f+sQ97P5PbbUCp3uVNqrQ==
+karma@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/karma/-/karma-6.0.2.tgz#4bf52f7586fdcc51122e206431fd5510795cacfa"
+  integrity sha512-GBm8vPkQvjJL1ye//iH6yk9ROHOW+1TaFzRvbc6TbbCOFszbEG66dyDMoFjMMTAHy0ERNqRrMHap/LEHWeijNA==
   dependencies:
     body-parser "^1.19.0"
     braces "^3.0.2"
