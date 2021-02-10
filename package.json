@@ -52,7 +52,7 @@
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.12.13",
     "@babel/plugin-proposal-optional-chaining": "^7.12.13",
     "@babel/preset-env": "^7.12.13",
-    "@changesets/cli": "^2.14.0",
+    "@changesets/cli": "^2.14.1",
     "@rollup/plugin-babel": "^5.2.3",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-node-resolve": "^11.1.1",
