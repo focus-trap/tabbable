@@ -40,5 +40,8 @@ module.exports = {
       ],
       plugins,
     },
+    test: {
+      presets: [['@babel/preset-env', { targets: { node: 'current' } }]],
+    },
   },
 };
