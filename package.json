@@ -55,7 +55,7 @@
     "@changesets/cli": "^2.14.1",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^17.1.0",
-    "@rollup/plugin-node-resolve": "^11.1.1",
+    "@rollup/plugin-node-resolve": "^11.2.0",
     "@types/node": "^14.14.28",
     "all-contributors-cli": "^6.19.0",
     "babel-eslint": "^10.1.0",
