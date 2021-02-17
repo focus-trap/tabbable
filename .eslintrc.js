@@ -18,6 +18,7 @@ module.exports = {
     commonjs: true,
     browser: true,
     mocha: true,
+    jest: true,
   },
   rules: {
     //// possible errors

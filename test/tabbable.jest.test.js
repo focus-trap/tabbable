@@ -213,11 +213,13 @@ describe('tabbable', () => {
 
       try {
         expect(getTabbableIds(tabbableElements)).toEqual(expectedTabbableIds);
+        // eslint-disable-next-line no-console
         expect(console.error).toHaveBeenCalledTimes(2);
       } finally {
         if (actualEscape) {
           CSS.escape = actualEscape;
         }
+        // eslint-disable-next-line no-console
         console.error.mockRestore();
       }
     });
