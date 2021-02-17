@@ -4,9 +4,9 @@ module.exports = function (config) {
   config.set({
     basePath: '',
     frameworks: ['browserify', 'mocha'],
-    files: ['test/**/tabbable.test.js'],
+    files: ['test/**/*.karma.test.js'],
     preprocessors: {
-      'test/**/tabbable.test.js': ['browserify'],
+      'test/**/*.karma.test.js': ['browserify'],
     },
     browserify: {
       debug: true,

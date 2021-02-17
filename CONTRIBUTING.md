@@ -18,7 +18,7 @@ Then open your browser to http://localhost:9966
 
 ## Testing
 
-When you're done with your changes, be sure to run `yarn format` to have Prettier format your code, and use `yarn lint` to check for syntax issues. `yarn test:unit` will run unit tests.
+When you're done with your changes, be sure to run `yarn format` to have Prettier format your code, and use `yarn lint` to check for syntax issues. `yarn test:unit` will run Karma unit tests. `yarn test:jest` will run Jest unit tests.
 
 You can also simply run `yarn test` to check all of the above.
 
