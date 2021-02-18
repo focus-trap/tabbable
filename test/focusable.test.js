@@ -1,11 +1,15 @@
 const { focusable } = require('../src/index.js');
 const fixtures = require('./fixtures/index.js');
-
-function getFocusableIds(focusableResult) {
-  return focusableResult.map((el) => el.getAttribute('id'));
-}
+const {
+  getIdsFromElementsArray,
+  removeAllChildNodes,
+} = require('./helpers.js');
 
 describe('focusable', () => {
+  afterEach(() => {
+    removeAllChildNodes(document.body);
+  });
+
   describe('example fixtures', () => {
     it('correctly identifies focusable elements in the "basic" example', () => {
       const expectedFocusableIds = [
@@ -29,6 +33,7 @@ describe('focusable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.basic;
+      document.body.append(container);
 
       // JSDOM does not support the `contenteditable` attribute, so we need to fake it
       // https://github.com/jsdom/jsdom/issues/1670
@@ -42,7 +47,9 @@ describe('focusable', () => {
 
       const focusableElements = focusable(container);
 
-      expect(getFocusableIds(focusableElements)).toEqual(expectedFocusableIds);
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
+      );
     });
 
     it('correctly identifies focusable elements in the "nested" example', () => {
@@ -54,10 +61,13 @@ describe('focusable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.nested;
+      document.body.append(container);
 
       const focusableElements = focusable(container);
 
-      expect(getFocusableIds(focusableElements)).toEqual(expectedFocusableIds);
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
+      );
     });
 
     it('correctly identifies focusable elements in the "jqueryui" example', () => {
@@ -89,10 +99,13 @@ describe('focusable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.jqueryui;
+      document.body.append(container);
 
       const focusableElements = focusable(container);
 
-      expect(getFocusableIds(focusableElements)).toEqual(expectedFocusableIds);
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
+      );
     });
 
     it('correctly identifies focusable elements in the "non-linear" example', () => {
@@ -114,10 +127,13 @@ describe('focusable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures['non-linear'];
+      document.body.append(container);
 
       const focusableElements = focusable(container);
 
-      expect(getFocusableIds(focusableElements)).toEqual(expectedFocusableIds);
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
+      );
     });
 
     it('correctly identifies focusable elements in the "changing content" example', () => {
@@ -129,10 +145,13 @@ describe('focusable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures['changing-content'];
+      document.body.append(container);
 
       const focusableElements = focusable(container);
 
-      expect(getFocusableIds(focusableElements)).toEqual(expectedFocusableIds);
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
+      );
 
       container.querySelector('#initially-hidden').style.display = 'block';
 
@@ -146,9 +165,9 @@ describe('focusable', () => {
 
       const focusableElementsAfterSectionIsUnhidden = focusable(container);
 
-      expect(getFocusableIds(focusableElementsAfterSectionIsUnhidden)).toEqual(
-        expectedFocusableIdsAfterSectionIsUnhidden
-      );
+      expect(
+        getIdsFromElementsArray(focusableElementsAfterSectionIsUnhidden)
+      ).toEqual(expectedFocusableIdsAfterSectionIsUnhidden);
     });
 
     it('correctly identifies focusable elements in the "svg" example', () => {
@@ -156,10 +175,13 @@ describe('focusable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.svg;
+      document.body.append(container);
 
       const focusableElements = focusable(container);
 
-      expect(getFocusableIds(focusableElements)).toEqual(expectedFocusableIds);
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
+      );
     });
 
     it('correctly identifies focusable elements in the "radio" example', () => {
@@ -178,10 +200,13 @@ describe('focusable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.radio;
+      document.body.append(container);
 
       const focusableElements = focusable(container);
 
-      expect(getFocusableIds(focusableElements)).toEqual(expectedFocusableIds);
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
+      );
     });
 
     it('correctly identifies focusable elements in the "details" example', () => {
@@ -194,10 +219,13 @@ describe('focusable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.details;
+      document.body.append(container);
 
       const focusableElements = focusable(container);
 
-      expect(getFocusableIds(focusableElements)).toEqual(expectedFocusableIds);
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
+      );
     });
 
     it('correctly identifies focusable elements in the "shadow-dom" example', () => {
@@ -205,6 +233,7 @@ describe('focusable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures['shadow-dom'];
+      document.body.append(container);
 
       const host = container.querySelector('#shadow-host');
       const template = container.querySelector('#shadow-root-template');
@@ -214,7 +243,9 @@ describe('focusable', () => {
 
       const focusableElements = focusable(shadow.querySelector('#container'));
 
-      expect(getFocusableIds(focusableElements)).toEqual(expectedFocusableIds);
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
+      );
     });
 
     describe('options argument', () => {
@@ -230,12 +261,13 @@ describe('focusable', () => {
         container.id = 'container-div';
         container.setAttribute('tabindex', '0');
         container.innerHTML = fixtures.nested;
+        document.body.append(container);
 
         const focusableElements = focusable(container, {
           includeContainer: true,
         });
 
-        expect(getFocusableIds(focusableElements)).toEqual(
+        expect(getIdsFromElementsArray(focusableElements)).toEqual(
           expectedFocusableIds
         );
       });
@@ -251,12 +283,13 @@ describe('focusable', () => {
         container.id = 'container-div';
         container.setAttribute('tabindex', '0');
         container.innerHTML = fixtures.nested;
+        document.body.append(container);
 
         const focusableElements = focusable(container, {
           includeContainer: false,
         });
 
-        expect(getFocusableIds(focusableElements)).toEqual(
+        expect(getIdsFromElementsArray(focusableElements)).toEqual(
           expectedFocusableIds
         );
       });

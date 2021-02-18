@@ -1,11 +1,16 @@
+/* global spyOn */
 const { tabbable } = require('../src/index.js');
 const fixtures = require('./fixtures/index.js');
-
-function getTabbableIds(tabbableResult) {
-  return tabbableResult.map((el) => el.getAttribute('id'));
-}
+const {
+  getIdsFromElementsArray,
+  removeAllChildNodes,
+} = require('./helpers.js');
 
 describe('tabbable', () => {
+  afterEach(() => {
+    removeAllChildNodes(document.body);
+  });
+
   describe('example fixtures', () => {
     it('correctly identifies tabbable elements in the "basic" example', () => {
       const expectedTabbableIds = [
@@ -28,6 +33,7 @@ describe('tabbable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.basic;
+      document.body.append(container);
 
       // JSDOM does not support the `contenteditable` attribute, so we need to fake it
       // https://github.com/jsdom/jsdom/issues/1670
@@ -41,7 +47,9 @@ describe('tabbable', () => {
 
       const tabbableElements = tabbable(container);
 
-      expect(getTabbableIds(tabbableElements)).toEqual(expectedTabbableIds);
+      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
+        expectedTabbableIds
+      );
     });
 
     it('correctly identifies tabbable elements in the "nested" example', () => {
@@ -49,10 +57,13 @@ describe('tabbable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.nested;
+      document.body.append(container);
 
       const tabbableElements = tabbable(container);
 
-      expect(getTabbableIds(tabbableElements)).toEqual(expectedTabbableIds);
+      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
+        expectedTabbableIds
+      );
     });
 
     it('correctly identifies tabbable elements in the "jqueryui" example', () => {
@@ -82,10 +93,13 @@ describe('tabbable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.jqueryui;
+      document.body.append(container);
 
       const tabbableElements = tabbable(container);
 
-      expect(getTabbableIds(tabbableElements)).toEqual(expectedTabbableIds);
+      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
+        expectedTabbableIds
+      );
     });
 
     it('correctly identifies tabbable elements in the "non-linear" example', () => {
@@ -113,10 +127,13 @@ describe('tabbable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures['non-linear'];
+      document.body.append(container);
 
       const tabbableElements = tabbable(container);
 
-      expect(getTabbableIds(tabbableElements)).toEqual(expectedTabbableIds);
+      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
+        expectedTabbableIds
+      );
     });
 
     it('correctly identifies tabbable elements in the "changing content" example', () => {
@@ -128,10 +145,13 @@ describe('tabbable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures['changing-content'];
+      document.body.append(container);
 
       const tabbableElements = tabbable(container);
 
-      expect(getTabbableIds(tabbableElements)).toEqual(expectedTabbableIds);
+      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
+        expectedTabbableIds
+      );
 
       container.querySelector('#initially-hidden').style.display = 'block';
 
@@ -145,9 +165,9 @@ describe('tabbable', () => {
 
       const tabbableElementsAfterSectionIsUnhidden = tabbable(container);
 
-      expect(getTabbableIds(tabbableElementsAfterSectionIsUnhidden)).toEqual(
-        expectedTabbableIdsAfterSectionIsUnhidden
-      );
+      expect(
+        getIdsFromElementsArray(tabbableElementsAfterSectionIsUnhidden)
+      ).toEqual(expectedTabbableIdsAfterSectionIsUnhidden);
     });
 
     it('correctly identifies tabbable elements in the "svg" example', () => {
@@ -155,14 +175,16 @@ describe('tabbable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.svg;
+      document.body.append(container);
 
       const tabbableElements = tabbable(container);
 
-      expect(getTabbableIds(tabbableElements)).toEqual(expectedTabbableIds);
+      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
+        expectedTabbableIds
+      );
     });
 
-    // TODO: The results we get here do not match the results we get in the legacy Karma test
-    it.skip('correctly identifies tabbable elements in the "radio" example', () => {
+    it('correctly identifies tabbable elements in the "radio" example', () => {
       const expectedTabbableIds = [
         'formA-radioA',
         'formB-radioA',
@@ -175,17 +197,19 @@ describe('tabbable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.radio;
+      document.body.append(container);
 
       const tabbableElements = tabbable(container);
 
-      expect(getTabbableIds(tabbableElements)).toEqual(expectedTabbableIds);
+      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
+        expectedTabbableIds
+      );
     });
 
-    // TODO: The results we get here do not match the results we get in the legacy Karma test
-    it.skip('correctly identifies tabbable elements in the "radio" example without the `CSS.escape` functionality', () => {
+    it('correctly identifies tabbable elements in the "radio" example without the `CSS.escape` functionality', () => {
       const actualEscape = CSS.escape;
       CSS.escape = undefined;
-      jest.spyOn(console, 'error');
+      spyOn(console, 'error');
 
       const expectedTabbableIds = [
         'formA-radioA',
@@ -198,19 +222,20 @@ describe('tabbable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.radio;
+      document.body.append(container);
 
       const tabbableElements = tabbable(container);
 
       try {
-        expect(getTabbableIds(tabbableElements)).toEqual(expectedTabbableIds);
+        expect(getIdsFromElementsArray(tabbableElements)).toEqual(
+          expectedTabbableIds
+        );
         // eslint-disable-next-line no-console
         expect(console.error).toHaveBeenCalledTimes(2);
       } finally {
         if (actualEscape) {
           CSS.escape = actualEscape;
         }
-        // eslint-disable-next-line no-console
-        console.error.mockRestore();
       }
     });
 
@@ -224,10 +249,13 @@ describe('tabbable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.details;
+      document.body.append(container);
 
       const tabbableElements = tabbable(container);
 
-      expect(getTabbableIds(tabbableElements)).toEqual(expectedTabbableIds);
+      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
+        expectedTabbableIds
+      );
     });
 
     it('correctly identifies tabbable elements in the "shadow-dom" example', () => {
@@ -235,6 +263,7 @@ describe('tabbable', () => {
 
       const container = document.createElement('div');
       container.innerHTML = fixtures['shadow-dom'];
+      document.body.append(container);
 
       const host = container.querySelector('#shadow-host');
       const template = container.querySelector('#shadow-root-template');
@@ -244,7 +273,9 @@ describe('tabbable', () => {
 
       const tabbableElements = tabbable(shadow.querySelector('#container'));
 
-      expect(getTabbableIds(tabbableElements)).toEqual(expectedTabbableIds);
+      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
+        expectedTabbableIds
+      );
     });
 
     describe('options argument', () => {
@@ -260,12 +291,15 @@ describe('tabbable', () => {
         container.id = 'container-div';
         container.setAttribute('tabindex', '0');
         container.innerHTML = fixtures.nested;
+        document.body.append(container);
 
         const tabbableElements = tabbable(container, {
           includeContainer: true,
         });
 
-        expect(getTabbableIds(tabbableElements)).toEqual(expectedTabbableIds);
+        expect(getIdsFromElementsArray(tabbableElements)).toEqual(
+          expectedTabbableIds
+        );
       });
 
       it('does not include the container element when the `includeContainer` property is false', () => {
@@ -279,12 +313,15 @@ describe('tabbable', () => {
         container.id = 'container-div';
         container.setAttribute('tabindex', '0');
         container.innerHTML = fixtures.nested;
+        document.body.append(container);
 
         const tabbableElements = tabbable(container, {
           includeContainer: false,
         });
 
-        expect(getTabbableIds(tabbableElements)).toEqual(expectedTabbableIds);
+        expect(getIdsFromElementsArray(tabbableElements)).toEqual(
+          expectedTabbableIds
+        );
       });
     });
   });
