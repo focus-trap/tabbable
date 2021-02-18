@@ -45,18 +45,6 @@ describe('isFocusable', () => {
       expect(isFocusable(getByText(container, 'Focusable'))).toBe(true);
     });
 
-    // The README says `isFocusable` should return `true for:
-    // <a> elements with href or xlink:href attributes
-    // But this is returning `false`.
-    // Should the README be updated to not include `xlink:href` here?
-    it.skip('returns true for an `a` anchor element with an `xlink:href` attribute', () => {
-      const container = document.createElement('div');
-      container.innerHTML =
-        '<a xlink:href="https://github.com/focus-trap/tabbable">Focusable</a>';
-
-      expect(isFocusable(getByText(container, 'Focusable'))).toBe(true);
-    });
-
     it('returns true for an `audio` element with a `controls` attribute', () => {
       const container = document.createElement('div');
       container.innerHTML = '<audio data-testid="testAudio" controls></audio>';

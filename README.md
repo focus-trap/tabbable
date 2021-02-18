@@ -14,7 +14,7 @@ The following are considered tabbable:
 - `<input>` elements
 - `<select>` elements
 - `<textarea>` elements
-- `<a>` elements with `href` or `xlink:href` attributes
+- `<a>` elements with an `href` attribute
 - `<audio>` and `<videos>` elements with `controls` attributes
 - the first `<summary>` element directly under a `<details>` element
 - `<details>` element without a `<summary>` element

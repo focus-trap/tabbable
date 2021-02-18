@@ -45,18 +45,6 @@ describe('isTabbable', () => {
       expect(isTabbable(getByText(container, 'Tabbable'))).toBe(true);
     });
 
-    // The README says `isTabbable` should return `true for:
-    // <a> elements with href or xlink:href attributes
-    // But this is returning `false`.
-    // Should the README be updated to not include `xlink:href` here?
-    it.skip('returns true for an `a` anchor element with an `xlink:href` attribute', () => {
-      const container = document.createElement('div');
-      container.innerHTML =
-        '<a xlink:href="https://github.com/focus-trap/tabbable">Tabbable</a>';
-
-      expect(isTabbable(getByText(container, 'Tabbable'))).toBe(true);
-    });
-
     it('returns true for an `audio` element with a `controls` attribute', () => {
       const container = document.createElement('div');
       container.innerHTML = '<audio data-testid="testAudio" controls></audio>';
