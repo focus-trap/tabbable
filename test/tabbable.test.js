@@ -1,15 +1,5 @@
 const { tabbable } = require('../src/index.js');
-const {
-  basic,
-  nested,
-  jqueryui,
-  'non-linear': nonLinear,
-  'changing-content': changingContent,
-  svg,
-  radio,
-  details,
-  'shadow-dom': shadowDom,
-} = require('./fixtures/index.js');
+const fixtures = require('./fixtures/index.js');
 
 function getTabbableIds(tabbableResult) {
   return tabbableResult.map((el) => el.getAttribute('id'));
@@ -37,7 +27,7 @@ describe('tabbable', () => {
       ];
 
       const container = document.createElement('div');
-      container.innerHTML = basic;
+      container.innerHTML = fixtures.basic;
 
       // JSDOM does not support the `contenteditable` attribute, so we need to fake it
       // https://github.com/jsdom/jsdom/issues/1670
@@ -58,7 +48,7 @@ describe('tabbable', () => {
       const expectedTabbableIds = ['tabindex-div-2', 'tabindex-div-0', 'input'];
 
       const container = document.createElement('div');
-      container.innerHTML = nested;
+      container.innerHTML = fixtures.nested;
 
       const tabbableElements = tabbable(container);
 
@@ -91,7 +81,7 @@ describe('tabbable', () => {
       ];
 
       const container = document.createElement('div');
-      container.innerHTML = jqueryui;
+      container.innerHTML = fixtures.jqueryui;
 
       const tabbableElements = tabbable(container);
 
@@ -122,7 +112,7 @@ describe('tabbable', () => {
       ];
 
       const container = document.createElement('div');
-      container.innerHTML = nonLinear;
+      container.innerHTML = fixtures['non-linear'];
 
       const tabbableElements = tabbable(container);
 
@@ -137,7 +127,7 @@ describe('tabbable', () => {
       ];
 
       const container = document.createElement('div');
-      container.innerHTML = changingContent;
+      container.innerHTML = fixtures['changing-content'];
 
       const tabbableElements = tabbable(container);
 
@@ -164,7 +154,7 @@ describe('tabbable', () => {
       const expectedTabbableIds = ['svg-btn', 'svg-1'];
 
       const container = document.createElement('div');
-      container.innerHTML = svg;
+      container.innerHTML = fixtures.svg;
 
       const tabbableElements = tabbable(container);
 
@@ -184,7 +174,7 @@ describe('tabbable', () => {
       ];
 
       const container = document.createElement('div');
-      container.innerHTML = radio;
+      container.innerHTML = fixtures.radio;
 
       const tabbableElements = tabbable(container);
 
@@ -207,7 +197,7 @@ describe('tabbable', () => {
       ];
 
       const container = document.createElement('div');
-      container.innerHTML = radio;
+      container.innerHTML = fixtures.radio;
 
       const tabbableElements = tabbable(container);
 
@@ -233,7 +223,7 @@ describe('tabbable', () => {
       ];
 
       const container = document.createElement('div');
-      container.innerHTML = details;
+      container.innerHTML = fixtures.details;
 
       const tabbableElements = tabbable(container);
 
@@ -244,7 +234,7 @@ describe('tabbable', () => {
       const expectedTabbableIds = ['input'];
 
       const container = document.createElement('div');
-      container.innerHTML = shadowDom;
+      container.innerHTML = fixtures['shadow-dom'];
 
       const host = container.querySelector('#shadow-host');
       const template = container.querySelector('#shadow-root-template');
@@ -269,7 +259,7 @@ describe('tabbable', () => {
         const container = document.createElement('div');
         container.id = 'container-div';
         container.setAttribute('tabindex', '0');
-        container.innerHTML = nested;
+        container.innerHTML = fixtures.nested;
 
         const tabbableElements = tabbable(container, {
           includeContainer: true,
@@ -288,7 +278,7 @@ describe('tabbable', () => {
         const container = document.createElement('div');
         container.id = 'container-div';
         container.setAttribute('tabindex', '0');
-        container.innerHTML = nested;
+        container.innerHTML = fixtures.nested;
 
         const tabbableElements = tabbable(container, {
           includeContainer: false,

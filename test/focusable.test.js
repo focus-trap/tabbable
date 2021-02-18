@@ -1,15 +1,5 @@
 const { focusable } = require('../src/index.js');
-const {
-  basic,
-  nested,
-  jqueryui,
-  'non-linear': nonLinear,
-  'changing-content': changingContent,
-  svg,
-  radio,
-  details,
-  'shadow-dom': shadowDom,
-} = require('./fixtures/index.js');
+const fixtures = require('./fixtures/index.js');
 
 function getFocusableIds(focusableResult) {
   return focusableResult.map((el) => el.getAttribute('id'));
@@ -38,7 +28,7 @@ describe('focusable', () => {
       ];
 
       const container = document.createElement('div');
-      container.innerHTML = basic;
+      container.innerHTML = fixtures.basic;
 
       // JSDOM does not support the `contenteditable` attribute, so we need to fake it
       // https://github.com/jsdom/jsdom/issues/1670
@@ -63,7 +53,7 @@ describe('focusable', () => {
       ];
 
       const container = document.createElement('div');
-      container.innerHTML = nested;
+      container.innerHTML = fixtures.nested;
 
       const focusableElements = focusable(container);
 
@@ -98,7 +88,7 @@ describe('focusable', () => {
       ];
 
       const container = document.createElement('div');
-      container.innerHTML = jqueryui;
+      container.innerHTML = fixtures.jqueryui;
 
       const focusableElements = focusable(container);
 
@@ -123,7 +113,7 @@ describe('focusable', () => {
       ];
 
       const container = document.createElement('div');
-      container.innerHTML = nonLinear;
+      container.innerHTML = fixtures['non-linear'];
 
       const focusableElements = focusable(container);
 
@@ -138,7 +128,7 @@ describe('focusable', () => {
       ];
 
       const container = document.createElement('div');
-      container.innerHTML = changingContent;
+      container.innerHTML = fixtures['changing-content'];
 
       const focusableElements = focusable(container);
 
@@ -165,7 +155,7 @@ describe('focusable', () => {
       const expectedFocusableIds = ['svg-btn', 'svg-1', 'svg-2'];
 
       const container = document.createElement('div');
-      container.innerHTML = svg;
+      container.innerHTML = fixtures.svg;
 
       const focusableElements = focusable(container);
 
@@ -187,7 +177,7 @@ describe('focusable', () => {
       ];
 
       const container = document.createElement('div');
-      container.innerHTML = radio;
+      container.innerHTML = fixtures.radio;
 
       const focusableElements = focusable(container);
 
@@ -203,7 +193,7 @@ describe('focusable', () => {
       ];
 
       const container = document.createElement('div');
-      container.innerHTML = details;
+      container.innerHTML = fixtures.details;
 
       const focusableElements = focusable(container);
 
@@ -214,7 +204,7 @@ describe('focusable', () => {
       const expectedFocusableIds = ['input'];
 
       const container = document.createElement('div');
-      container.innerHTML = shadowDom;
+      container.innerHTML = fixtures['shadow-dom'];
 
       const host = container.querySelector('#shadow-host');
       const template = container.querySelector('#shadow-root-template');
@@ -239,7 +229,7 @@ describe('focusable', () => {
         const container = document.createElement('div');
         container.id = 'container-div';
         container.setAttribute('tabindex', '0');
-        container.innerHTML = nested;
+        container.innerHTML = fixtures.nested;
 
         const focusableElements = focusable(container, {
           includeContainer: true,
@@ -260,7 +250,7 @@ describe('focusable', () => {
         const container = document.createElement('div');
         container.id = 'container-div';
         container.setAttribute('tabindex', '0');
-        container.innerHTML = nested;
+        container.innerHTML = fixtures.nested;
 
         const focusableElements = focusable(container, {
           includeContainer: false,
