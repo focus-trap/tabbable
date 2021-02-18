@@ -46,7 +46,6 @@ jobs:
       - name: Test
         run: |-
           yarn test:unit;
-          yarn test:jest;
           yarn test:types;
 
       - name: Build # Tests to see if a build can succeed
