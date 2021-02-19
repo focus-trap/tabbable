@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.6
+
+### Patch Changes
+
+- f9f6d25: Replaces Karma/Mocha/Sinon/Chai in test suite with Jest/Dom Testing Library. Removes README reference to identifying anchor tags with an `xlink:href` attribute as tabbable since that information is incorrect.
+
 ## 5.1.5
 
 ### Patch Changes
