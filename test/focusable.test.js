@@ -1,20 +1,18 @@
-/* global spyOn */
-const { tabbable } = require('../src/index.js');
+const { focusable } = require('../src/index.js');
 const fixtures = require('./fixtures/index.js');
 const {
   getIdsFromElementsArray,
   removeAllChildNodes,
 } = require('./helpers.js');
 
-describe('tabbable', () => {
+describe('focusable', () => {
   afterEach(() => {
     removeAllChildNodes(document.body);
   });
 
   describe('example fixtures', () => {
-    it('correctly identifies tabbable elements in the "basic" example', () => {
-      const expectedTabbableIds = [
-        'tabindex-hrefless-anchor',
+    it('correctly identifies focusable elements in the "basic" example', () => {
+      const expectedFocusableIds = [
         'contenteditable-true',
         'contenteditable-nesting',
         'input',
@@ -22,10 +20,12 @@ describe('tabbable', () => {
         'select',
         'select-readonly',
         'href-anchor',
+        'tabindex-hrefless-anchor',
         'textarea',
         'textarea-readonly',
         'button',
         'tabindex-div',
+        'negative-select',
         'hiddenParentVisible-button',
         'audio-control',
         'video-control',
@@ -45,36 +45,34 @@ describe('tabbable', () => {
       editableDiv.contentEditable = 'true';
       editableNestedDiv.contentEditable = 'true';
 
-      const tabbableElements = tabbable(container);
+      const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
-        expectedTabbableIds
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
       );
     });
 
-    it('correctly identifies tabbable elements in the "nested" example', () => {
-      const expectedTabbableIds = ['tabindex-div-2', 'tabindex-div-0', 'input'];
+    it('correctly identifies focusable elements in the "nested" example', () => {
+      const expectedFocusableIds = [
+        'tabindex-div-0',
+        'tabindex-div-2',
+        'input',
+      ];
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.nested;
       document.body.append(container);
 
-      const tabbableElements = tabbable(container);
+      const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
-        expectedTabbableIds
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
       );
     });
 
-    it('correctly identifies tabbable elements in the "jqueryui" example', () => {
-      const expectedTabbableIds = [
-        // 1
+    it('correctly identifies focusable elements in the "jqueryui" example', () => {
+      const expectedFocusableIds = [
         'formTabindex',
-        'visibleAncestor-spanWithTabindex',
-        // 10
-        'inputTabindex10',
-        'spanTabindex10',
-        // 0
         'visibleAncestor-inputTypeNone',
         'visibleAncestor-inputTypeText',
         'visibleAncestor-inputTypeCheckbox',
@@ -84,9 +82,17 @@ describe('tabbable', () => {
         'visibleAncestor-select',
         'visibleAncestor-textarea',
         'visibleAncestor-anchorWithHref',
+        'visibleAncestor-spanWithTabindex',
+        'visibleAncestor-divWithNegativeTabindex',
         'positionFixedButton',
         'inputTabindex0',
+        'inputTabindex10',
+        'inputTabindex-1',
+        'inputTabindex-50',
         'spanTabindex0',
+        'spanTabindex10',
+        'spanTabindex-1',
+        'spanTabindex-50',
         'dimensionlessParent',
         'dimensionlessParent-dimensionless',
       ];
@@ -95,49 +101,43 @@ describe('tabbable', () => {
       container.innerHTML = fixtures.jqueryui;
       document.body.append(container);
 
-      const tabbableElements = tabbable(container);
+      const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
-        expectedTabbableIds
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
       );
     });
 
-    it('correctly identifies tabbable elements in the "non-linear" example', () => {
-      const expectedTabbableIds = [
-        // 1
-        'input-1',
-        'href-anchor-1',
-        // 2
-        'button-2',
-        // 3
-        'select-3',
-        'tabindex-div-3',
-        // 4
-        'tabindex-hrefless-anchor-4',
-        //12
-        'textarea-12',
-        // 0
+    it('correctly identifies focusable elements in the "non-linear" example', () => {
+      const expectedFocusableIds = [
         'input',
         'select',
         'href-anchor',
         'textarea',
         'button',
         'tabindex-div-0',
+        'input-1',
+        'select-3',
+        'href-anchor-1',
+        'tabindex-hrefless-anchor-4',
+        'textarea-12',
+        'button-2',
+        'tabindex-div-3',
       ];
 
       const container = document.createElement('div');
       container.innerHTML = fixtures['non-linear'];
       document.body.append(container);
 
-      const tabbableElements = tabbable(container);
+      const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
-        expectedTabbableIds
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
       );
     });
 
-    it('correctly identifies tabbable elements in the "changing content" example', () => {
-      const expectedTabbableIds = [
+    it('correctly identifies focusable elements in the "changing content" example', () => {
+      const expectedFocusableIds = [
         'visible-button-1',
         'visible-button-2',
         'visible-button-3',
@@ -147,15 +147,15 @@ describe('tabbable', () => {
       container.innerHTML = fixtures['changing-content'];
       document.body.append(container);
 
-      const tabbableElements = tabbable(container);
+      const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
-        expectedTabbableIds
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
       );
 
       container.querySelector('#initially-hidden').style.display = 'block';
 
-      const expectedTabbableIdsAfterSectionIsUnhidden = [
+      const expectedFocusableIdsAfterSectionIsUnhidden = [
         'visible-button-1',
         'visible-button-2',
         'visible-button-3',
@@ -163,84 +163,54 @@ describe('tabbable', () => {
         'initially-hidden-button-2',
       ];
 
-      const tabbableElementsAfterSectionIsUnhidden = tabbable(container);
+      const focusableElementsAfterSectionIsUnhidden = focusable(container);
 
       expect(
-        getIdsFromElementsArray(tabbableElementsAfterSectionIsUnhidden)
-      ).toEqual(expectedTabbableIdsAfterSectionIsUnhidden);
+        getIdsFromElementsArray(focusableElementsAfterSectionIsUnhidden)
+      ).toEqual(expectedFocusableIdsAfterSectionIsUnhidden);
     });
 
-    it('correctly identifies tabbable elements in the "svg" example', () => {
-      const expectedTabbableIds = ['svg-btn', 'svg-1'];
+    it('correctly identifies focusable elements in the "svg" example', () => {
+      const expectedFocusableIds = ['svg-btn', 'svg-1', 'svg-2'];
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.svg;
       document.body.append(container);
 
-      const tabbableElements = tabbable(container);
+      const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
-        expectedTabbableIds
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
       );
     });
 
-    it('correctly identifies tabbable elements in the "radio" example', () => {
-      const expectedTabbableIds = [
+    it('correctly identifies focusable elements in the "radio" example', () => {
+      const expectedFocusableIds = [
         'formA-radioA',
+        'formA-radioB',
         'formB-radioA',
         'formB-radioB',
         'noform-radioA',
+        'noform-radioB',
         'noform-groupB-radioA',
         'noform-groupB-radioB',
         'noform-groupC-radioA',
+        'noform-groupC-radioB',
       ];
 
       const container = document.createElement('div');
       container.innerHTML = fixtures.radio;
       document.body.append(container);
 
-      const tabbableElements = tabbable(container);
+      const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
-        expectedTabbableIds
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
       );
     });
 
-    it('correctly identifies tabbable elements in the "radio" example without the `CSS.escape` functionality', () => {
-      const actualEscape = CSS.escape;
-      CSS.escape = undefined;
-      spyOn(console, 'error');
-
-      const expectedTabbableIds = [
-        'formA-radioA',
-        'formB-radioA',
-        'formB-radioB',
-        'noform-radioA',
-        'noform-groupB-radioA',
-        'noform-groupB-radioB',
-      ];
-
-      const container = document.createElement('div');
-      container.innerHTML = fixtures.radio;
-      document.body.append(container);
-
-      const tabbableElements = tabbable(container);
-
-      try {
-        expect(getIdsFromElementsArray(tabbableElements)).toEqual(
-          expectedTabbableIds
-        );
-        // eslint-disable-next-line no-console
-        expect(console.error).toHaveBeenCalledTimes(2);
-      } finally {
-        if (actualEscape) {
-          CSS.escape = actualEscape;
-        }
-      }
-    });
-
-    it('correctly identifies tabbable elements in the "details" example', () => {
-      const expectedTabbableIds = [
+    it('correctly identifies focusable elements in the "details" example', () => {
+      const expectedFocusableIds = [
         'details-a-summary',
         'details-b-summary',
         'visible-input',
@@ -251,15 +221,15 @@ describe('tabbable', () => {
       container.innerHTML = fixtures.details;
       document.body.append(container);
 
-      const tabbableElements = tabbable(container);
+      const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
-        expectedTabbableIds
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
       );
     });
 
-    it('correctly identifies tabbable elements in the "shadow-dom" example', () => {
-      const expectedTabbableIds = ['input'];
+    it('correctly identifies focusable elements in the "shadow-dom" example', () => {
+      const expectedFocusableIds = ['input'];
 
       const container = document.createElement('div');
       container.innerHTML = fixtures['shadow-dom'];
@@ -271,19 +241,19 @@ describe('tabbable', () => {
       const shadow = host.attachShadow({ mode: 'open' });
       shadow.appendChild(template.content.cloneNode(true));
 
-      const tabbableElements = tabbable(shadow.querySelector('#container'));
+      const focusableElements = focusable(shadow.querySelector('#container'));
 
-      expect(getIdsFromElementsArray(tabbableElements)).toEqual(
-        expectedTabbableIds
+      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expectedFocusableIds
       );
     });
 
     describe('options argument', () => {
       it('includes the container element when the `includeContainer` property is true', () => {
-        const expectedTabbableIds = [
-          'tabindex-div-2',
+        const expectedFocusableIds = [
           'container-div',
           'tabindex-div-0',
+          'tabindex-div-2',
           'input',
         ];
 
@@ -293,19 +263,19 @@ describe('tabbable', () => {
         container.innerHTML = fixtures.nested;
         document.body.append(container);
 
-        const tabbableElements = tabbable(container, {
+        const focusableElements = focusable(container, {
           includeContainer: true,
         });
 
-        expect(getIdsFromElementsArray(tabbableElements)).toEqual(
-          expectedTabbableIds
+        expect(getIdsFromElementsArray(focusableElements)).toEqual(
+          expectedFocusableIds
         );
       });
 
       it('does not include the container element when the `includeContainer` property is false', () => {
-        const expectedTabbableIds = [
-          'tabindex-div-2',
+        const expectedFocusableIds = [
           'tabindex-div-0',
+          'tabindex-div-2',
           'input',
         ];
 
@@ -315,12 +285,12 @@ describe('tabbable', () => {
         container.innerHTML = fixtures.nested;
         document.body.append(container);
 
-        const tabbableElements = tabbable(container, {
+        const focusableElements = focusable(container, {
           includeContainer: false,
         });
 
-        expect(getIdsFromElementsArray(tabbableElements)).toEqual(
-          expectedTabbableIds
+        expect(getIdsFromElementsArray(focusableElements)).toEqual(
+          expectedFocusableIds
         );
       });
     });
