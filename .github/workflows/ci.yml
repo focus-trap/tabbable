@@ -48,7 +48,7 @@ jobs:
           yarn global add codecov;
           yarn test:coverage;
           yarn test:types;
-          codecov;
+          yarn codecov;
 
       - name: Build # Tests to see if a build can succeed
         run: yarn build
