@@ -38,9 +38,6 @@ jobs:
       - name: Install packages
         run: yarn --frozen-lockfile
 
-      - name: Install Codecov globally
-        run: yarn global add codecov
-
       - name: Lint
         run: |-
           yarn format:check;
@@ -48,6 +45,7 @@ jobs:
 
       - name: Test
         run: |-
+          yarn global add codecov;
           yarn test:coverage;
           yarn test:types;
           codecov;
