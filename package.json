@@ -28,9 +28,10 @@
     "format:watch": "onchange \"{*,src/**/*,test/**/*,.github/workflows/*}.+(js|yml)\" -- prettier --write {{changed}}",
     "lint": "eslint \"*.js\" \"src/**/*.js\" \"test/**/*.js\"",
     "start": "yarn compile:cjs && budo -l -d -o test/debug.js -- -t brfs",
-    "test:unit": "jest",
-    "test:types": "tsc index.d.ts",
     "test": "yarn format:check && yarn lint && yarn test:unit && yarn test:types",
+    "test:coverage": "jest --coverage",
+    "test:types": "tsc index.d.ts",
+    "test:unit": "jest",
     "prepare": "yarn build",
     "release": "yarn build && changeset publish"
   },
