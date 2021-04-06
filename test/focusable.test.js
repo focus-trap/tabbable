@@ -3,6 +3,7 @@ const fixtures = require('./fixtures/index.js');
 const {
   getIdsFromElementsArray,
   removeAllChildNodes,
+  mockElementsSizes,
 } = require('./helpers.js');
 
 describe('focusable', () => {
@@ -292,6 +293,68 @@ describe('focusable', () => {
         expect(getIdsFromElementsArray(focusableElements)).toEqual(
           expectedFocusableIds
         );
+      });
+
+      describe('displayed check', () => {
+        it('return browser visible elements by default ("full" option)', () => {
+          const expectedTabbableIds = [
+            'displayed-top',
+            'displayed-nested',
+            'displayed-zero-size',
+          ];
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.displayed;
+          mockElementsSizes(container);
+          document.body.append(container);
+
+          const tabbableElementsDefault = focusable(container);
+          const tabbableElementsFull = focusable(container, {
+            displayCheck: 'full',
+          });
+
+          expect(getIdsFromElementsArray(tabbableElementsDefault)).toEqual(
+            expectedTabbableIds
+          );
+          expect(getIdsFromElementsArray(tabbableElementsFull)).toEqual(
+            getIdsFromElementsArray(tabbableElementsDefault)
+          );
+        });
+        it('return only elements with size ("non-zero-area" option)', () => {
+          const expectedTabbableIds = ['displayed-top', 'displayed-nested'];
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.displayed;
+          mockElementsSizes(container);
+          document.body.append(container);
+
+          const tabbableElementsWithSize = focusable(container, {
+            displayCheck: 'non-zero-area',
+          });
+
+          expect(getIdsFromElementsArray(tabbableElementsWithSize)).toEqual(
+            expectedTabbableIds
+          );
+        });
+        it('return elements without checking display ("none" option)', () => {
+          const expectedTabbableIds = [
+            'displayed-top',
+            'displayed-nested',
+            'displayed-none-top',
+            'nested-under-displayed-none',
+            'displayed-zero-size',
+          ];
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.displayed;
+          mockElementsSizes(container);
+          document.body.append(container);
+
+          const tabbableElementsWithSize = focusable(container, {
+            displayCheck: 'none',
+          });
+
+          expect(getIdsFromElementsArray(tabbableElementsWithSize)).toEqual(
+            expectedTabbableIds
+          );
+        });
       });
     });
   });

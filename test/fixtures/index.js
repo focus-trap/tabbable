@@ -22,4 +22,5 @@ module.exports = {
     path.join(__dirname, 'shadow-dom.html'),
     'utf8'
   ),
+  displayed: fs.readFileSync(path.join(__dirname, 'displayed.html'), 'utf8'),
 };
