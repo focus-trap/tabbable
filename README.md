@@ -174,7 +174,7 @@ The `displayCheck` configuration accepts the following options:
 
 - `full`: (default) Most reliably resemble browser behavior, this option checks that an element is displayed and all of his ancestors are displayed as well (Notice that this doesn't exclude `visibility: hidden` or elements with zero size). This check is by far the slowest option as it might cause layout reflow.
 - `non-zero-area`: This option checks display under the assumption that elements that are not displayed have zero area (width AND height equals zero). While not keeping true to browser behavior, this option is much less intensive then the `full` option and better for accessibility as zero-size elements with focusable content are considered a strong accessibility anti-pattern.
-- `none`: This checks completely opt out of the display check. **This option is not recommended**, as it might return elements that are not displayed, and as such not tabbable/focusable and can break accessibility. Make sure you know which elements in your DOM are displayed and can filter them out yourself before using this option.
+- `none`: This checks completely opt out of the display check. **This option is not recommended**, as it might return elements that are not displayed, and as such not tabbable/focusable and can break accessibility. Make sure you know which elements in your DOM are not displayed and can filter them out yourself before using this option.
 
 **_Feedback and contributions more than welcome!_**
 
