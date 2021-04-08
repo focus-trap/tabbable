@@ -314,19 +314,30 @@ describe('isTabbable', () => {
       <div data-testid="nested-under-displayed-none" tabindex="0" data-jsdom-no-size></div>
     </div>
     `;
-    it('return browser visible elements by default ("full" option)', () => {
+    function setupDisplayCheck() {
       const container = document.createElement('div');
       container.innerHTML = fixture;
       mockElementsSizes(container);
       document.body.append(container);
-      const displayedTop = getByTestId(container, 'displayed-top');
-      const displayedNested = getByTestId(container, 'displayed-nested');
-      const displayedZeroSize = getByTestId(container, 'displayed-zero-size');
-      const displayedNoneTop = getByTestId(container, 'displayed-none-top');
-      const nestedUnderDisplayedNone = getByTestId(
-        container,
-        'nested-under-displayed-none'
-      );
+      return {
+        displayedTop: getByTestId(container, 'displayed-top'),
+        displayedNested: getByTestId(container, 'displayed-nested'),
+        displayedZeroSize: getByTestId(container, 'displayed-zero-size'),
+        displayedNoneTop: getByTestId(container, 'displayed-none-top'),
+        nestedUnderDisplayedNone: getByTestId(
+          container,
+          'nested-under-displayed-none'
+        ),
+      };
+    }
+    it('return browser visible elements by default ("full" option)', () => {
+      const {
+        displayedTop,
+        displayedNested,
+        displayedZeroSize,
+        displayedNoneTop,
+        nestedUnderDisplayedNone,
+      } = setupDisplayCheck();
 
       // default
       expect(isTabbable(displayedTop)).toBe(true);
@@ -343,18 +354,13 @@ describe('isTabbable', () => {
       expect(isTabbable(nestedUnderDisplayedNone)).toBe(false);
     });
     it('return only elements with size ("non-zero-area" option)', () => {
-      const container = document.createElement('div');
-      container.innerHTML = fixture;
-      mockElementsSizes(container);
-      document.body.append(container);
-      const displayedTop = getByTestId(container, 'displayed-top');
-      const displayedNested = getByTestId(container, 'displayed-nested');
-      const displayedZeroSize = getByTestId(container, 'displayed-zero-size');
-      const displayedNoneTop = getByTestId(container, 'displayed-none-top');
-      const nestedUnderDisplayedNone = getByTestId(
-        container,
-        'nested-under-displayed-none'
-      );
+      const {
+        displayedTop,
+        displayedNested,
+        displayedZeroSize,
+        displayedNoneTop,
+        nestedUnderDisplayedNone,
+      } = setupDisplayCheck();
 
       const options = { displayCheck: 'non-zero-area' };
       expect(isTabbable(displayedTop, options)).toBe(true);
@@ -364,18 +370,13 @@ describe('isTabbable', () => {
       expect(isTabbable(nestedUnderDisplayedNone, options)).toBe(false);
     });
     it('return elements without checking display ("none" option)', () => {
-      const container = document.createElement('div');
-      container.innerHTML = fixture;
-      mockElementsSizes(container);
-      document.body.append(container);
-      const displayedTop = getByTestId(container, 'displayed-top');
-      const displayedNested = getByTestId(container, 'displayed-nested');
-      const displayedZeroSize = getByTestId(container, 'displayed-zero-size');
-      const displayedNoneTop = getByTestId(container, 'displayed-none-top');
-      const nestedUnderDisplayedNone = getByTestId(
-        container,
-        'nested-under-displayed-none'
-      );
+      const {
+        displayedTop,
+        displayedNested,
+        displayedZeroSize,
+        displayedNoneTop,
+        nestedUnderDisplayedNone,
+      } = setupDisplayCheck();
 
       const options = { displayCheck: 'none' };
       expect(isTabbable(displayedTop, options)).toBe(true);

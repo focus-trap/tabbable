@@ -297,7 +297,7 @@ describe('focusable', () => {
 
       describe('displayed check', () => {
         it('return browser visible elements by default ("full" option)', () => {
-          const expectedTabbableIds = [
+          const expectedFocusableIds = [
             'displayed-top',
             'displayed-nested',
             'displayed-zero-size',
@@ -307,35 +307,35 @@ describe('focusable', () => {
           mockElementsSizes(container);
           document.body.append(container);
 
-          const tabbableElementsDefault = focusable(container);
-          const tabbableElementsFull = focusable(container, {
+          const focusableElementsDefault = focusable(container);
+          const focusableElementsFull = focusable(container, {
             displayCheck: 'full',
           });
 
-          expect(getIdsFromElementsArray(tabbableElementsDefault)).toEqual(
-            expectedTabbableIds
+          expect(getIdsFromElementsArray(focusableElementsDefault)).toEqual(
+            expectedFocusableIds
           );
-          expect(getIdsFromElementsArray(tabbableElementsFull)).toEqual(
-            getIdsFromElementsArray(tabbableElementsDefault)
+          expect(getIdsFromElementsArray(focusableElementsFull)).toEqual(
+            getIdsFromElementsArray(focusableElementsDefault)
           );
         });
         it('return only elements with size ("non-zero-area" option)', () => {
-          const expectedTabbableIds = ['displayed-top', 'displayed-nested'];
+          const expectedFocusableIds = ['displayed-top', 'displayed-nested'];
           const container = document.createElement('div');
           container.innerHTML = fixtures.displayed;
           mockElementsSizes(container);
           document.body.append(container);
 
-          const tabbableElementsWithSize = focusable(container, {
+          const focusableElementsWithSize = focusable(container, {
             displayCheck: 'non-zero-area',
           });
 
-          expect(getIdsFromElementsArray(tabbableElementsWithSize)).toEqual(
-            expectedTabbableIds
+          expect(getIdsFromElementsArray(focusableElementsWithSize)).toEqual(
+            expectedFocusableIds
           );
         });
         it('return elements without checking display ("none" option)', () => {
-          const expectedTabbableIds = [
+          const expectedFocusableIds = [
             'displayed-top',
             'displayed-nested',
             'displayed-none-top',
@@ -347,12 +347,12 @@ describe('focusable', () => {
           mockElementsSizes(container);
           document.body.append(container);
 
-          const tabbableElementsWithSize = focusable(container, {
+          const focusableElementsWithSize = focusable(container, {
             displayCheck: 'none',
           });
 
-          expect(getIdsFromElementsArray(tabbableElementsWithSize)).toEqual(
-            expectedTabbableIds
+          expect(getIdsFromElementsArray(focusableElementsWithSize)).toEqual(
+            expectedFocusableIds
           );
         });
       });
