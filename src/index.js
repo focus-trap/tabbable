@@ -140,7 +140,7 @@ const isNonTabbableRadio = function (node) {
   return isRadio(node) && !isTabbableRadio(node);
 };
 
-const isHidden = function (node) {
+const isHidden = function (node, displayCheck) {
   if (getComputedStyle(node).visibility === 'hidden') {
     return true;
   }
@@ -150,22 +150,26 @@ const isHidden = function (node) {
   if (matches.call(nodeUnderDetails, 'details:not([open]) *')) {
     return true;
   }
-
-  while (node) {
-    if (getComputedStyle(node).display === 'none') {
-      return true;
+  if (!displayCheck || displayCheck === 'full') {
+    while (node) {
+      if (getComputedStyle(node).display === 'none') {
+        return true;
+      }
+      node = node.parentElement;
     }
-    node = node.parentElement;
+  } else if (displayCheck === 'non-zero-area') {
+    const { width, height } = node.getBoundingClientRect();
+    return width === 0 && height === 0;
   }
 
   return false;
 };
 
-const isNodeMatchingSelectorFocusable = function (node) {
+const isNodeMatchingSelectorFocusable = function (options, node) {
   if (
     node.disabled ||
     isHiddenInput(node) ||
-    isHidden(node) ||
+    isHidden(node, options.displayCheck) ||
     /* For a details element with a summary, the summary element gets the focused  */
     isDetailsWithSummary(node)
   ) {
@@ -174,9 +178,9 @@ const isNodeMatchingSelectorFocusable = function (node) {
   return true;
 };
 
-const isNodeMatchingSelectorTabbable = function (node) {
+const isNodeMatchingSelectorTabbable = function (options, node) {
   if (
-    !isNodeMatchingSelectorFocusable(node) ||
+    !isNodeMatchingSelectorFocusable(options, node) ||
     isNonTabbableRadio(node) ||
     getTabindex(node) < 0
   ) {
@@ -194,7 +198,7 @@ const tabbable = function (el, options) {
   const candidates = getCandidates(
     el,
     options.includeContainer,
-    isNodeMatchingSelectorTabbable
+    isNodeMatchingSelectorTabbable.bind(null, options)
   );
 
   candidates.forEach(function (candidate, i) {
@@ -224,34 +228,36 @@ const focusable = function (el, options) {
   const candidates = getCandidates(
     el,
     options.includeContainer,
-    isNodeMatchingSelectorFocusable
+    isNodeMatchingSelectorFocusable.bind(null, options)
   );
 
   return candidates;
 };
 
-const isTabbable = function (node) {
+const isTabbable = function (node, options) {
+  options = options || {};
   if (!node) {
     throw new Error('No node provided');
   }
   if (matches.call(node, candidateSelector) === false) {
     return false;
   }
-  return isNodeMatchingSelectorTabbable(node);
+  return isNodeMatchingSelectorTabbable(options, node);
 };
 
 const focusableCandidateSelector = /* #__PURE__ */ candidateSelectors
   .concat('iframe')
   .join(',');
 
-const isFocusable = function (node) {
+const isFocusable = function (node, options) {
+  options = options || {};
   if (!node) {
     throw new Error('No node provided');
   }
   if (matches.call(node, focusableCandidateSelector) === false) {
     return false;
   }
-  return isNodeMatchingSelectorFocusable(node);
+  return isNodeMatchingSelectorFocusable(options, node);
 };
 
 export { tabbable, focusable, isTabbable, isFocusable };

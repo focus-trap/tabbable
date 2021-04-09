@@ -1,6 +1,6 @@
 const { getByTestId, getByText } = require('@testing-library/dom');
 const { isFocusable } = require('../src/index.js');
-const { removeAllChildNodes } = require('./helpers.js');
+const { removeAllChildNodes, mockElementsSizes } = require('./helpers.js');
 
 describe('isFocusable', () => {
   afterEach(() => {
@@ -296,6 +296,100 @@ describe('isFocusable', () => {
       expect(
         isFocusable(getByTestId(container, 'childInputInOpenDetails'))
       ).toBe(true);
+    });
+  });
+
+  describe('display check', () => {
+    const fixture = `
+      <div data-testid="displayed-top" tabindex="0">
+        <div data-testid="displayed-nested" tabindex="0"></div>
+        <div
+          data-testid="displayed-zero-size"
+          tabindex="0"
+          style="width: 0; height: 0"
+          data-jsdom-no-size
+        ></div>
+      </div>
+      <div
+        data-testid="displayed-none-top"
+        tabindex="0"
+        style="display: none"
+        data-jsdom-no-size
+      >
+      <div data-testid="nested-under-displayed-none" tabindex="0" data-jsdom-no-size></div>
+    </div>
+    `;
+    function setupDisplayCheck() {
+      const container = document.createElement('div');
+      container.innerHTML = fixture;
+      mockElementsSizes(container);
+      document.body.append(container);
+      return {
+        displayedTop: getByTestId(container, 'displayed-top'),
+        displayedNested: getByTestId(container, 'displayed-nested'),
+        displayedZeroSize: getByTestId(container, 'displayed-zero-size'),
+        displayedNoneTop: getByTestId(container, 'displayed-none-top'),
+        nestedUnderDisplayedNone: getByTestId(
+          container,
+          'nested-under-displayed-none'
+        ),
+      };
+    }
+
+    it('return browser visible elements by default ("full" option)', () => {
+      const {
+        displayedTop,
+        displayedNested,
+        displayedZeroSize,
+        displayedNoneTop,
+        nestedUnderDisplayedNone,
+      } = setupDisplayCheck();
+
+      // default
+      expect(isFocusable(displayedTop)).toBe(true);
+      expect(isFocusable(displayedNested)).toBe(true);
+      expect(isFocusable(displayedZeroSize)).toBe(true);
+      expect(isFocusable(displayedNoneTop)).toBe(false);
+      expect(isFocusable(nestedUnderDisplayedNone)).toBe(false);
+      // full
+      const options = { displayCheck: 'full' };
+      expect(isFocusable(displayedTop, options)).toBe(true);
+      expect(isFocusable(displayedNested, options)).toBe(true);
+      expect(isFocusable(displayedZeroSize, options)).toBe(true);
+      expect(isFocusable(displayedNoneTop)).toBe(false);
+      expect(isFocusable(nestedUnderDisplayedNone)).toBe(false);
+    });
+    it('return only elements with size ("non-zero-area" option)', () => {
+      const {
+        displayedTop,
+        displayedNested,
+        displayedZeroSize,
+        displayedNoneTop,
+        nestedUnderDisplayedNone,
+      } = setupDisplayCheck();
+
+      const options = { displayCheck: 'non-zero-area' };
+      expect(isFocusable(displayedTop, options)).toBe(true);
+      expect(isFocusable(displayedNested, options)).toBe(true);
+      expect(isFocusable(displayedZeroSize, options)).toBe(false);
+      expect(isFocusable(displayedNoneTop, options)).toBe(false);
+      expect(isFocusable(nestedUnderDisplayedNone, options)).toBe(false);
+    });
+    it('return elements without checking display ("none" option)', () => {
+      const {
+        displayedTop,
+        displayedNested,
+        displayedZeroSize,
+        displayedNoneTop,
+        nestedUnderDisplayedNone,
+      } = setupDisplayCheck();
+
+      const options = { displayCheck: 'none' };
+      expect(isFocusable(displayedTop, options)).toBe(true);
+      expect(isFocusable(displayedNested, options)).toBe(true);
+      expect(isFocusable(displayedZeroSize, options)).toBe(true);
+      expect(isFocusable(displayedNoneTop, options)).toBe(true);
+      expect(isFocusable(nestedUnderDisplayedNone, options)).toBe(true);
     });
   });
 });

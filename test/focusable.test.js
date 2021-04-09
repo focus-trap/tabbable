@@ -3,6 +3,7 @@ const fixtures = require('./fixtures/index.js');
 const {
   getIdsFromElementsArray,
   removeAllChildNodes,
+  mockElementsSizes,
 } = require('./helpers.js');
 
 describe('focusable', () => {
@@ -292,6 +293,68 @@ describe('focusable', () => {
         expect(getIdsFromElementsArray(focusableElements)).toEqual(
           expectedFocusableIds
         );
+      });
+
+      describe('displayed check', () => {
+        it('return browser visible elements by default ("full" option)', () => {
+          const expectedFocusableIds = [
+            'displayed-top',
+            'displayed-nested',
+            'displayed-zero-size',
+          ];
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.displayed;
+          mockElementsSizes(container);
+          document.body.append(container);
+
+          const focusableElementsDefault = focusable(container);
+          const focusableElementsFull = focusable(container, {
+            displayCheck: 'full',
+          });
+
+          expect(getIdsFromElementsArray(focusableElementsDefault)).toEqual(
+            expectedFocusableIds
+          );
+          expect(getIdsFromElementsArray(focusableElementsFull)).toEqual(
+            getIdsFromElementsArray(focusableElementsDefault)
+          );
+        });
+        it('return only elements with size ("non-zero-area" option)', () => {
+          const expectedFocusableIds = ['displayed-top', 'displayed-nested'];
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.displayed;
+          mockElementsSizes(container);
+          document.body.append(container);
+
+          const focusableElementsWithSize = focusable(container, {
+            displayCheck: 'non-zero-area',
+          });
+
+          expect(getIdsFromElementsArray(focusableElementsWithSize)).toEqual(
+            expectedFocusableIds
+          );
+        });
+        it('return elements without checking display ("none" option)', () => {
+          const expectedFocusableIds = [
+            'displayed-top',
+            'displayed-nested',
+            'displayed-none-top',
+            'nested-under-displayed-none',
+            'displayed-zero-size',
+          ];
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.displayed;
+          mockElementsSizes(container);
+          document.body.append(container);
+
+          const focusableElementsWithSize = focusable(container, {
+            displayCheck: 'none',
+          });
+
+          expect(getIdsFromElementsArray(focusableElementsWithSize)).toEqual(
+            expectedFocusableIds
+          );
+        });
       });
     });
   });
