@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.2.0
+
+### Minor Changes
+
+- bf0a8f0: Exposed an option to select the way that an element is checked as displayed
+
 ## 5.1.6
 
 ### Patch Changes
