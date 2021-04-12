@@ -58,7 +58,7 @@ jobs:
         run: yarn build
   E2E:
     runs-on: ubuntu-latest
-    name: e2e on Chrome
+    name: e2e
     strategy:
       matrix:
         browser: [chrome, firefox]
