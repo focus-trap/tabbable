@@ -4,28 +4,22 @@ Cypress.Commands.add('setupTestWindow', (done) => {
       done({
         testWindow,
         testHelpers: {
-          getIdsFromElementsArray,
-          removeAllChildNodes,
-          setupFixture,
+          getIdsFromElementsArray(elements) {
+            return elements.map((el) => el.getAttribute('id'));
+          },
+          removeAllChildNodes(parent) {
+            while (parent.firstChild) {
+              parent.removeChild(parent.firstChild);
+            }
+          },
+          setupFixture(content) {
+            const container = document.createElement('div');
+            container.innerHTML = content;
+            document.body.append(container);
+            return { container };
+          },
         },
       });
     },
   });
 });
-
-function getIdsFromElementsArray(elements) {
-  return elements.map((el) => el.getAttribute('id'));
-}
-
-function removeAllChildNodes(parent) {
-  while (parent.firstChild) {
-    parent.removeChild(parent.firstChild);
-  }
-}
-
-function setupFixture(content) {
-  const container = document.createElement('div');
-  container.innerHTML = content;
-  document.body.append(container);
-  return { container };
-}

@@ -4,6 +4,7 @@ describe('tabbable', () => {
   let fixtures, window, document, helpers;
   before((done) => {
     cy.setupTestWindow(({ testWindow, testHelpers }) => {
+      // eslint-disable-next-line no-unused-vars
       window = testWindow;
       document = testWindow.document;
       helpers = testHelpers;
