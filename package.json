@@ -32,6 +32,7 @@
     "test:coverage": "jest --coverage",
     "test:types": "tsc index.d.ts",
     "test:unit": "jest",
+    "test:e2e": "cypress open",
     "prepare": "yarn build",
     "release": "yarn build && changeset publish"
   },
@@ -67,6 +68,7 @@
     "browserify": "^17.0.0",
     "budo": "^11.6.4",
     "cross-env": "^7.0.3",
+    "cypress": "^7.0.1",
     "eslint": "^7.24.0",
     "eslint-config-prettier": "^8.2.0",
     "eslint-plugin-import": "^2.22.1",

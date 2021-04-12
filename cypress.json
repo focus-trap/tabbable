@@ -1,0 +1,7 @@
+{
+    "viewportHeight": 600,
+    "viewportWidth": 800,
+    "video": false,
+    "integrationFolder": "test/e2e"
+  }
+  

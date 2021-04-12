@@ -10,6 +10,7 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
+    'plugin:cypress/recommended',
     'prettier', // ALWAYS LAST: disable style rules that conflict with prettier
   ],
   plugins: ['import'],
