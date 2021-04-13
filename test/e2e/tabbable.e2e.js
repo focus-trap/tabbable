@@ -35,7 +35,7 @@ describe('tabbable', () => {
         'textarea',
         'textarea-readonly',
         'button',
-        // 'tabindex-div',
+        'tabindex-div',
         'hiddenParentVisible-button',
         'audio-control',
         'video-control',
