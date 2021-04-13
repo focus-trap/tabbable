@@ -17,6 +17,13 @@
  */
 // eslint-disable-next-line no-unused-vars
 module.exports = (on, config) => {
+  // enable coverage
+  require('@cypress/code-coverage/task')(on, config);
+  // instrument code
+  on(
+    'file:preprocessor',
+    require('@cypress/code-coverage/use-browserify-istanbul')
+  );
   // fetch fixtures
   on('task', {
     getFixtures() {
