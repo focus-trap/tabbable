@@ -61,7 +61,7 @@ jobs:
     name: e2e
     strategy:
       matrix:
-        browser: [chrome, firefox]
+        browser: [chrome]
     container:
       image: cypress/included:6.0.1
       options: --user 1001
