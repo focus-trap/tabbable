@@ -8,13 +8,13 @@ on:
 
 jobs:
   test:
-    name: Lint & Test
+    name: Check lint/types/unit-test/build
     runs-on: ubuntu-latest
     env:
       CI: true
     strategy:
       matrix:
-        node: [12, 14]
+        node: [14]
     steps:
       - uses: actions/checkout@master
 
