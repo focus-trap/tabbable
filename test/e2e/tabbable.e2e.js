@@ -1,25 +1,24 @@
 import { tabbable } from '../../src/index.js';
+import {
+  setupTestWindow,
+  getFixtures,
+  removeAllChildNodes,
+  getIdsFromElementsArray,
+} from './e2e.helpers';
 
 describe('tabbable', () => {
-  let fixtures, window, document, helpers;
-  before((done) => {
-    cy.setupTestWindow(({ testWindow, testHelpers }) => {
+  let window, document, fixtures;
+  before(() => {
+    setupTestWindow((testWindow) => {
       // eslint-disable-next-line no-unused-vars
       window = testWindow;
       document = testWindow.document;
-      helpers = testHelpers;
-      done();
     });
-  });
-  before((done) => {
-    cy.task('getFixtures').then((f) => {
-      fixtures = f;
-      done();
-    });
+    getFixtures((f) => (fixtures = f));
   });
 
   afterEach(() => {
-    helpers.removeAllChildNodes(document.body);
+    removeAllChildNodes(document.body);
   });
 
   describe('example fixtures', () => {
@@ -58,7 +57,7 @@ describe('tabbable', () => {
 
       const tabbableElements = tabbable(container);
 
-      expect(helpers.getIdsFromElementsArray(tabbableElements)).to.eql(
+      expect(getIdsFromElementsArray(tabbableElements)).to.eql(
         expectedTabbableIds
       );
     });
