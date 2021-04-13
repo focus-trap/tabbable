@@ -67,6 +67,7 @@ jobs:
         uses: cypress-io/github-action@v2.6.1
         with:
           browser: ${{ matrix.browser }}
+          env: coverage=true
       - name: Code coverage
         run: |-
           yarn global add codecov;
