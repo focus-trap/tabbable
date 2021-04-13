@@ -1,14 +1,23 @@
+import { isTabbable } from '../../src/index.js';
+import { setupTestWindow, removeAllChildNodes } from './e2e.helpers';
 const { getByTestId, getByText } = require('@testing-library/dom');
-const { isTabbable } = require('../src/index.js');
-const { removeAllChildNodes, mockElementsSizes } = require('./helpers.js');
 
 describe('isTabbable', () => {
+  let window, document;
+  before(() => {
+    setupTestWindow((testWindow) => {
+      // eslint-disable-next-line no-unused-vars
+      window = testWindow;
+      document = testWindow.document;
+    });
+  });
+
   afterEach(() => {
     removeAllChildNodes(document.body);
   });
 
   it('throws an error if no node is provided', () => {
-    expect(() => isTabbable()).toThrow();
+    expect(() => isTabbable()).to.throw();
   });
 
   describe('returns true', () => {
@@ -17,7 +26,7 @@ describe('isTabbable', () => {
       container.innerHTML = '<button>Click me</button>';
       document.body.append(container);
 
-      expect(isTabbable(getByText(container, 'Click me'))).toBe(true);
+      expect(isTabbable(getByText(container, 'Click me'))).to.eql(true);
     });
 
     it('returns true for an `input` element', () => {
@@ -25,7 +34,7 @@ describe('isTabbable', () => {
       container.innerHTML = '<input data-testid="testInput" />';
       document.body.append(container);
 
-      expect(isTabbable(getByTestId(container, 'testInput'))).toBe(true);
+      expect(isTabbable(getByTestId(container, 'testInput'))).to.eql(true);
     });
 
     it('returns true for a `select` element', () => {
@@ -35,7 +44,7 @@ describe('isTabbable', () => {
         </select>`;
       document.body.append(container);
 
-      expect(isTabbable(getByTestId(container, 'testSelect'))).toBe(true);
+      expect(isTabbable(getByTestId(container, 'testSelect'))).to.eql(true);
     });
 
     it('returns true for a `textarea` element', () => {
@@ -43,7 +52,7 @@ describe('isTabbable', () => {
       container.innerHTML = '<textarea data-testId="testTextarea"></textarea>';
       document.body.append(container);
 
-      expect(isTabbable(getByTestId(container, 'testTextarea'))).toBe(true);
+      expect(isTabbable(getByTestId(container, 'testTextarea'))).to.eql(true);
     });
 
     it('returns true for an `a` anchor element with an `href` attribute', () => {
@@ -52,7 +61,7 @@ describe('isTabbable', () => {
         '<a href="https://github.com/focus-trap/tabbable">Tabbable</a>';
       document.body.append(container);
 
-      expect(isTabbable(getByText(container, 'Tabbable'))).toBe(true);
+      expect(isTabbable(getByText(container, 'Tabbable'))).to.eql(true);
     });
 
     it('returns true for an `audio` element with a `controls` attribute', () => {
@@ -60,7 +69,7 @@ describe('isTabbable', () => {
       container.innerHTML = '<audio data-testid="testAudio" controls></audio>';
       document.body.append(container);
 
-      expect(isTabbable(getByTestId(container, 'testAudio'))).toBe(true);
+      expect(isTabbable(getByTestId(container, 'testAudio'))).to.eql(true);
     });
 
     it('returns true for a `video` element with a `controls` attribute', () => {
@@ -68,7 +77,7 @@ describe('isTabbable', () => {
       container.innerHTML = '<video data-testid="testVideo" controls></video>';
       document.body.append(container);
 
-      expect(isTabbable(getByTestId(container, 'testVideo'))).toBe(true);
+      expect(isTabbable(getByTestId(container, 'testVideo'))).to.eql(true);
     });
 
     it('returns true for the first `summary` child element that is a direct descendant of a `details` element', () => {
@@ -79,9 +88,9 @@ describe('isTabbable', () => {
         </details>`;
       document.body.append(container);
 
-      expect(isTabbable(getByTestId(container, 'testDetails'))).toBe(false);
-      expect(isTabbable(getByText(container, 'Summary 1'))).toBe(true);
-      expect(isTabbable(getByText(container, 'Summary 2'))).toBe(false);
+      expect(isTabbable(getByTestId(container, 'testDetails'))).to.eql(false);
+      expect(isTabbable(getByText(container, 'Summary 1'))).to.eql(true);
+      expect(isTabbable(getByText(container, 'Summary 2'))).to.eql(false);
     });
 
     it('returns true for a `details` element without a `summary` child element', () => {
@@ -89,7 +98,7 @@ describe('isTabbable', () => {
       container.innerHTML = '<details>Details content</details>';
       document.body.append(container);
 
-      expect(isTabbable(getByText(container, 'Details content'))).toBe(true);
+      expect(isTabbable(getByText(container, 'Details content'))).to.eql(true);
     });
 
     // JSDOM does not support the `contenteditable` attribute, so we need to fake it
@@ -109,8 +118,8 @@ describe('isTabbable', () => {
       editableDiv.contentEditable = 'true';
       editableParagraph.contentEditable = 'true';
 
-      expect(isTabbable(editableDiv)).toBe(true);
-      expect(isTabbable(editableParagraph)).toBe(true);
+      expect(isTabbable(editableDiv)).to.eql(true);
+      expect(isTabbable(editableParagraph)).to.eql(true);
     });
 
     it('returns true for any element with a non-negative `tabindex` attribute', () => {
@@ -120,11 +129,11 @@ describe('isTabbable', () => {
         <span tabIndex="0">Tabbable span</span>`;
       document.body.append(container);
 
-      expect(isTabbable(getByText(container, 'Tabbable parapgraph'))).toBe(
+      expect(isTabbable(getByText(container, 'Tabbable parapgraph'))).to.eql(
         true
       );
-      expect(isTabbable(getByText(container, 'Tabbable div'))).toBe(true);
-      expect(isTabbable(getByText(container, 'Tabbable span'))).toBe(true);
+      expect(isTabbable(getByText(container, 'Tabbable div'))).to.eql(true);
+      expect(isTabbable(getByText(container, 'Tabbable span'))).to.eql(true);
     });
   });
 
@@ -136,9 +145,9 @@ describe('isTabbable', () => {
         <span>span</span>`;
       document.body.append(container);
 
-      expect(isTabbable(getByText(container, 'parapgraph'))).toBe(false);
-      expect(isTabbable(getByText(container, 'div'))).toBe(false);
-      expect(isTabbable(getByText(container, 'span'))).toBe(false);
+      expect(isTabbable(getByText(container, 'parapgraph'))).to.eql(false);
+      expect(isTabbable(getByText(container, 'div'))).to.eql(false);
+      expect(isTabbable(getByText(container, 'span'))).to.eql(false);
     });
 
     it('returns false for an `a` anchor element without an `href` attribute', () => {
@@ -146,7 +155,7 @@ describe('isTabbable', () => {
       container.innerHTML = '<a>Tabbable</a>';
       document.body.append(container);
 
-      expect(isTabbable(getByText(container, 'Tabbable'))).toBe(false);
+      expect(isTabbable(getByText(container, 'Tabbable'))).to.eql(false);
     });
 
     it('returns false for an `audio` element without a `controls` attribute', () => {
@@ -154,7 +163,7 @@ describe('isTabbable', () => {
       container.innerHTML = '<audio data-testid="testAudio"></audio>';
       document.body.append(container);
 
-      expect(isTabbable(getByTestId(container, 'testAudio'))).toBe(false);
+      expect(isTabbable(getByTestId(container, 'testAudio'))).to.eql(false);
     });
 
     it('returns false for a `video` element without a `controls` attribute', () => {
@@ -162,7 +171,7 @@ describe('isTabbable', () => {
       container.innerHTML = '<video data-testid="testVideo"></video>';
       document.body.append(container);
 
-      expect(isTabbable(getByTestId(container, 'testVideo'))).toBe(false);
+      expect(isTabbable(getByTestId(container, 'testVideo'))).to.eql(false);
     });
 
     it('returns false for a `summary` element that is not a direct descendant of a `details` element', () => {
@@ -170,7 +179,7 @@ describe('isTabbable', () => {
       container.innerHTML = '<summary>Summary</summary>';
       document.body.append(container);
 
-      expect(isTabbable(getByText(container, 'Summary'))).toBe(false);
+      expect(isTabbable(getByText(container, 'Summary'))).to.eql(false);
     });
 
     // JSDOM does not support the `contenteditable` attribute, so we need to fake it
@@ -190,8 +199,8 @@ describe('isTabbable', () => {
       editableDiv.contentEditable = 'false';
       editableParagraph.contentEditable = 'false';
 
-      expect(isTabbable(editableDiv)).toBe(false);
-      expect(isTabbable(editableParagraph)).toBe(false);
+      expect(isTabbable(editableDiv)).to.eql(false);
+      expect(isTabbable(editableParagraph)).to.eql(false);
     });
 
     it('returns false for any element with a negative `tabindex` attribute', () => {
@@ -200,7 +209,7 @@ describe('isTabbable', () => {
         '<input tabIndex="-1" data-testid="nonTabbableInput" />';
       document.body.append(container);
 
-      expect(isTabbable(getByTestId(container, 'nonTabbableInput'))).toBe(
+      expect(isTabbable(getByTestId(container, 'nonTabbableInput'))).to.eql(
         false
       );
     });
@@ -211,8 +220,8 @@ describe('isTabbable', () => {
         <button disabled="true">Click me</button>`;
       document.body.append(container);
 
-      expect(isTabbable(getByTestId(container, 'disabledInput'))).toBe(false);
-      expect(isTabbable(getByText(container, 'Click me'))).toBe(false);
+      expect(isTabbable(getByTestId(container, 'disabledInput'))).to.eql(false);
+      expect(isTabbable(getByText(container, 'Click me'))).to.eql(false);
     });
 
     it('returns false for any element that is visually hidden with a `display: none` style', () => {
@@ -221,7 +230,7 @@ describe('isTabbable', () => {
         '<input style="display: none;" data-testid="hiddenInput" />';
       document.body.append(container);
 
-      expect(isTabbable(getByTestId(container, 'hiddenInput'))).toBe(false);
+      expect(isTabbable(getByTestId(container, 'hiddenInput'))).to.eql(false);
     });
 
     it('returns false for any element that is visually hidden with a `visibility: hidden` style', () => {
@@ -230,7 +239,7 @@ describe('isTabbable', () => {
         '<input style="visibility: hidden;" data-testid="hiddenInput" />';
       document.body.append(container);
 
-      expect(isTabbable(getByTestId(container, 'hiddenInput'))).toBe(false);
+      expect(isTabbable(getByTestId(container, 'hiddenInput'))).to.eql(false);
     });
 
     it('returns false for any element that is a descendant of an ancestor that is visually hidden with a `display: none` style', () => {
@@ -242,7 +251,7 @@ describe('isTabbable', () => {
 
       expect(
         isTabbable(getByTestId(container, 'inputChildOfHiddenAncestor'))
-      ).toBe(false);
+      ).to.eql(false);
     });
 
     it('returns false for any element that is a descendant of an ancestor that is visually hidden with a `visibility: hidden` style', () => {
@@ -254,7 +263,7 @@ describe('isTabbable', () => {
 
       expect(
         isTabbable(getByTestId(container, 'inputChildOfHiddenAncestor'))
-      ).toBe(false);
+      ).to.eql(false);
     });
 
     it('returns false for any non-`summary` element descendants of a closed `details` element', () => {
@@ -267,15 +276,15 @@ describe('isTabbable', () => {
         </details>`;
       document.body.append(container);
 
-      expect(isTabbable(getByTestId(container, 'closedDetails'))).toBe(true);
+      expect(isTabbable(getByTestId(container, 'closedDetails'))).to.eql(true);
       expect(
         isTabbable(getByTestId(container, 'childInputInClosedDetails'))
-      ).toBe(false);
+      ).to.eql(false);
 
-      expect(isTabbable(getByTestId(container, 'openDetails'))).toBe(true);
+      expect(isTabbable(getByTestId(container, 'openDetails'))).to.eql(true);
       expect(
         isTabbable(getByTestId(container, 'childInputInOpenDetails'))
-      ).toBe(true);
+      ).to.eql(true);
     });
 
     it('returns false for a radio `input` element if a different radio button in the group is checked', () => {
@@ -289,8 +298,8 @@ describe('isTabbable', () => {
         </form>`;
       document.body.append(container);
 
-      expect(isTabbable(getByTestId(container, 'radioA'))).toBe(true);
-      expect(isTabbable(getByTestId(container, 'radioB'))).toBe(false);
+      expect(isTabbable(getByTestId(container, 'radioA'))).to.eql(true);
+      expect(isTabbable(getByTestId(container, 'radioB'))).to.eql(false);
     });
   });
 
@@ -317,7 +326,6 @@ describe('isTabbable', () => {
     function setupDisplayCheck() {
       const container = document.createElement('div');
       container.innerHTML = fixture;
-      mockElementsSizes(container);
       document.body.append(container);
       return {
         displayedTop: getByTestId(container, 'displayed-top'),
@@ -340,18 +348,18 @@ describe('isTabbable', () => {
       } = setupDisplayCheck();
 
       // default
-      expect(isTabbable(displayedTop)).toBe(true);
-      expect(isTabbable(displayedNested)).toBe(true);
-      expect(isTabbable(displayedZeroSize)).toBe(true);
-      expect(isTabbable(displayedNoneTop)).toBe(false);
-      expect(isTabbable(nestedUnderDisplayedNone)).toBe(false);
+      expect(isTabbable(displayedTop)).to.eql(true);
+      expect(isTabbable(displayedNested)).to.eql(true);
+      expect(isTabbable(displayedZeroSize)).to.eql(true);
+      expect(isTabbable(displayedNoneTop)).to.eql(false);
+      expect(isTabbable(nestedUnderDisplayedNone)).to.eql(false);
       // full
       const options = { displayCheck: 'full' };
-      expect(isTabbable(displayedTop, options)).toBe(true);
-      expect(isTabbable(displayedNested, options)).toBe(true);
-      expect(isTabbable(displayedZeroSize, options)).toBe(true);
-      expect(isTabbable(displayedNoneTop)).toBe(false);
-      expect(isTabbable(nestedUnderDisplayedNone)).toBe(false);
+      expect(isTabbable(displayedTop, options)).to.eql(true);
+      expect(isTabbable(displayedNested, options)).to.eql(true);
+      expect(isTabbable(displayedZeroSize, options)).to.eql(true);
+      expect(isTabbable(displayedNoneTop)).to.eql(false);
+      expect(isTabbable(nestedUnderDisplayedNone)).to.eql(false);
     });
     it('return only elements with size ("non-zero-area" option)', () => {
       const {
@@ -363,11 +371,11 @@ describe('isTabbable', () => {
       } = setupDisplayCheck();
 
       const options = { displayCheck: 'non-zero-area' };
-      expect(isTabbable(displayedTop, options)).toBe(true);
-      expect(isTabbable(displayedNested, options)).toBe(true);
-      expect(isTabbable(displayedZeroSize, options)).toBe(false);
-      expect(isTabbable(displayedNoneTop, options)).toBe(false);
-      expect(isTabbable(nestedUnderDisplayedNone, options)).toBe(false);
+      expect(isTabbable(displayedTop, options)).to.eql(true);
+      expect(isTabbable(displayedNested, options)).to.eql(true);
+      expect(isTabbable(displayedZeroSize, options)).to.eql(false);
+      expect(isTabbable(displayedNoneTop, options)).to.eql(false);
+      expect(isTabbable(nestedUnderDisplayedNone, options)).to.eql(false);
     });
     it('return elements without checking display ("none" option)', () => {
       const {
@@ -379,11 +387,11 @@ describe('isTabbable', () => {
       } = setupDisplayCheck();
 
       const options = { displayCheck: 'none' };
-      expect(isTabbable(displayedTop, options)).toBe(true);
-      expect(isTabbable(displayedNested, options)).toBe(true);
-      expect(isTabbable(displayedZeroSize, options)).toBe(true);
-      expect(isTabbable(displayedNoneTop, options)).toBe(true);
-      expect(isTabbable(nestedUnderDisplayedNone, options)).toBe(true);
+      expect(isTabbable(displayedTop, options)).to.eql(true);
+      expect(isTabbable(displayedNested, options)).to.eql(true);
+      expect(isTabbable(displayedZeroSize, options)).to.eql(true);
+      expect(isTabbable(displayedNoneTop, options)).to.eql(true);
+      expect(isTabbable(nestedUnderDisplayedNone, options)).to.eql(true);
     });
   });
 });

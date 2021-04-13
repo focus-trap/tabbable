@@ -1,12 +1,22 @@
-const { focusable } = require('../src/index.js');
-const fixtures = require('./fixtures/index.js');
-const {
-  getIdsFromElementsArray,
+import { focusable } from '../../src/index.js';
+import {
+  setupTestWindow,
+  getFixtures,
   removeAllChildNodes,
-  mockElementsSizes,
-} = require('./helpers.js');
+  getIdsFromElementsArray,
+} from './e2e.helpers';
 
-describe('focusable', () => {
+describe('isFocusable', () => {
+  let window, document, fixtures;
+  before(() => {
+    setupTestWindow((testWindow) => {
+      // eslint-disable-next-line no-unused-vars
+      window = testWindow;
+      document = testWindow.document;
+    });
+    getFixtures((f) => (fixtures = f));
+  });
+
   afterEach(() => {
     removeAllChildNodes(document.body);
   });
@@ -48,7 +58,7 @@ describe('focusable', () => {
 
       const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+      expect(getIdsFromElementsArray(focusableElements)).to.eql(
         expectedFocusableIds
       );
     });
@@ -66,7 +76,7 @@ describe('focusable', () => {
 
       const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+      expect(getIdsFromElementsArray(focusableElements)).to.eql(
         expectedFocusableIds
       );
     });
@@ -104,7 +114,7 @@ describe('focusable', () => {
 
       const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+      expect(getIdsFromElementsArray(focusableElements)).to.eql(
         expectedFocusableIds
       );
     });
@@ -132,7 +142,7 @@ describe('focusable', () => {
 
       const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+      expect(getIdsFromElementsArray(focusableElements)).to.eql(
         expectedFocusableIds
       );
     });
@@ -150,7 +160,7 @@ describe('focusable', () => {
 
       const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+      expect(getIdsFromElementsArray(focusableElements)).to.eql(
         expectedFocusableIds
       );
 
@@ -168,7 +178,7 @@ describe('focusable', () => {
 
       expect(
         getIdsFromElementsArray(focusableElementsAfterSectionIsUnhidden)
-      ).toEqual(expectedFocusableIdsAfterSectionIsUnhidden);
+      ).to.eql(expectedFocusableIdsAfterSectionIsUnhidden);
     });
 
     it('correctly identifies focusable elements in the "svg" example', () => {
@@ -180,7 +190,7 @@ describe('focusable', () => {
 
       const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+      expect(getIdsFromElementsArray(focusableElements)).to.eql(
         expectedFocusableIds
       );
     });
@@ -205,7 +215,7 @@ describe('focusable', () => {
 
       const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+      expect(getIdsFromElementsArray(focusableElements)).to.eql(
         expectedFocusableIds
       );
     });
@@ -224,7 +234,7 @@ describe('focusable', () => {
 
       const focusableElements = focusable(container);
 
-      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+      expect(getIdsFromElementsArray(focusableElements)).to.eql(
         expectedFocusableIds
       );
     });
@@ -244,7 +254,7 @@ describe('focusable', () => {
 
       const focusableElements = focusable(shadow.querySelector('#container'));
 
-      expect(getIdsFromElementsArray(focusableElements)).toEqual(
+      expect(getIdsFromElementsArray(focusableElements)).to.eql(
         expectedFocusableIds
       );
     });
@@ -268,7 +278,7 @@ describe('focusable', () => {
           includeContainer: true,
         });
 
-        expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expect(getIdsFromElementsArray(focusableElements)).to.eql(
           expectedFocusableIds
         );
       });
@@ -290,7 +300,7 @@ describe('focusable', () => {
           includeContainer: false,
         });
 
-        expect(getIdsFromElementsArray(focusableElements)).toEqual(
+        expect(getIdsFromElementsArray(focusableElements)).to.eql(
           expectedFocusableIds
         );
       });
@@ -304,7 +314,6 @@ describe('focusable', () => {
           ];
           const container = document.createElement('div');
           container.innerHTML = fixtures.displayed;
-          mockElementsSizes(container);
           document.body.append(container);
 
           const focusableElementsDefault = focusable(container);
@@ -312,10 +321,10 @@ describe('focusable', () => {
             displayCheck: 'full',
           });
 
-          expect(getIdsFromElementsArray(focusableElementsDefault)).toEqual(
+          expect(getIdsFromElementsArray(focusableElementsDefault)).to.eql(
             expectedFocusableIds
           );
-          expect(getIdsFromElementsArray(focusableElementsFull)).toEqual(
+          expect(getIdsFromElementsArray(focusableElementsFull)).to.eql(
             getIdsFromElementsArray(focusableElementsDefault)
           );
         });
@@ -323,14 +332,13 @@ describe('focusable', () => {
           const expectedFocusableIds = ['displayed-top', 'displayed-nested'];
           const container = document.createElement('div');
           container.innerHTML = fixtures.displayed;
-          mockElementsSizes(container);
           document.body.append(container);
 
           const focusableElementsWithSize = focusable(container, {
             displayCheck: 'non-zero-area',
           });
 
-          expect(getIdsFromElementsArray(focusableElementsWithSize)).toEqual(
+          expect(getIdsFromElementsArray(focusableElementsWithSize)).to.eql(
             expectedFocusableIds
           );
         });
@@ -344,14 +352,13 @@ describe('focusable', () => {
           ];
           const container = document.createElement('div');
           container.innerHTML = fixtures.displayed;
-          mockElementsSizes(container);
           document.body.append(container);
 
           const focusableElementsWithSize = focusable(container, {
             displayCheck: 'none',
           });
 
-          expect(getIdsFromElementsArray(focusableElementsWithSize)).toEqual(
+          expect(getIdsFromElementsArray(focusableElementsWithSize)).to.eql(
             expectedFocusableIds
           );
         });
