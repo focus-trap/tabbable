@@ -68,8 +68,9 @@ jobs:
         with:
           browser: ${{ matrix.browser }}
           env: coverage=true
-      - name: Code coverage
+      - name: Install code coverage
         run: |-
           yarn global add codecov;
           echo "$(yarn global bin)" >> $GITHUB_PATH;
+      - name: Code coverage
         run: codecov;
