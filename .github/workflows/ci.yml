@@ -61,7 +61,7 @@ jobs:
     name: e2e
     strategy:
       matrix:
-        browser: [chrome]
+        browser: [chrome, firefox]
     container:
       image: cypress/included:6.0.1
       options: --user 1001
@@ -69,6 +69,6 @@ jobs:
       CYPRESS_BROWSER: ${{ matrix.browser }}
     steps:
       - uses: actions/checkout@v2
-      - uses: cypress-io/github-action@v2
+      - uses: cypress-io/github-action@v2.6.1
         with:
           browser: ${{ matrix.browser }}
