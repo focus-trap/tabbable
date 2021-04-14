@@ -67,7 +67,7 @@
     "browserify": "^17.0.0",
     "budo": "^11.6.4",
     "cross-env": "^7.0.3",
-    "eslint": "^7.23.0",
+    "eslint": "^7.24.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.22.1",
     "jest": "^26.6.3",
