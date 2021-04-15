@@ -57,7 +57,7 @@ jobs:
       matrix:
         browser: [chrome, firefox]
     container:
-      image: cypress/included:6.0.1
+      image: cypress/included:7.1.0
       options: --user 1001
     env:
       CYPRESS_BROWSER: ${{ matrix.browser }}
