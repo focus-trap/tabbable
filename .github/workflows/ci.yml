@@ -8,13 +8,13 @@ on:
 
 jobs:
   test:
-    name: Lint & Test
+    name: Check lint/types/unit-test/build
     runs-on: ubuntu-latest
     env:
       CI: true
     strategy:
       matrix:
-        node: [12, 14]
+        node: [14]
     steps:
       - uses: actions/checkout@master
 
@@ -38,11 +38,6 @@ jobs:
       - name: Install packages
         run: yarn --frozen-lockfile
 
-      - name: Install Codecov globally
-        run: |
-          yarn global add codecov
-          echo "$(yarn global bin)" >> $GITHUB_PATH
-
       - name: Lint
         run: |-
           yarn format:check;
@@ -50,9 +45,32 @@ jobs:
 
       - name: Test
         run: |-
-          yarn test:coverage;
           yarn test:types;
-          codecov;
+          yarn test:unit;
 
       - name: Build # Tests to see if a build can succeed
         run: yarn build
+  E2E:
+    runs-on: ubuntu-latest
+    name: e2e
+    strategy:
+      matrix:
+        browser: [chrome, firefox]
+    container:
+      image: cypress/included:7.1.0
+      options: --user 1001
+    env:
+      CYPRESS_BROWSER: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test E2E
+        uses: cypress-io/github-action@v2.6.1
+        with:
+          browser: ${{ matrix.browser }}
+          env: coverage=true
+      - name: Install code coverage
+        run: |-
+          yarn global add codecov;
+          echo "$(yarn global bin)" >> $GITHUB_PATH;
+      - name: Code coverage
+        run: codecov;

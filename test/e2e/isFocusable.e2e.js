@@ -1,14 +1,23 @@
+import { isFocusable } from '../../src/index.js';
+import { setupTestWindow, removeAllChildNodes } from './e2e.helpers';
 const { getByTestId, getByText } = require('@testing-library/dom');
-const { isFocusable } = require('../src/index.js');
-const { removeAllChildNodes, mockElementsSizes } = require('./helpers.js');
 
 describe('isFocusable', () => {
+  let window, document;
+  before(() => {
+    setupTestWindow((testWindow) => {
+      // eslint-disable-next-line no-unused-vars
+      window = testWindow;
+      document = testWindow.document;
+    });
+  });
+
   afterEach(() => {
     removeAllChildNodes(document.body);
   });
 
   it('throws an error if no node is provided', () => {
-    expect(() => isFocusable()).toThrow();
+    expect(() => isFocusable()).to.throw();
   });
 
   describe('returns true', () => {
@@ -17,7 +26,7 @@ describe('isFocusable', () => {
       container.innerHTML = '<button>Click me</button>';
       document.body.append(container);
 
-      expect(isFocusable(getByText(container, 'Click me'))).toBe(true);
+      expect(isFocusable(getByText(container, 'Click me'))).to.eql(true);
     });
 
     it('returns true for an `input` element', () => {
@@ -25,7 +34,7 @@ describe('isFocusable', () => {
       container.innerHTML = '<input data-testid="testInput" />';
       document.body.append(container);
 
-      expect(isFocusable(getByTestId(container, 'testInput'))).toBe(true);
+      expect(isFocusable(getByTestId(container, 'testInput'))).to.eql(true);
     });
 
     it('returns true for a `select` element', () => {
@@ -35,7 +44,7 @@ describe('isFocusable', () => {
         </select>`;
       document.body.append(container);
 
-      expect(isFocusable(getByTestId(container, 'testSelect'))).toBe(true);
+      expect(isFocusable(getByTestId(container, 'testSelect'))).to.eql(true);
     });
 
     it('returns true for a `textarea` element', () => {
@@ -43,7 +52,7 @@ describe('isFocusable', () => {
       container.innerHTML = '<textarea data-testId="testTextarea"></textarea>';
       document.body.append(container);
 
-      expect(isFocusable(getByTestId(container, 'testTextarea'))).toBe(true);
+      expect(isFocusable(getByTestId(container, 'testTextarea'))).to.eql(true);
     });
 
     it('returns true for an `a` anchor element with an `href` attribute', () => {
@@ -52,7 +61,7 @@ describe('isFocusable', () => {
         '<a href="https://github.com/focus-trap/tabbable">Focusable</a>';
       document.body.append(container);
 
-      expect(isFocusable(getByText(container, 'Focusable'))).toBe(true);
+      expect(isFocusable(getByText(container, 'Focusable'))).to.eql(true);
     });
 
     it('returns true for an `audio` element with a `controls` attribute', () => {
@@ -60,7 +69,7 @@ describe('isFocusable', () => {
       container.innerHTML = '<audio data-testid="testAudio" controls></audio>';
       document.body.append(container);
 
-      expect(isFocusable(getByTestId(container, 'testAudio'))).toBe(true);
+      expect(isFocusable(getByTestId(container, 'testAudio'))).to.eql(true);
     });
 
     it('returns true for a `video` element with a `controls` attribute', () => {
@@ -68,7 +77,7 @@ describe('isFocusable', () => {
       container.innerHTML = '<video data-testid="testVideo" controls></video>';
       document.body.append(container);
 
-      expect(isFocusable(getByTestId(container, 'testVideo'))).toBe(true);
+      expect(isFocusable(getByTestId(container, 'testVideo'))).to.eql(true);
     });
 
     it('returns true for the first `summary` child element that is a direct descendant of a `details` element', () => {
@@ -79,9 +88,9 @@ describe('isFocusable', () => {
         </details>`;
       document.body.append(container);
 
-      expect(isFocusable(getByTestId(container, 'testDetails'))).toBe(false);
-      expect(isFocusable(getByText(container, 'Summary 1'))).toBe(true);
-      expect(isFocusable(getByText(container, 'Summary 2'))).toBe(false);
+      expect(isFocusable(getByTestId(container, 'testDetails'))).to.eql(false);
+      expect(isFocusable(getByText(container, 'Summary 1'))).to.eql(true);
+      expect(isFocusable(getByText(container, 'Summary 2'))).to.eql(false);
     });
 
     it('returns true for a `details` element without a `summary` child element', () => {
@@ -89,7 +98,7 @@ describe('isFocusable', () => {
       container.innerHTML = '<details>Details content</details>';
       document.body.append(container);
 
-      expect(isFocusable(getByText(container, 'Details content'))).toBe(true);
+      expect(isFocusable(getByText(container, 'Details content'))).to.eql(true);
     });
 
     // JSDOM does not support the `contenteditable` attribute, so we need to fake it
@@ -109,8 +118,8 @@ describe('isFocusable', () => {
       editableDiv.contentEditable = 'true';
       editableParagraph.contentEditable = 'true';
 
-      expect(isFocusable(editableDiv)).toBe(true);
-      expect(isFocusable(editableParagraph)).toBe(true);
+      expect(isFocusable(editableDiv)).to.eql(true);
+      expect(isFocusable(editableParagraph)).to.eql(true);
     });
 
     it('returns true for any element with a non-negative `tabindex` attribute', () => {
@@ -120,11 +129,11 @@ describe('isFocusable', () => {
         <span tabIndex="0">Focusable span</span>`;
       document.body.append(container);
 
-      expect(isFocusable(getByText(container, 'Focusable parapgraph'))).toBe(
+      expect(isFocusable(getByText(container, 'Focusable parapgraph'))).to.eql(
         true
       );
-      expect(isFocusable(getByText(container, 'Focusable div'))).toBe(true);
-      expect(isFocusable(getByText(container, 'Focusable span'))).toBe(true);
+      expect(isFocusable(getByText(container, 'Focusable div'))).to.eql(true);
+      expect(isFocusable(getByText(container, 'Focusable span'))).to.eql(true);
     });
 
     it('returns true for any element with a negative `tabindex` attribute', () => {
@@ -135,12 +144,14 @@ describe('isFocusable', () => {
         <span tabIndex="-1">Focusable span</span>`;
       document.body.append(container);
 
-      expect(isFocusable(getByTestId(container, 'focusableInput'))).toBe(true);
-      expect(isFocusable(getByText(container, 'Focusable parapgraph'))).toBe(
+      expect(isFocusable(getByTestId(container, 'focusableInput'))).to.eql(
         true
       );
-      expect(isFocusable(getByText(container, 'Focusable div'))).toBe(true);
-      expect(isFocusable(getByText(container, 'Focusable span'))).toBe(true);
+      expect(isFocusable(getByText(container, 'Focusable parapgraph'))).to.eql(
+        true
+      );
+      expect(isFocusable(getByText(container, 'Focusable div'))).to.eql(true);
+      expect(isFocusable(getByText(container, 'Focusable span'))).to.eql(true);
     });
 
     it('returns true for all radio `input` elements in a group, regardless of checked status', () => {
@@ -154,8 +165,8 @@ describe('isFocusable', () => {
         </form>`;
       document.body.append(container);
 
-      expect(isFocusable(getByTestId(container, 'radioA'))).toBe(true);
-      expect(isFocusable(getByTestId(container, 'radioB'))).toBe(true);
+      expect(isFocusable(getByTestId(container, 'radioA'))).to.eql(true);
+      expect(isFocusable(getByTestId(container, 'radioB'))).to.eql(true);
     });
   });
 
@@ -167,9 +178,9 @@ describe('isFocusable', () => {
         <span>span</span>`;
       document.body.append(container);
 
-      expect(isFocusable(getByText(container, 'parapgraph'))).toBe(false);
-      expect(isFocusable(getByText(container, 'div'))).toBe(false);
-      expect(isFocusable(getByText(container, 'span'))).toBe(false);
+      expect(isFocusable(getByText(container, 'parapgraph'))).to.eql(false);
+      expect(isFocusable(getByText(container, 'div'))).to.eql(false);
+      expect(isFocusable(getByText(container, 'span'))).to.eql(false);
     });
 
     it('returns false for an `a` anchor element without an `href` attribute', () => {
@@ -177,7 +188,7 @@ describe('isFocusable', () => {
       container.innerHTML = '<a>Not focusable</a>';
       document.body.append(container);
 
-      expect(isFocusable(getByText(container, 'Not focusable'))).toBe(false);
+      expect(isFocusable(getByText(container, 'Not focusable'))).to.eql(false);
     });
 
     it('returns false for an `audio` element without a `controls` attribute', () => {
@@ -185,7 +196,7 @@ describe('isFocusable', () => {
       container.innerHTML = '<audio data-testid="testAudio"></audio>';
       document.body.append(container);
 
-      expect(isFocusable(getByTestId(container, 'testAudio'))).toBe(false);
+      expect(isFocusable(getByTestId(container, 'testAudio'))).to.eql(false);
     });
 
     it('returns false for a `video` element without a `controls` attribute', () => {
@@ -193,7 +204,7 @@ describe('isFocusable', () => {
       container.innerHTML = '<video data-testid="testVideo"></video>';
       document.body.append(container);
 
-      expect(isFocusable(getByTestId(container, 'testVideo'))).toBe(false);
+      expect(isFocusable(getByTestId(container, 'testVideo'))).to.eql(false);
     });
 
     it('returns false for a `summary` element that is not a direct descendant of a `details` element', () => {
@@ -201,7 +212,7 @@ describe('isFocusable', () => {
       container.innerHTML = '<summary>Summary</summary>';
       document.body.append(container);
 
-      expect(isFocusable(getByText(container, 'Summary'))).toBe(false);
+      expect(isFocusable(getByText(container, 'Summary'))).to.eql(false);
     });
 
     // JSDOM does not support the `contenteditable` attribute, so we need to fake it
@@ -221,8 +232,8 @@ describe('isFocusable', () => {
       editableDiv.contentEditable = 'false';
       editableParagraph.contentEditable = 'false';
 
-      expect(isFocusable(editableDiv)).toBe(false);
-      expect(isFocusable(editableParagraph)).toBe(false);
+      expect(isFocusable(editableDiv)).to.eql(false);
+      expect(isFocusable(editableParagraph)).to.eql(false);
     });
 
     it('returns false for any element with a `disabled` attribute', () => {
@@ -231,8 +242,10 @@ describe('isFocusable', () => {
         <button disabled="true">Click me</button>`;
       document.body.append(container);
 
-      expect(isFocusable(getByTestId(container, 'disabledInput'))).toBe(false);
-      expect(isFocusable(getByText(container, 'Click me'))).toBe(false);
+      expect(isFocusable(getByTestId(container, 'disabledInput'))).to.eql(
+        false
+      );
+      expect(isFocusable(getByText(container, 'Click me'))).to.eql(false);
     });
 
     it('returns false for any element that is visually hidden with a `display: none` style', () => {
@@ -241,7 +254,7 @@ describe('isFocusable', () => {
         '<input style="display: none;" data-testid="hiddenInput" />';
       document.body.append(container);
 
-      expect(isFocusable(getByTestId(container, 'hiddenInput'))).toBe(false);
+      expect(isFocusable(getByTestId(container, 'hiddenInput'))).to.eql(false);
     });
 
     it('returns false for any element that is visually hidden with a `visibility: hidden` style', () => {
@@ -250,7 +263,7 @@ describe('isFocusable', () => {
         '<input style="visibility: hidden;" data-testid="hiddenInput" />';
       document.body.append(container);
 
-      expect(isFocusable(getByTestId(container, 'hiddenInput'))).toBe(false);
+      expect(isFocusable(getByTestId(container, 'hiddenInput'))).to.eql(false);
     });
 
     it('returns false for any element that is a descendant of an ancestor that is visually hidden with a `display: none` style', () => {
@@ -262,7 +275,7 @@ describe('isFocusable', () => {
 
       expect(
         isFocusable(getByTestId(container, 'inputChildOfHiddenAncestor'))
-      ).toBe(false);
+      ).to.eql(false);
     });
 
     it('returns false for any element that is a descendant of an ancestor that is visually hidden with a `visibility: hidden` style', () => {
@@ -274,7 +287,7 @@ describe('isFocusable', () => {
 
       expect(
         isFocusable(getByTestId(container, 'inputChildOfHiddenAncestor'))
-      ).toBe(false);
+      ).to.eql(false);
     });
 
     it('returns false for any non-`summary` element descendants of a closed `details` element', () => {
@@ -287,15 +300,15 @@ describe('isFocusable', () => {
         </details>`;
       document.body.append(container);
 
-      expect(isFocusable(getByTestId(container, 'closedDetails'))).toBe(true);
+      expect(isFocusable(getByTestId(container, 'closedDetails'))).to.eql(true);
       expect(
         isFocusable(getByTestId(container, 'childInputInClosedDetails'))
-      ).toBe(false);
+      ).to.eql(false);
 
-      expect(isFocusable(getByTestId(container, 'openDetails'))).toBe(true);
+      expect(isFocusable(getByTestId(container, 'openDetails'))).to.eql(true);
       expect(
         isFocusable(getByTestId(container, 'childInputInOpenDetails'))
-      ).toBe(true);
+      ).to.eql(true);
     });
   });
 
@@ -322,7 +335,6 @@ describe('isFocusable', () => {
     function setupDisplayCheck() {
       const container = document.createElement('div');
       container.innerHTML = fixture;
-      mockElementsSizes(container);
       document.body.append(container);
       return {
         displayedTop: getByTestId(container, 'displayed-top'),
@@ -346,18 +358,18 @@ describe('isFocusable', () => {
       } = setupDisplayCheck();
 
       // default
-      expect(isFocusable(displayedTop)).toBe(true);
-      expect(isFocusable(displayedNested)).toBe(true);
-      expect(isFocusable(displayedZeroSize)).toBe(true);
-      expect(isFocusable(displayedNoneTop)).toBe(false);
-      expect(isFocusable(nestedUnderDisplayedNone)).toBe(false);
+      expect(isFocusable(displayedTop)).to.eql(true);
+      expect(isFocusable(displayedNested)).to.eql(true);
+      expect(isFocusable(displayedZeroSize)).to.eql(true);
+      expect(isFocusable(displayedNoneTop)).to.eql(false);
+      expect(isFocusable(nestedUnderDisplayedNone)).to.eql(false);
       // full
       const options = { displayCheck: 'full' };
-      expect(isFocusable(displayedTop, options)).toBe(true);
-      expect(isFocusable(displayedNested, options)).toBe(true);
-      expect(isFocusable(displayedZeroSize, options)).toBe(true);
-      expect(isFocusable(displayedNoneTop)).toBe(false);
-      expect(isFocusable(nestedUnderDisplayedNone)).toBe(false);
+      expect(isFocusable(displayedTop, options)).to.eql(true);
+      expect(isFocusable(displayedNested, options)).to.eql(true);
+      expect(isFocusable(displayedZeroSize, options)).to.eql(true);
+      expect(isFocusable(displayedNoneTop)).to.eql(false);
+      expect(isFocusable(nestedUnderDisplayedNone)).to.eql(false);
     });
     it('return only elements with size ("non-zero-area" option)', () => {
       const {
@@ -369,11 +381,11 @@ describe('isFocusable', () => {
       } = setupDisplayCheck();
 
       const options = { displayCheck: 'non-zero-area' };
-      expect(isFocusable(displayedTop, options)).toBe(true);
-      expect(isFocusable(displayedNested, options)).toBe(true);
-      expect(isFocusable(displayedZeroSize, options)).toBe(false);
-      expect(isFocusable(displayedNoneTop, options)).toBe(false);
-      expect(isFocusable(nestedUnderDisplayedNone, options)).toBe(false);
+      expect(isFocusable(displayedTop, options)).to.eql(true);
+      expect(isFocusable(displayedNested, options)).to.eql(true);
+      expect(isFocusable(displayedZeroSize, options)).to.eql(false);
+      expect(isFocusable(displayedNoneTop, options)).to.eql(false);
+      expect(isFocusable(nestedUnderDisplayedNone, options)).to.eql(false);
     });
     it('return elements without checking display ("none" option)', () => {
       const {
@@ -385,11 +397,11 @@ describe('isFocusable', () => {
       } = setupDisplayCheck();
 
       const options = { displayCheck: 'none' };
-      expect(isFocusable(displayedTop, options)).toBe(true);
-      expect(isFocusable(displayedNested, options)).toBe(true);
-      expect(isFocusable(displayedZeroSize, options)).toBe(true);
-      expect(isFocusable(displayedNoneTop, options)).toBe(true);
-      expect(isFocusable(nestedUnderDisplayedNone, options)).toBe(true);
+      expect(isFocusable(displayedTop, options)).to.eql(true);
+      expect(isFocusable(displayedNested, options)).to.eql(true);
+      expect(isFocusable(displayedZeroSize, options)).to.eql(true);
+      expect(isFocusable(displayedNoneTop, options)).to.eql(true);
+      expect(isFocusable(nestedUnderDisplayedNone, options)).to.eql(true);
     });
   });
 });
