@@ -68,3 +68,7 @@ dist/
 # OS files
 .DS_Store
 .Thumbs
+
+# Cypress local artifacts
+cypress/videos
+cypress/screenshots
