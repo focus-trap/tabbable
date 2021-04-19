@@ -101,8 +101,6 @@ describe('isTabbable', () => {
       expect(isTabbable(getByText(container, 'Details content'))).to.eql(true);
     });
 
-    // JSDOM does not support the `contenteditable` attribute, so we need to fake it
-    // https://github.com/jsdom/jsdom/issues/1670
     it('returns true for any element with a `contenteditable` attribute with a truthy value', () => {
       const container = document.createElement('div');
       container.innerHTML = `<div contenteditable="true">contenteditable div</div>
@@ -114,9 +112,6 @@ describe('isTabbable', () => {
         container,
         'contenteditable paragraph'
       );
-
-      editableDiv.contentEditable = 'true';
-      editableParagraph.contentEditable = 'true';
 
       expect(isTabbable(editableDiv)).to.eql(true);
       expect(isTabbable(editableParagraph)).to.eql(true);
@@ -182,8 +177,6 @@ describe('isTabbable', () => {
       expect(isTabbable(getByText(container, 'Summary'))).to.eql(false);
     });
 
-    // JSDOM does not support the `contenteditable` attribute, so we need to fake it
-    // https://github.com/jsdom/jsdom/issues/1670
     it('returns false for any element with a `contenteditable` attribute with a falsy value', () => {
       const container = document.createElement('div');
       container.innerHTML = `<div contenteditable="false">contenteditable div</div>
@@ -195,9 +188,6 @@ describe('isTabbable', () => {
         container,
         'contenteditable paragraph'
       );
-
-      editableDiv.contentEditable = 'false';
-      editableParagraph.contentEditable = 'false';
 
       expect(isTabbable(editableDiv)).to.eql(false);
       expect(isTabbable(editableParagraph)).to.eql(false);
@@ -311,16 +301,14 @@ describe('isTabbable', () => {
           data-testid="displayed-zero-size"
           tabindex="0"
           style="width: 0; height: 0"
-          data-jsdom-no-size
         ></div>
       </div>
       <div
         data-testid="displayed-none-top"
         tabindex="0"
         style="display: none"
-        data-jsdom-no-size
       >
-      <div data-testid="nested-under-displayed-none" tabindex="0" data-jsdom-no-size></div>
+      <div data-testid="nested-under-displayed-none" tabindex="0"></div>
     </div>
     `;
     function setupDisplayCheck() {

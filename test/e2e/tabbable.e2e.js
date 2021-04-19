@@ -45,16 +45,6 @@ describe('tabbable', () => {
       container.innerHTML = fixtures.basic;
       document.body.append(container);
 
-      // JSDOM does not support the `contenteditable` attribute, so we need to fake it
-      // https://github.com/jsdom/jsdom/issues/1670
-      const editableDiv = container.querySelector('#contenteditable-true');
-      const editableNestedDiv = container.querySelector(
-        '#contenteditable-nesting'
-      );
-
-      editableDiv.contentEditable = 'true';
-      editableNestedDiv.contentEditable = 'true';
-
       const tabbableElements = tabbable(container);
 
       expect(getIdsFromElementsArray(tabbableElements)).to.eql(
