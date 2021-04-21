@@ -33,6 +33,7 @@
     "test:unit": "jest",
     "test:e2e": "cypress run",
     "test:e2e:dev": "cypress open",
+    "test:coverage": "cypress run --env coverage=true",
     "prepare": "yarn build",
     "release": "yarn build && changeset publish"
   },
