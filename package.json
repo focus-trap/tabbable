@@ -61,7 +61,7 @@
     "@rollup/plugin-node-resolve": "^11.2.1",
     "@testing-library/dom": "^7.30.3",
     "@testing-library/jest-dom": "^5.11.10",
-    "@types/node": "^14.14.37",
+    "@types/node": "^14.14.41",
     "all-contributors-cli": "^6.20.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.3",
