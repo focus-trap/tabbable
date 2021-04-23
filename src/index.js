@@ -13,12 +13,18 @@ const candidateSelectors = [
 ];
 const candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
 
-const matches =
-  typeof Element === 'undefined'
-    ? function () {}
-    : Element.prototype.matches ||
-      Element.prototype.msMatchesSelector ||
-      Element.prototype.webkitMatchesSelector;
+const NoElement = typeof Element === 'undefined';
+
+const matches = NoElement
+  ? function () {}
+  : Element.prototype.matches ||
+    Element.prototype.msMatchesSelector ||
+    Element.prototype.webkitMatchesSelector;
+
+const getRootNode =
+  !NoElement && Element.prototype.getRootNode
+    ? (element) => element.getRootNode()
+    : (element) => element.ownerDocument;
 
 const getCandidates = function (el, includeContainer, filter) {
   let candidates = Array.prototype.slice.apply(
@@ -100,9 +106,7 @@ const isTabbableRadio = function (node) {
   if (!node.name) {
     return true;
   }
-  const radioScope =
-    node.form || node.getRootNode ? node.getRootNode() : node.ownerDocument;
-
+  const radioScope = node.form || getRootNode(node);
   const queryRadios = function (name) {
     return radioScope.querySelectorAll(
       'input[type="radio"][name="' + name + '"]'
@@ -141,7 +145,12 @@ const isNonTabbableRadio = function (node) {
   return isRadio(node) && !isTabbableRadio(node);
 };
 
-const isHidden = function (node, displayCheck) {
+const noop = () => {};
+const isZeroArea = function (node) {
+  const { width, height } = node.getBoundingClientRect();
+  return width === 0 && height === 0;
+};
+const isHidden = function (node, options) {
   if (getComputedStyle(node).visibility === 'hidden') {
     return true;
   }
@@ -151,16 +160,35 @@ const isHidden = function (node, displayCheck) {
   if (matches.call(nodeUnderDetails, 'details:not([open]) *')) {
     return true;
   }
+  const displayCheck = options.displayCheck;
+  const getShadowRoot = options.getShadowRoot || noop;
   if (!displayCheck || displayCheck === 'full') {
     while (node) {
       if (getComputedStyle(node).display === 'none') {
         return true;
       }
-      node = node.parentElement;
+      const parentElement = node.parentElement;
+      const rootNode = getRootNode(node);
+      if (
+        parentElement &&
+        !parentElement.shadowRoot &&
+        getShadowRoot(parentElement)
+      ) {
+        // fallback to zero area size for unreachable shadow dom
+        return isZeroArea(node);
+      } else if (node.assignedSlot) {
+        // iterate up slot
+        node = node.assignedSlot;
+      } else if (!parentElement && rootNode !== node.ownerDocument) {
+        // cross shadow boundary
+        node = rootNode.host;
+      } else {
+        // iterate up normal dom
+        node = parentElement;
+      }
     }
   } else if (displayCheck === 'non-zero-area') {
-    const { width, height } = node.getBoundingClientRect();
-    return width === 0 && height === 0;
+    return isZeroArea(node);
   }
 
   return false;
@@ -214,7 +242,7 @@ const isNodeMatchingSelectorFocusable = function (options, node) {
   if (
     node.disabled ||
     isHiddenInput(node) ||
-    isHidden(node, options.displayCheck) ||
+    isHidden(node, options) ||
     // For a details element with a summary, the summary element gets the focus
     isDetailsWithSummary(node) ||
     isDisabledFromFieldset(node)
