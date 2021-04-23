@@ -100,7 +100,8 @@ const isTabbableRadio = function (node) {
   if (!node.name) {
     return true;
   }
-  const radioScope = node.form || node.ownerDocument;
+  const radioScope =
+    node.form || node.getRootNode ? node.getRootNode() : node.ownerDocument;
 
   const queryRadios = function (name) {
     return radioScope.querySelectorAll(
