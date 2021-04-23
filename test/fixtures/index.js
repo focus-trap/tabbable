@@ -32,4 +32,8 @@ module.exports = {
     path.join(__dirname, 'shadow-dom-display.html'),
     'utf8'
   ),
+  shadowDomQuery: fs.readFileSync(
+    path.join(__dirname, 'shadow-dom-query.html'),
+    'utf8'
+  ),
 };
