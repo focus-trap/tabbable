@@ -126,6 +126,23 @@ describe('web-components', () => {
       expect(getIdsFromElementsArray(result)).to.eql(expected);
     });
 
+    it('should find tabbable host', () => {
+      const expected = [
+        'light-before',
+        'tabbable-host',
+        'shadow-input',
+        'light-after',
+      ];
+      const { container } = setupFixture(fixtures.shadowDomQuery, {
+        window,
+        caseId: 'tabbable-host',
+      });
+
+      const result = tabbable(container, { getShadowRoot() {} });
+
+      expect(getIdsFromElementsArray(result)).to.eql(expected);
+    });
+
     it('should find elements inside shadow dom when directly querying the element with shadow root', () => {
       const expected = ['shadow-input'];
       const { container } = setupFixture(fixtures.shadowDomQuery, {
