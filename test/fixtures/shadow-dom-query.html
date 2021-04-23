@@ -11,6 +11,19 @@
     <input id="light-after"></input>
 </div>
 
+<div id="tabbable-host">
+    <h2>tabbable host</h2>
+    <input id="light-before"></input>
+    <test-shadow tabindex="0" id="tabbable-host">
+        <template shadowroot="open">
+            <div>
+                <input id="shadow-input"></input>
+            </div>
+        </template>
+    </test-shadow>
+    <input id="light-after"></input>
+</div>
+
 <div id="light-shadow-with-slots">
     <h2>light shadow and slots</h2>
     <input id="light-before"></input>
