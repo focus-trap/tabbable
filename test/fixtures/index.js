@@ -28,4 +28,8 @@ module.exports = {
     path.join(__dirname, 'shadow-dom-radio.html'),
     'utf8'
   ),
+  shadowDomDisplay: fs.readFileSync(
+    path.join(__dirname, 'shadow-dom-display.html'),
+    'utf8'
+  ),
 };
