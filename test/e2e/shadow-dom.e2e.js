@@ -43,5 +43,68 @@ describe('web-components', () => {
       expect(isTabbable(radio2Slotted), 'not checked slotted').to.eql(false);
       expect(isTabbable(lightRadio3), 'not checked in light').to.eql(false);
     });
+    it('should not match elements in shadow root with a "display=none" ancestor', () => {
+      const { container } = setupFixture(fixtures.shadowDomDisplay, {
+        window,
+        caseId: 'light-display-none',
+      });
+      const shadowRoot = container.querySelector('test-shadow').shadowRoot;
+      const shadowInput = shadowRoot.querySelector('#shadow-input');
+      const lightInputSlotted = container.querySelector('#light-input-slotted');
+
+      // focusable
+      expect(isFocusable(shadowInput), 'non display shadow').to.eql(false);
+      expect(isFocusable(lightInputSlotted), 'non display slotted').to.eql(
+        false
+      );
+      // tabbable
+      expect(isTabbable(shadowInput), 'non display shadow').to.eql(false);
+      expect(isTabbable(lightInputSlotted), 'non display slotted').to.eql(
+        false
+      );
+    });
+    it('should not match elements in a non display slot', () => {
+      const { container } = setupFixture(fixtures.shadowDomDisplay, {
+        window,
+        caseId: 'slot-display-none',
+      });
+      const lightInputSlotted = container.querySelector('#light-input-slotted');
+
+      expect(isFocusable(lightInputSlotted)).to.eql(false);
+      expect(isTabbable(lightInputSlotted)).to.eql(false);
+    });
+    it('should not match elements in a closed shadow root with inner display="none" (fallback to zero-area-size)', () => {
+      const { container } = setupFixture(fixtures.shadowDomDisplay, {
+        window,
+        caseId: 'slot-display-none-closed-shadow',
+      });
+      const webComp = container.querySelector('test-shadow');
+      const lightDisplayNoneSlotted = container.querySelector(
+        '#light-input-slotted'
+      );
+
+      // focusable
+      expect(
+        isFocusable(lightDisplayNoneSlotted),
+        'unable to test unknown shadow nested non display'
+      ).to.eql(true);
+      expect(
+        isFocusable(lightDisplayNoneSlotted, {
+          getShadowRoot: (node) => node === webComp,
+        }),
+        'fallback to zero size check for unreached shadow root'
+      ).to.eql(false);
+      // tabbable
+      expect(
+        isTabbable(lightDisplayNoneSlotted),
+        'unable to test unknown shadow nested non display'
+      ).to.eql(true);
+      expect(
+        isTabbable(lightDisplayNoneSlotted, {
+          getShadowRoot: (node) => node === webComp,
+        }),
+        'fallback to zero size for unreached shadow root'
+      ).to.eql(false);
+    });
   });
 });
