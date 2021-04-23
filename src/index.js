@@ -37,11 +37,69 @@ const getCandidates = function (el, includeContainer, filter) {
   return candidates;
 };
 
+const getCandidatesIteratively = function (
+  elements,
+  includeContainer,
+  options
+) {
+  const candidates = [];
+  const elementsToCheck = Array.from(elements);
+  while (elementsToCheck.length) {
+    const element = elementsToCheck.shift();
+    if (element.tagName === 'SLOT') {
+      // add shadow dom slot scope (slot itself cannot be focusable)
+      const assigned = element.assignedElements();
+      const content = assigned.length ? assigned : element.children;
+      const nestedCandidates = getCandidatesIteratively(content, true, options);
+      if (options.flatten) {
+        candidates.push(...nestedCandidates);
+      } else {
+        candidates.push({
+          scope: element,
+          candidates: nestedCandidates,
+        });
+      }
+    } else {
+      // check candidate element
+      const validCandidate = matches.call(element, candidateSelector);
+      if (
+        validCandidate &&
+        options.filter(element) &&
+        (includeContainer || !elements.includes(element))
+      ) {
+        candidates.push(element);
+      }
+      // iterate over content
+      const shadowRoot = element.shadowRoot || options.getShadowRoot(element);
+      if (shadowRoot) {
+        // add shadow dom scope
+        const nestedCandidates = getCandidatesIteratively(
+          shadowRoot === true ? element.children : shadowRoot.children,
+          true,
+          options
+        );
+        if (options.flatten) {
+          candidates.push(...nestedCandidates);
+        } else {
+          candidates.push({
+            scope: element,
+            candidates: nestedCandidates,
+          });
+        }
+      } else {
+        // add light dom scope
+        elementsToCheck.unshift(...element.children);
+      }
+    }
+  }
+  return candidates;
+};
+
 const isContentEditable = function (node) {
   return node.contentEditable === 'true';
 };
 
-const getTabindex = function (node) {
+const getTabindex = function (node, isScope) {
   const tabindexAttr = parseInt(node.getAttribute('tabindex'), 10);
 
   if (!isNaN(tabindexAttr)) {
@@ -59,8 +117,13 @@ const getTabindex = function (node) {
   //  yet they are still part of the regular tab order; in FF, they get a default
   //  `tabIndex` of 0; since Chrome still puts those elements in the regular tab
   //  order, consider their tab index to be 0.
+  //
+  // isScope is positive for custom element with shadow root or slot that by default
+  // have tabIndex -1, but need to be sorted by document order in order for their
+  // content to be inserted in the correct position
   if (
-    (node.nodeName === 'AUDIO' ||
+    (isScope ||
+      node.nodeName === 'AUDIO' ||
       node.nodeName === 'VIDEO' ||
       node.nodeName === 'DETAILS') &&
     node.getAttribute('tabindex') === null
@@ -263,47 +326,77 @@ const isNodeMatchingSelectorTabbable = function (options, node) {
   return true;
 };
 
-const tabbable = function (el, options) {
-  options = options || {};
-
+const sortByOrder = function (candidates) {
   const regularTabbables = [];
   const orderedTabbables = [];
-
-  const candidates = getCandidates(
-    el,
-    options.includeContainer,
-    isNodeMatchingSelectorTabbable.bind(null, options)
-  );
-
-  candidates.forEach(function (candidate, i) {
-    const candidateTabindex = getTabindex(candidate);
+  candidates.forEach(function (item, i) {
+    const isScope = !!item.scope;
+    const element = isScope ? item.scope : item;
+    const candidateTabindex = getTabindex(element, isScope);
+    const elements = isScope ? sortByOrder(item.candidates) : element;
     if (candidateTabindex === 0) {
-      regularTabbables.push(candidate);
+      isScope
+        ? regularTabbables.push(...elements)
+        : regularTabbables.push(element);
     } else {
       orderedTabbables.push({
         documentOrder: i,
         tabIndex: candidateTabindex,
-        node: candidate,
+        item: item,
+        isScope: isScope,
+        content: elements,
       });
     }
   });
 
-  const tabbableNodes = orderedTabbables
+  return orderedTabbables
     .sort(sortOrderedTabbables)
-    .map((a) => a.node)
+    .reduce((acc, sortable) => {
+      sortable.isScope
+        ? acc.push(...sortable.content)
+        : acc.push(sortable.content);
+      return acc;
+    }, [])
     .concat(regularTabbables);
+};
 
-  return tabbableNodes;
+const tabbable = function (el, options) {
+  options = options || {};
+
+  let candidates;
+  if (options.getShadowRoot) {
+    candidates = getCandidatesIteratively([el], options.includeContainer, {
+      filter: isNodeMatchingSelectorTabbable.bind(null, options),
+      flatten: false,
+      getShadowRoot: options.getShadowRoot,
+    });
+  } else {
+    candidates = getCandidates(
+      el,
+      options.includeContainer,
+      isNodeMatchingSelectorTabbable.bind(null, options)
+    );
+  }
+  return sortByOrder(candidates);
 };
 
 const focusable = function (el, options) {
   options = options || {};
 
-  const candidates = getCandidates(
-    el,
-    options.includeContainer,
-    isNodeMatchingSelectorFocusable.bind(null, options)
-  );
+  let candidates;
+  if (options.getShadowRoot) {
+    candidates = getCandidatesIteratively([el], options.includeContainer, {
+      filter: isNodeMatchingSelectorFocusable.bind(null, options),
+      flatten: true,
+      getShadowRoot: options.getShadowRoot,
+    });
+  } else {
+    candidates = getCandidates(
+      el,
+      options.includeContainer,
+      isNodeMatchingSelectorFocusable.bind(null, options)
+    );
+  }
 
   return candidates;
 };
