@@ -2,6 +2,7 @@ type FocusableElement = HTMLElement | SVGElement;
 
 export type CheckOptions = {
   displayCheck?: 'full' | 'non-zero-area' | 'none';
+  getShadowDom?: (node: FocusableElement) => boolean | undefined;
 };
 
 export type TabbableOptions = {
