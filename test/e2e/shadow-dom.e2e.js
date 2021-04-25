@@ -112,6 +112,19 @@ describe('web-components', () => {
         'fallback to zero size for unreached shadow root'
       ).to.eql(false);
     });
+    it('should not match slot elements', () => {
+      const { container } = setupFixture(fixtures.shadowDomQuery, {
+        window,
+        caseId: 'slots-tab-index',
+      });
+      const shadowRoot = container.querySelector('test-shadow').shadowRoot;
+      const slotWithTabIndex = shadowRoot.querySelector(
+        'slot[name="slot-first"]'
+      );
+
+      expect(isFocusable(slotWithTabIndex), 'slot not focusable').to.eql(false);
+      expect(isTabbable(slotWithTabIndex), 'slot not tabbable').to.eql(false);
+    });
   });
   describe('query', () => {
     it('should find elements inside shadow dom', () => {
