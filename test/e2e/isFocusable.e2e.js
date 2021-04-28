@@ -3,11 +3,9 @@ import { setupTestWindow, removeAllChildNodes } from './e2e.helpers';
 const { getByTestId, getByText } = require('@testing-library/dom');
 
 describe('isFocusable', () => {
-  let window, document;
+  let document;
   before(() => {
     setupTestWindow((testWindow) => {
-      // eslint-disable-next-line no-unused-vars
-      window = testWindow;
       document = testWindow.document;
     });
   });
