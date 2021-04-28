@@ -7,11 +7,9 @@ import {
 } from './e2e.helpers';
 
 describe('tabbable', () => {
-  let window, document, fixtures;
+  let document, fixtures;
   before(() => {
     setupTestWindow((testWindow) => {
-      // eslint-disable-next-line no-unused-vars
-      window = testWindow;
       document = testWindow.document;
     });
     getFixtures((f) => (fixtures = f));
