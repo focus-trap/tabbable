@@ -73,7 +73,7 @@
     "cypress": "^7.2.0",
     "eslint": "^7.25.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-cypress": "^2.11.2",
+    "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-import": "^2.22.1",
     "jest": "^26.6.3",
     "jest-watch-typeahead": "^0.6.3",
