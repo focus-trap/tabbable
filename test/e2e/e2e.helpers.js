@@ -17,11 +17,15 @@ export function removeAllChildNodes(parent) {
 }
 
 /**
+ * @typedef {Object} SetupFixtureOptions
+ * @property {Window=} window to setup in (defaults to test context window)
+ * @property {string=} caseId subtree element id to render from the fixture
+ */
+
+/**
  * Renders a fixture into the body with support for shadow dom hydration
- *
- * @param {string} content        html content to be used as fixture
- * @param {window} options.window window to run the fixture in
- * @param {window} options.caseId subtree element id to render from the fixture
+ * @param {string} content html content to be used as fixture
+ * @param {SetupFixtureOptions} options
  * @returns {HTMLDivElement} return.container the element the fixture was rendered into
  */
 export function setupFixture(content, options = {}) {
