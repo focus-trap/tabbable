@@ -26,6 +26,12 @@ const getRootNode =
     ? (element) => element.getRootNode()
     : (element) => element.ownerDocument;
 
+/**
+ * @param {Element} el container to check in
+ * @param {boolean} includeContainer add container to check
+ * @param {(node: Element) => boolean} filter filter candidates
+ * @returns {Element[]}
+ */
 const getCandidates = function (el, includeContainer, filter) {
   let candidates = Array.prototype.slice.apply(
     el.querySelectorAll(candidateSelector)
@@ -37,6 +43,31 @@ const getCandidates = function (el, includeContainer, filter) {
   return candidates;
 };
 
+/**
+ * @callback GetShadowRoot
+ * @param {Element} element to check for shadow root
+ * @returns {ShadowRoot|boolean} ShadowRoot if available or boolean indicating if a shadowRoot is attached but not available.
+ */
+
+/**
+ * @typedef {Object} CandidatesScope
+ * @property {Element} scope contains inner candidates
+ * @property {Element[]} candidates
+ */
+
+/**
+ * @typedef {Object} IterativeOptions
+ * @property {GetShadowRoot} getShadowRoot returns the shadow root of an element or a boolean stating if it has a shadow root
+ * @property {(node: Element) => boolean} filter filter candidates
+ * @property {boolean} flatten if true then result will flatten any CandidatesScope into the returned list
+ */
+
+/**
+ * @param {Element[]} elements list of element containers to match candidates from
+ * @param {boolean} includeContainer add container list to check
+ * @param {IterativeOptions} options
+ * @returns {Array.<Element|CandidatesScope>}
+ */
 const getCandidatesIteratively = function (
   elements,
   includeContainer,
@@ -326,6 +357,10 @@ const isNodeMatchingSelectorTabbable = function (options, node) {
   return true;
 };
 
+/**
+ * @param {Array.<Element|CandidatesScope>} candidates
+ * @returns Element[]
+ */
 const sortByOrder = function (candidates) {
   const regularTabbables = [];
   const orderedTabbables = [];
