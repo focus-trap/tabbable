@@ -244,7 +244,7 @@ const isZeroArea = function (node) {
   const { width, height } = node.getBoundingClientRect();
   return width === 0 && height === 0;
 };
-const isHidden = function (node, options) {
+const isHidden = function (node, { displayCheck, getShadowRoot = noop }) {
   if (getComputedStyle(node).visibility === 'hidden') {
     return true;
   }
@@ -254,8 +254,7 @@ const isHidden = function (node, options) {
   if (matches.call(nodeUnderDetails, 'details:not([open]) *')) {
     return true;
   }
-  const displayCheck = options.displayCheck;
-  const getShadowRoot = options.getShadowRoot || noop;
+
   if (!displayCheck || displayCheck === 'full') {
     while (node) {
       if (getComputedStyle(node).display === 'none') {
