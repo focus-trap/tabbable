@@ -1363,14 +1363,14 @@
     through2 "^2.0.0"
     watchify "3.11.1"
 
-"@cypress/code-coverage@^3.9.8":
-  version "3.9.8"
-  resolved "https://registry.yarnpkg.com/@cypress/code-coverage/-/code-coverage-3.9.8.tgz#316ae1d3d7b82aa24d838516e3bdc5f3e8bc52f6"
-  integrity sha512-DxZjozoLoIq8h0xrlB6CKb7gcEo1wqFaLYhb/V1oZwixogwRXUgWnQuqTdgBo9A7TrlOc6LsKXEAbIRps0R+Jg==
+"@cypress/code-coverage@^3.9.9":
+  version "3.9.9"
+  resolved "https://registry.yarnpkg.com/@cypress/code-coverage/-/code-coverage-3.9.9.tgz#8f46d0ffdce2457ec9a0ad590a383e2dad0c0bf0"
+  integrity sha512-dBojYCqZeb0h0rthAUWZFyFCAIpmBIAw1r68laKRS+L+TsjbsKUjsn7tvSHxNVvlmC1kFjHyRpyOig2sKjJlcg==
   dependencies:
     "@cypress/browserify-preprocessor" "3.0.1"
     chalk "4.1.1"
-    dayjs "1.10.5"
+    dayjs "1.10.6"
     debug "4.3.2"
     execa "4.1.0"
     globby "11.0.4"
@@ -3653,10 +3653,10 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
-dayjs@1.10.5, dayjs@^1.10.4:
-  version "1.10.5"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.10.5.tgz#5600df4548fc2453b3f163ebb2abbe965ccfb986"
-  integrity sha512-BUFis41ikLz+65iH6LHQCDm4YPMj5r1YFLdupPIyM4SGcXMmtiLQ7U37i+hGS8urIuqe7I/ou3IS1jVc4nbN4g==
+dayjs@1.10.6, dayjs@^1.10.4:
+  version "1.10.6"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.10.6.tgz#288b2aa82f2d8418a6c9d4df5898c0737ad02a63"
+  integrity sha512-AztC/IOW4L1Q41A86phW5Thhcrco3xuAA+YX/BLpLWWjRcTj5TOt/QImBLmCKlrF7u7k47arTnOyL6GnbG8Hvw==
 
 debounce@^1.0.0:
   version "1.2.0"
