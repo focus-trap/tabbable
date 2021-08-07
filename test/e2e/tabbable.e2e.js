@@ -256,6 +256,28 @@ describe('tabbable', () => {
       );
     });
 
+    it('correctly identifies tabbable elements in the "fieldset" example', () => {
+      const expectedTabbableIds = [
+        'free-enabled-button',
+        'fieldset-enabled-button',
+        'fieldset-enabled-input',
+        'fieldset-enabled-select',
+        'fieldset-enabled-textarea',
+        'fieldset-enabled-anchor',
+        'fieldset-disabled-anchor',
+      ];
+
+      const container = document.createElement('div');
+      container.innerHTML = fixtures.fieldset;
+      document.body.append(container);
+
+      const tabbableElements = tabbable(container);
+
+      expect(getIdsFromElementsArray(tabbableElements)).to.eql(
+        expectedTabbableIds
+      );
+    });
+
     it('correctly identifies tabbable elements in the "shadow-dom" example', () => {
       const expectedTabbableIds = ['input'];
 

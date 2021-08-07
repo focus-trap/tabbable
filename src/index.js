@@ -165,13 +165,36 @@ const isHidden = function (node, displayCheck) {
   return false;
 };
 
+// form fields (nested) inside a disabled fieldset are not focusable/tabbable
+const isInsideDisabledFieldset = function (node) {
+  if (
+    isInput(node) ||
+    node.tagName === 'SELECT' ||
+    node.tagName === 'TEXTAREA' ||
+    node.tagName === 'BUTTON'
+  ) {
+    let parentNode = node.parentElement;
+    while (parentNode) {
+      if (parentNode.tagName === 'FIELDSET' && parentNode.disabled) {
+        return true;
+      }
+      parentNode = parentNode.parentElement;
+    }
+  }
+
+  // else, node's tabbable/focusable state should not be affected by a fieldset's
+  //  enabled/disabled state
+  return false;
+};
+
 const isNodeMatchingSelectorFocusable = function (options, node) {
   if (
     node.disabled ||
     isHiddenInput(node) ||
     isHidden(node, options.displayCheck) ||
-    /* For a details element with a summary, the summary element gets the focused  */
-    isDetailsWithSummary(node)
+    // For a details element with a summary, the summary element gets the focus
+    isDetailsWithSummary(node) ||
+    isInsideDisabledFieldset(node)
   ) {
     return false;
   }

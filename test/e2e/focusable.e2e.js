@@ -227,6 +227,28 @@ describe('isFocusable', () => {
       );
     });
 
+    it('correctly identifies focusable elements in the "fieldset" example', () => {
+      const expectedFocusableIds = [
+        'free-enabled-button',
+        'fieldset-enabled-button',
+        'fieldset-enabled-input',
+        'fieldset-enabled-select',
+        'fieldset-enabled-textarea',
+        'fieldset-enabled-anchor',
+        'fieldset-disabled-anchor',
+      ];
+
+      const container = document.createElement('div');
+      container.innerHTML = fixtures.fieldset;
+      document.body.append(container);
+
+      const focusableElements = focusable(container);
+
+      expect(getIdsFromElementsArray(focusableElements)).to.eql(
+        expectedFocusableIds
+      );
+    });
+
     it('correctly identifies focusable elements in the "shadow-dom" example', () => {
       const expectedFocusableIds = ['input'];
 

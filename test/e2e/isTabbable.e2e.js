@@ -289,6 +289,54 @@ describe('isTabbable', () => {
       expect(isTabbable(getByTestId(container, 'radioA'))).to.eql(true);
       expect(isTabbable(getByTestId(container, 'radioB'))).to.eql(false);
     });
+
+    it('returns false for any form element inside a disabled fieldset', () => {
+      const container = document.createElement('div');
+      container.innerHTML = `
+<fieldset data-testid="fieldset-disabled" disabled>
+  <legend data-testid="fieldset-disabled-legend">Disabled fieldset</legend>
+  <button data-testid="fieldset-disabled-button">Button not tabbable/focusable</button>
+  <input data-testid="fieldset-disabled-input" type="text" value="Input not tabbable/focusable">
+  <select data-testid="fieldset-disabled-select">
+    <option value="foo">Select not tabbable/focusable</option>
+  </select>
+  <textarea data-testid="fieldset-disabled-textarea" cols="30" rows="10">Textarea not tabbable/focusable</textarea>
+  <fieldset data-testid="fieldset-disabled-fieldset-enabled">
+    <input data-testid="fieldset-disabled-fieldset-enabled-input" type="text" value="Input not tabbable/focusable">
+  </fieldset>
+  <a data-testid="fieldset-disabled-anchor" href="#">Link is tabbable/focusable</a>
+</fieldset>
+`;
+      document.body.append(container);
+
+      expect(
+        isTabbable(getByTestId(container, 'fieldset-disabled-legend'))
+      ).to.eql(false);
+      expect(
+        isTabbable(getByTestId(container, 'fieldset-disabled-button'))
+      ).to.eql(false);
+      expect(
+        isTabbable(getByTestId(container, 'fieldset-disabled-input'))
+      ).to.eql(false);
+      expect(
+        isTabbable(getByTestId(container, 'fieldset-disabled-select'))
+      ).to.eql(false);
+      expect(
+        isTabbable(getByTestId(container, 'fieldset-disabled-textarea'))
+      ).to.eql(false);
+
+      // nested in enabled fieldset, disabled parent fieldset takes precedence
+      expect(
+        isTabbable(
+          getByTestId(container, 'fieldset-disabled-fieldset-enabled-input')
+        )
+      ).to.eql(false);
+
+      // anchor is not form field so it remains tabbable
+      expect(
+        isTabbable(getByTestId(container, 'fieldset-disabled-anchor'))
+      ).to.eql(true);
+    });
   });
 
   describe('display check', () => {

@@ -23,4 +23,5 @@ module.exports = {
     'utf8'
   ),
   displayed: fs.readFileSync(path.join(__dirname, 'displayed.html'), 'utf8'),
+  fieldset: fs.readFileSync(path.join(__dirname, 'fieldset.html'), 'utf8'),
 };
