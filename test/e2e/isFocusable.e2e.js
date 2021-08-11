@@ -303,7 +303,24 @@ describe('isFocusable', () => {
       const container = document.createElement('div');
       container.innerHTML = `
 <fieldset data-testid="fieldset-disabled" disabled>
-  <legend data-testid="fieldset-disabled-legend">Disabled fieldset</legend>
+  <legend data-testid="fieldset-disabled-legend1">
+    Disabled fieldset legend 1 (all ENABLED)
+    <button data-testid="fieldset-disabled-legend1-button">Button is tabbable/focusable</button>
+    <input data-testid="fieldset-disabled-legend1-input" type="text" value="Input is tabbable/focusable">
+    <select data-testid="fieldset-disabled-legend1-select">
+      <option value="foo">Select is tabbable/focusable</option>
+    </select>
+    <textarea data-testid="fieldset-disabled-legend1-textarea" cols="30" rows="10">Textarea is tabbable/focusable</textarea>
+  </legend>
+  <legend data-testid="fieldset-disabled-legend2">
+    Disabled fieldset legend 2 (all disabled)
+    <button data-testid="fieldset-disabled-legend2-button">Button not tabbable/focusable</button>
+    <input data-testid="fieldset-disabled-legend2-input" type="text" value="Input not tabbable/focusable">
+    <select data-testid="fieldset-disabled-legend2-select">
+      <option value="foo">Select not tabbable/focusable</option>
+    </select>
+    <textarea data-testid="fieldset-disabled-legend2-textarea" cols="30" rows="10">Textarea not tabbable/focusable</textarea>
+  </legend>
   <button data-testid="fieldset-disabled-button">Button not tabbable/focusable</button>
   <input data-testid="fieldset-disabled-input" type="text" value="Input not tabbable/focusable">
   <select data-testid="fieldset-disabled-select">
@@ -311,6 +328,7 @@ describe('isFocusable', () => {
   </select>
   <textarea data-testid="fieldset-disabled-textarea" cols="30" rows="10">Textarea not tabbable/focusable</textarea>
   <fieldset data-testid="fieldset-disabled-fieldset-enabled">
+    <legend><button data-testid="fieldset-disabled-fieldset-enabled-legend-button">Button not tabbable/focusable</button></legend>
     <input data-testid="fieldset-disabled-fieldset-enabled-input" type="text" value="Input not tabbable/focusable">
   </fieldset>
   <a data-testid="fieldset-disabled-anchor" href="#">Link is tabbable/focusable</a>
@@ -318,9 +336,38 @@ describe('isFocusable', () => {
 `;
       document.body.append(container);
 
+      // in first legend of disabled fieldset: focusable
       expect(
-        isFocusable(getByTestId(container, 'fieldset-disabled-legend'))
+        isFocusable(getByTestId(container, 'fieldset-disabled-legend1-button'))
+      ).to.eql(true);
+      expect(
+        isFocusable(getByTestId(container, 'fieldset-disabled-legend1-input'))
+      ).to.eql(true);
+      expect(
+        isFocusable(getByTestId(container, 'fieldset-disabled-legend1-select'))
+      ).to.eql(true);
+      expect(
+        isFocusable(
+          getByTestId(container, 'fieldset-disabled-legend1-textarea')
+        )
+      ).to.eql(true);
+
+      // in second (or subsequent) legend of disabled fieldset: NOT focusable
+      expect(
+        isFocusable(getByTestId(container, 'fieldset-disabled-legend2-button'))
       ).to.eql(false);
+      expect(
+        isFocusable(getByTestId(container, 'fieldset-disabled-legend2-input'))
+      ).to.eql(false);
+      expect(
+        isFocusable(getByTestId(container, 'fieldset-disabled-legend2-select'))
+      ).to.eql(false);
+      expect(
+        isFocusable(
+          getByTestId(container, 'fieldset-disabled-legend2-textarea')
+        )
+      ).to.eql(false);
+
       expect(
         isFocusable(getByTestId(container, 'fieldset-disabled-button'))
       ).to.eql(false);
@@ -335,6 +382,14 @@ describe('isFocusable', () => {
       ).to.eql(false);
 
       // nested in enabled fieldset, disabled parent fieldset takes precedence
+      expect(
+        isFocusable(
+          getByTestId(
+            container,
+            'fieldset-disabled-fieldset-enabled-legend-button'
+          )
+        )
+      ).to.eql(false);
       expect(
         isFocusable(
           getByTestId(container, 'fieldset-disabled-fieldset-enabled-input')

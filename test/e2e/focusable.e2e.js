@@ -6,7 +6,7 @@ import {
   getIdsFromElementsArray,
 } from './e2e.helpers';
 
-describe('isFocusable', () => {
+describe('focusable', () => {
   let document, fixtures;
   before(() => {
     setupTestWindow((testWindow) => {
@@ -230,11 +230,20 @@ describe('isFocusable', () => {
     it('correctly identifies focusable elements in the "fieldset" example', () => {
       const expectedFocusableIds = [
         'free-enabled-button',
+        'fieldset-enabled-legend-button',
+        'fieldset-enabled-legend-input',
+        'fieldset-enabled-legend-select',
+        'fieldset-enabled-legend-textarea',
         'fieldset-enabled-button',
         'fieldset-enabled-input',
         'fieldset-enabled-select',
         'fieldset-enabled-textarea',
+        'fieldset-enabled-fieldset-disabled-legend-button',
         'fieldset-enabled-anchor',
+        'fieldset-disabled-legend1-button',
+        'fieldset-disabled-legend1-input',
+        'fieldset-disabled-legend1-select',
+        'fieldset-disabled-legend1-textarea',
         'fieldset-disabled-anchor',
       ];
 
