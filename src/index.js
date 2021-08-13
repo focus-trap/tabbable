@@ -165,13 +165,58 @@ const isHidden = function (node, displayCheck) {
   return false;
 };
 
+// form fields (nested) inside a disabled fieldset are not focusable/tabbable
+//  unless they are in the _first_ <legend> element of the top-most disabled
+//  fieldset
+const isDisabledFromFieldset = function (node) {
+  if (
+    isInput(node) ||
+    node.tagName === 'SELECT' ||
+    node.tagName === 'TEXTAREA' ||
+    node.tagName === 'BUTTON'
+  ) {
+    let parentNode = node.parentElement;
+    while (parentNode) {
+      if (parentNode.tagName === 'FIELDSET' && parentNode.disabled) {
+        // look for the first <legend> as an immediate child of the disabled
+        //  <fieldset>: if the node is in that legend, it'll be enabled even
+        //  though the fieldset is disabled; otherwise, the node is in a
+        //  secondary/subsequent legend, or somewhere else within the fieldset
+        //  (however deep nested) and it'll be disabled
+        for (let i = 0; i < parentNode.children.length; i++) {
+          const child = parentNode.children.item(i);
+          if (child.tagName === 'LEGEND') {
+            if (child.contains(node)) {
+              return false;
+            }
+
+            // the node isn't in the first legend (in doc order), so no matter
+            //  where it is now, it'll be disabled
+            return true;
+          }
+        }
+
+        // the node isn't in a legend, so no matter where it is now, it'll be disabled
+        return true;
+      }
+
+      parentNode = parentNode.parentElement;
+    }
+  }
+
+  // else, node's tabbable/focusable state should not be affected by a fieldset's
+  //  enabled/disabled state
+  return false;
+};
+
 const isNodeMatchingSelectorFocusable = function (options, node) {
   if (
     node.disabled ||
     isHiddenInput(node) ||
     isHidden(node, options.displayCheck) ||
-    /* For a details element with a summary, the summary element gets the focused  */
-    isDetailsWithSummary(node)
+    // For a details element with a summary, the summary element gets the focus
+    isDetailsWithSummary(node) ||
+    isDisabledFromFieldset(node)
   ) {
     return false;
   }
