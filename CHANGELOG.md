@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.2.1
+
+### Patch Changes
+
+- 1d5fcb5: Fixed: Form elements in disabled fieldsets should not be tabbable/focusable (#413)
+
 ## 5.2.0
 
 ### Minor Changes
