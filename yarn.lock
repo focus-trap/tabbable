@@ -1712,27 +1712,6 @@
     jest-haste-map "^27.2.0"
     jest-runtime "^27.2.1"
 
-"@jest/transform@^27.2.0", "@jest/transform@^27.2.1":
-  version "27.2.1"
-  resolved "https://registry.yarnpkg.com/@jest/transform/-/transform-27.2.1.tgz#743443adb84b3b7419951fc702515ce20ba6285e"
-  integrity sha512-xmB5vh81KK8DiiCMtI5vI59mP+GggNmc9BiN+fg4mKdQHV369+WuZc1Lq2xWFCOCsRPHt24D9h7Idp4YaMB1Ww==
-  dependencies:
-    "@babel/core" "^7.1.0"
-    "@jest/types" "^27.1.1"
-    babel-plugin-istanbul "^6.0.0"
-    chalk "^4.0.0"
-    convert-source-map "^1.4.0"
-    fast-json-stable-stringify "^2.0.0"
-    graceful-fs "^4.2.4"
-    jest-haste-map "^27.2.0"
-    jest-regex-util "^27.0.6"
-    jest-util "^27.2.0"
-    micromatch "^4.0.4"
-    pirates "^4.0.1"
-    slash "^3.0.0"
-    source-map "^0.6.1"
-    write-file-atomic "^3.0.0"
-
 "@jest/transform@^27.2.1":
   version "27.2.1"
   resolved "https://registry.yarnpkg.com/@jest/transform/-/transform-27.2.1.tgz#743443adb84b3b7419951fc702515ce20ba6285e"
@@ -2483,20 +2462,6 @@ babel-eslint@^10.1.0:
     "@babel/types" "^7.7.0"
     eslint-visitor-keys "^1.0.0"
     resolve "^1.12.0"
-
-babel-jest@^27.2.0, babel-jest@^27.2.1:
-  version "27.2.1"
-  resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-27.2.1.tgz#48edfa5cf8d59ab293da94321a369ccc7b67a4b1"
-  integrity sha512-kkaekSJHew1zfDW3cA2QiSBPg4uiLpiW0OwJKqFv0r2/mFgym/IBn7hxPntL6FvS66G/ROh+lz4pRiCJAH1/UQ==
-  dependencies:
-    "@jest/transform" "^27.2.1"
-    "@jest/types" "^27.1.1"
-    "@types/babel__core" "^7.1.14"
-    babel-plugin-istanbul "^6.0.0"
-    babel-preset-jest "^27.2.0"
-    chalk "^4.0.0"
-    graceful-fs "^4.2.4"
-    slash "^3.0.0"
 
 babel-jest@^27.2.1:
   version "27.2.1"
@@ -3708,10 +3673,10 @@ csv@^5.3.1:
     csv-stringify "^5.3.6"
     stream-transform "^2.0.1"
 
-cypress@^8.4.0:
-  version "8.4.0"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-8.4.0.tgz#09ec06a73f1cb10121c103cba15076e659e24876"
-  integrity sha512-RtVgGFR06ikyMaq/VqapeqOjGaIA42PpK7F0qe1MCiFArfUuJECsLmeYaOA+1TlmNUgJNMSF5fWKkZIJr5Uc7w==
+cypress@^8.4.1:
+  version "8.4.1"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-8.4.1.tgz#8b5898bf49359cadc28f02ba05d51f63b8e3a717"
+  integrity sha512-itJXq0Vx3sXCUrDyBi2IUrkxVu/gTTp1VhjB5tzGgkeCR8Ae+/T8WV63rsZ7fS8Tpq7LPPXiyoM/sEdOX7cR6A==
   dependencies:
     "@cypress/request" "^2.88.6"
     "@cypress/xvfb" "^1.2.4"
