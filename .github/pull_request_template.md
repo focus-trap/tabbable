@@ -17,6 +17,8 @@ __Please leave this checklist in your PR.__
 - Unit test coverage added/updated.
 - E2E test coverage added/updated.
 - Typings added/updated.
+- Changes do not break SSR:
+  - Careful to test `typeof document/window !== 'undefined'` before using it in code that gets executed on load.
 - README updated (API changes, instructions, etc.).
 - Changes to dependencies explained.
 - Changeset added (run `yarn changeset` locally to add one, and follow the prompts).
