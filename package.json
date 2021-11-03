@@ -61,7 +61,7 @@
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-node-resolve": "^13.0.6",
     "@testing-library/dom": "^8.10.1",
-    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/jest-dom": "^5.15.0",
     "@types/node": "^16.11.6",
     "all-contributors-cli": "^6.20.0",
     "babel-eslint": "^10.1.0",
