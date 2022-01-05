@@ -65,7 +65,7 @@
     "@testing-library/jest-dom": "^5.16.1",
     "@types/node": "^17.0.5",
     "all-contributors-cli": "^6.20.0",
-    "babel-jest": "^27.4.5",
+    "babel-jest": "^27.4.6",
     "brfs": "^2.0.2",
     "browserify": "^17.0.0",
     "budo": "^11.6.4",
