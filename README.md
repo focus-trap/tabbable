@@ -91,6 +91,16 @@ Type: `full` | `non-zero-area` | `none` . Default: `full`.
 
 Configures how to check if an element is displayed, see ["Display check"](#display-check) below.
 
+##### getShadowRoot
+
+Type: `(node: FocusableElement) => ShadowRoot | boolean | undefined`
+
+Returns the node's `ShadowRoot` if available, or a `boolean` indicating if a `ShadowRoot` is attached but not available. `node` will be a descendent of the `rootNode` given to `tabbable()`.
+
+If `true` is returned, Tabbable assumes a closed `ShadowRoot` is attached and will iterate the `node`'s children for additional tabbable/focusable candidates.
+
+If a falsy value is returned, all children will be ignored as candidates.
+
 ### isTabbable
 
 ```js
