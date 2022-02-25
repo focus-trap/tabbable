@@ -28,7 +28,7 @@
     "format:watch": "onchange \"{*,src/**/*,test/**/*,.github/workflows/*}.+(js|yml)\" -- prettier --write {{changed}}",
     "lint": "eslint \"*.js\" \"src/**/*.js\" \"test/**/*.js\"",
     "start": "yarn compile:cjs && budo -l -d -o test/debug.js -- -t brfs",
-    "test": "yarn format:check && yarn lint && yarn test:types && yarn test:unit && yarn test:e2e",
+    "test": "yarn format && yarn lint && yarn test:types && yarn test:unit && yarn test:e2e",
     "test:types": "tsc index.d.ts",
     "test:unit": "jest",
     "test:e2e": "cypress run",
