@@ -171,21 +171,22 @@ const isHidden = function (node, displayCheck) {
 const isDisabledFromFieldset = function (node) {
   if (/^(INPUT|BUTTON|SELECT|TEXTAREA)$/.test(node.tagName)) {
     let parentNode = node.parentElement;
+    // check if `node` is contained in a disabled <fieldset>
     while (parentNode) {
+      // if it is
       if (parentNode.tagName === 'FIELDSET' && parentNode.disabled) {
         // look for the first <legend> among the children of the disabled <fieldset>
         for (let i = 0; i < parentNode.children.length; i++) {
           const child = parentNode.children.item(i);
           // when the first <legend> (in document order) is found
           if (child.tagName === 'LEGEND') {
-            // check whether the <fieldset> containing `node` is the top-most disabled <fieldset>
-            let ancestor = parentNode.parentElement;
-            while (ancestor) {
-              if (ancestor.tagName === 'FIELDSET' && ancestor.disabled) {
-                // the disabled <fieldset> containing `node` is nested in another disabled <fieldset>
+            // check whether its parent <fieldset> is nested in another disabled <fieldset>
+            while ((parentNode = parentNode.parentElement)) {
+              // if it is
+              if (parentNode.tagName === 'FIELDSET' && parentNode.disabled) {
+                // then the node is not in the <legend> of the top-most disabled <fieldset>
                 return true;
               }
-              ancestor = ancestor.parentElement;
             }
             // the disabled <fieldset> containing `node` is the the top-most disabled <fieldset>,
             // so return whether `node` is a descendant of its first <legend>
@@ -195,7 +196,6 @@ const isDisabledFromFieldset = function (node) {
         // the disabled <fieldset> containing `node` has no <legend>
         return true;
       }
-
       parentNode = parentNode.parentElement;
     }
   }
