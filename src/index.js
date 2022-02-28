@@ -173,7 +173,6 @@ const isDisabledFromFieldset = function (node) {
     let parentNode = node.parentElement;
     // check if `node` is contained in a disabled <fieldset>
     while (parentNode) {
-      // if it is
       if (parentNode.tagName === 'FIELDSET' && parentNode.disabled) {
         // look for the first <legend> among the children of the disabled <fieldset>
         for (let i = 0; i < parentNode.children.length; i++) {
@@ -182,9 +181,8 @@ const isDisabledFromFieldset = function (node) {
           if (child.tagName === 'LEGEND') {
             // check whether its parent <fieldset> is nested in another disabled <fieldset>
             while ((parentNode = parentNode.parentElement)) {
-              // if it is
               if (parentNode.tagName === 'FIELDSET' && parentNode.disabled) {
-                // then the node is not in the <legend> of the top-most disabled <fieldset>
+                // the node is not in the <legend> of the top-most disabled <fieldset>
                 return true;
               }
             }
