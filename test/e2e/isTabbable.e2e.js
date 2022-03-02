@@ -406,7 +406,10 @@ describe('isTabbable', () => {
         style="display: none"
       >
       <div data-testid="nested-under-displayed-none" tabindex="0"></div>
-    </div>
+      </div>
+      <div data-testid="displayed-contents-top" tabindex="0" style="display: contents">
+        <div data-testid="nested-under-displayed-contents" tabindex="0"></div>
+      </div>
     `;
     function setupDisplayCheck() {
       const container = document.createElement('div');
@@ -421,6 +424,11 @@ describe('isTabbable', () => {
           container,
           'nested-under-displayed-none'
         ),
+        displayedContentsTop: getByTestId(container, 'displayed-contents-top'),
+        nestedUnderDisplayedContents: getByTestId(
+          container,
+          'nested-under-displayed-contents'
+        ),
       };
     }
     it('return browser visible elements by default ("full" option)', () => {
@@ -430,6 +438,8 @@ describe('isTabbable', () => {
         displayedZeroSize,
         displayedNoneTop,
         nestedUnderDisplayedNone,
+        displayedContentsTop,
+        nestedUnderDisplayedContents,
       } = setupDisplayCheck();
 
       // default
@@ -438,14 +448,18 @@ describe('isTabbable', () => {
       expect(isTabbable(displayedZeroSize)).to.eql(true);
       expect(isTabbable(displayedNoneTop)).to.eql(false);
       expect(isTabbable(nestedUnderDisplayedNone)).to.eql(false);
+      expect(isTabbable(displayedContentsTop)).to.eql(false);
+      expect(isTabbable(nestedUnderDisplayedContents)).to.eql(true);
       // full
       const options = { displayCheck: 'full' };
       expect(isTabbable(displayedTop, options)).to.eql(true);
       expect(isTabbable(displayedNested, options)).to.eql(true);
       expect(isTabbable(displayedZeroSize, options)).to.eql(true);
-      expect(isTabbable(displayedNoneTop)).to.eql(false);
-      expect(isTabbable(nestedUnderDisplayedNone)).to.eql(false);
+      expect(isTabbable(displayedNoneTop, options)).to.eql(false);
+      expect(isTabbable(nestedUnderDisplayedNone, options)).to.eql(false);
+      expect(isTabbable(nestedUnderDisplayedContents, options)).to.eql(true);
     });
+
     it('return only elements with size ("non-zero-area" option)', () => {
       const {
         displayedTop,
@@ -453,6 +467,8 @@ describe('isTabbable', () => {
         displayedZeroSize,
         displayedNoneTop,
         nestedUnderDisplayedNone,
+        displayedContentsTop,
+        nestedUnderDisplayedContents,
       } = setupDisplayCheck();
 
       const options = { displayCheck: 'non-zero-area' };
@@ -461,6 +477,8 @@ describe('isTabbable', () => {
       expect(isTabbable(displayedZeroSize, options)).to.eql(false);
       expect(isTabbable(displayedNoneTop, options)).to.eql(false);
       expect(isTabbable(nestedUnderDisplayedNone, options)).to.eql(false);
+      expect(isTabbable(displayedContentsTop, options)).to.eql(false);
+      expect(isTabbable(nestedUnderDisplayedContents, options)).to.eql(true);
     });
     it('return elements without checking display ("none" option)', () => {
       const {
@@ -469,6 +487,8 @@ describe('isTabbable', () => {
         displayedZeroSize,
         displayedNoneTop,
         nestedUnderDisplayedNone,
+        displayedContentsTop,
+        nestedUnderDisplayedContents,
       } = setupDisplayCheck();
 
       const options = { displayCheck: 'none' };
@@ -477,6 +497,8 @@ describe('isTabbable', () => {
       expect(isTabbable(displayedZeroSize, options)).to.eql(true);
       expect(isTabbable(displayedNoneTop, options)).to.eql(true);
       expect(isTabbable(nestedUnderDisplayedNone, options)).to.eql(true);
+      expect(isTabbable(displayedContentsTop, options)).to.eql(true);
+      expect(isTabbable(nestedUnderDisplayedContents, options)).to.eql(true);
     });
   });
 });

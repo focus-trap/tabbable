@@ -359,6 +359,7 @@ describe('tabbable', () => {
             'displayed-top',
             'displayed-nested',
             'displayed-zero-size',
+            'nested-under-displayed-contents',
           ];
           const container = document.createElement('div');
           container.innerHTML = fixtures.displayed;
@@ -377,7 +378,11 @@ describe('tabbable', () => {
           );
         });
         it('return only elements with size ("non-zero-area" option)', () => {
-          const expectedTabbableIds = ['displayed-top', 'displayed-nested'];
+          const expectedTabbableIds = [
+            'displayed-top',
+            'displayed-nested',
+            'nested-under-displayed-contents',
+          ];
           const container = document.createElement('div');
           container.innerHTML = fixtures.displayed;
           document.body.append(container);
@@ -397,6 +402,8 @@ describe('tabbable', () => {
             'displayed-none-top',
             'nested-under-displayed-none',
             'displayed-zero-size',
+            'displayed-contents-top',
+            'nested-under-displayed-contents',
           ];
           const container = document.createElement('div');
           container.innerHTML = fixtures.displayed;
