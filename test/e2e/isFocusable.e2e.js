@@ -331,6 +331,10 @@ describe('isFocusable', () => {
     <legend><button data-testid="fieldset-disabled-fieldset-enabled-legend-button">Button not tabbable/focusable</button></legend>
     <input data-testid="fieldset-disabled-fieldset-enabled-input" type="text" value="Input not tabbable/focusable">
   </fieldset>
+  <fieldset data-testid="fieldset-disabled-fieldset-disabled" disabled>
+    <legend><button data-testid="fieldset-disabled-fieldset-disabled-legend-button">Button not tabbable/focusable</button></legend>
+    <input data-testid="fieldset-disabled-fieldset-disabled-input" type="text" value="Input not tabbable/focusable" />
+  </fieldset>
   <a data-testid="fieldset-disabled-anchor" href="#">Link is tabbable/focusable</a>
 </fieldset>
 `;
@@ -393,6 +397,21 @@ describe('isFocusable', () => {
       expect(
         isFocusable(
           getByTestId(container, 'fieldset-disabled-fieldset-enabled-input')
+        )
+      ).to.eql(false);
+
+      // nested in disabled fieldset, top-most disabled fieldset takes precedence
+      expect(
+        isFocusable(
+          getByTestId(
+            container,
+            'fieldset-disabled-fieldset-disabled-legend-button'
+          )
+        )
+      ).to.eql(false);
+      expect(
+        isFocusable(
+          getByTestId(container, 'fieldset-disabled-fieldset-disabled-input')
         )
       ).to.eql(false);
 
