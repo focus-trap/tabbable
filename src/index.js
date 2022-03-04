@@ -166,37 +166,35 @@ const isHidden = function (node, displayCheck) {
 };
 
 // form fields (nested) inside a disabled fieldset are not focusable/tabbable
-// unless they are in the _first_ <legend> element of the top-most disabled fieldset
+//  unless they are in the _first_ <legend> element of the top-most disabled
+//  fieldset
 const isDisabledFromFieldset = function (node) {
   if (/^(INPUT|BUTTON|SELECT|TEXTAREA)$/.test(node.tagName)) {
-    let parentNode = node;
-    let disabledFieldsetsCount = 0;
-    let legend;
-    // count how many disabled <fieldset> (DF) are ancestors of `node`
-    while ((parentNode = parentNode.parentElement)) {
+    let parentNode = node.parentElement;
+    // check if `node` is contained in a disabled <fieldset>
+    while (parentNode) {
       if (parentNode.tagName === 'FIELDSET' && parentNode.disabled) {
-        // if `node` has more than one DF ancestor, then it is not focusable
-        if (++disabledFieldsetsCount === 2) {
-          return true;
-        }
-        // find the first legend in the closest DF ancestor of `node`
+        // look for the first <legend> among the children of the disabled <fieldset>
         for (let i = 0; i < parentNode.children.length; i++) {
-          if (parentNode.children.item(i).tagName === 'LEGEND') {
-            legend = parentNode.children.item(i);
-            break;
+          const child = parentNode.children.item(i);
+          // when the first <legend> (in document order) is found
+          if (child.tagName === 'LEGEND') {
+            // if its parent <fieldset> is not nested in another disabled <fieldset>,
+            // return whether `node` is a descendant of its first <legend>
+            return matches.call(parentNode, 'fieldset[disabled] *')
+              ? true
+              : !child.contains(node);
           }
         }
-        if (!legend) {
-          // if the closest DF ancestor has no <legend>, then `node` is not focusable
-          return true;
-        }
+        // the disabled <fieldset> containing `node` has no <legend>
+        return true;
       }
+      parentNode = parentNode.parentElement;
     }
-    // if exactly one DF ancestor was found, return whether its legend contains `node`;
-    // if no DF ancestor was found, return `false` (meaning `node` is focusable).
-    return disabledFieldsetsCount ? !legend.contains(node) : false;
   }
-  // `node` is not a form field and its focusability can't be assessed here.
+
+  // else, node's tabbable/focusable state should not be affected by a fieldset's
+  //  enabled/disabled state
   return false;
 };
 
