@@ -171,24 +171,24 @@ const isHidden = function (node, displayCheck) {
 const isDisabledFromFieldset = function (node) {
   if (/^(INPUT|BUTTON|SELECT|TEXTAREA)$/.test(node.tagName)) {
     let parentNode = node.parentElement;
+    // check if `node` is contained in a disabled <fieldset>
     while (parentNode) {
       if (parentNode.tagName === 'FIELDSET' && parentNode.disabled) {
-        // look for the first <legend> as an immediate child of the disabled
-        //  <fieldset>: if the node is in that legend, it'll be enabled even
-        //  though the fieldset is disabled; otherwise, the node is in a
-        //  secondary/subsequent legend, or somewhere else within the fieldset
-        //  (however deep nested) and it'll be disabled
+        // look for the first <legend> among the children of the disabled <fieldset>
         for (let i = 0; i < parentNode.children.length; i++) {
           const child = parentNode.children.item(i);
+          // when the first <legend> (in document order) is found
           if (child.tagName === 'LEGEND') {
-            // return whether `node` is a descendant of the first <legend> found
-            return !child.contains(node);
+            // if its parent <fieldset> is not nested in another disabled <fieldset>,
+            // return whether `node` is a descendant of its first <legend>
+            return matches.call(parentNode, 'fieldset[disabled] *')
+              ? true
+              : !child.contains(node);
           }
         }
-        // the disabled <fieldset> containing the `node` has no <legend> at all
+        // the disabled <fieldset> containing `node` has no <legend>
         return true;
       }
-
       parentNode = parentNode.parentElement;
     }
   }
