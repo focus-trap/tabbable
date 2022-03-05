@@ -409,8 +409,11 @@ describe('isFocusable', () => {
         tabindex="0"
         style="display: none"
       >
-      <div data-testid="nested-under-displayed-none" tabindex="0"></div>
-    </div>
+        <div data-testid="nested-under-displayed-none" tabindex="0"></div>
+      </div>
+      <div data-testid="displayed-contents-top" tabindex="0" style="display: contents">
+        <div data-testid="nested-under-displayed-contents" tabindex="0"></div>
+      </div>
     `;
     function setupDisplayCheck() {
       const container = document.createElement('div');
@@ -425,6 +428,11 @@ describe('isFocusable', () => {
           container,
           'nested-under-displayed-none'
         ),
+        displayedContentsTop: getByTestId(container, 'displayed-contents-top'),
+        nestedUnderDisplayedContents: getByTestId(
+          container,
+          'nested-under-displayed-contents'
+        ),
       };
     }
 
@@ -435,6 +443,8 @@ describe('isFocusable', () => {
         displayedZeroSize,
         displayedNoneTop,
         nestedUnderDisplayedNone,
+        displayedContentsTop,
+        nestedUnderDisplayedContents,
       } = setupDisplayCheck();
 
       // default
@@ -443,14 +453,19 @@ describe('isFocusable', () => {
       expect(isFocusable(displayedZeroSize)).to.eql(true);
       expect(isFocusable(displayedNoneTop)).to.eql(false);
       expect(isFocusable(nestedUnderDisplayedNone)).to.eql(false);
+      expect(isFocusable(displayedContentsTop)).to.eql(false);
+      expect(isFocusable(nestedUnderDisplayedContents)).to.eql(true);
       // full
       const options = { displayCheck: 'full' };
       expect(isFocusable(displayedTop, options)).to.eql(true);
       expect(isFocusable(displayedNested, options)).to.eql(true);
       expect(isFocusable(displayedZeroSize, options)).to.eql(true);
-      expect(isFocusable(displayedNoneTop)).to.eql(false);
-      expect(isFocusable(nestedUnderDisplayedNone)).to.eql(false);
+      expect(isFocusable(displayedNoneTop, options)).to.eql(false);
+      expect(isFocusable(nestedUnderDisplayedNone, options)).to.eql(false);
+      expect(isFocusable(displayedContentsTop, options)).to.eql(false);
+      expect(isFocusable(nestedUnderDisplayedContents, options)).to.eql(true);
     });
+
     it('return only elements with size ("non-zero-area" option)', () => {
       const {
         displayedTop,
@@ -458,6 +473,8 @@ describe('isFocusable', () => {
         displayedZeroSize,
         displayedNoneTop,
         nestedUnderDisplayedNone,
+        displayedContentsTop,
+        nestedUnderDisplayedContents,
       } = setupDisplayCheck();
 
       const options = { displayCheck: 'non-zero-area' };
@@ -466,6 +483,8 @@ describe('isFocusable', () => {
       expect(isFocusable(displayedZeroSize, options)).to.eql(false);
       expect(isFocusable(displayedNoneTop, options)).to.eql(false);
       expect(isFocusable(nestedUnderDisplayedNone, options)).to.eql(false);
+      expect(isFocusable(displayedContentsTop, options)).to.eql(false);
+      expect(isFocusable(nestedUnderDisplayedContents, options)).to.eql(true);
     });
     it('return elements without checking display ("none" option)', () => {
       const {
@@ -474,6 +493,8 @@ describe('isFocusable', () => {
         displayedZeroSize,
         displayedNoneTop,
         nestedUnderDisplayedNone,
+        displayedContentsTop,
+        nestedUnderDisplayedContents,
       } = setupDisplayCheck();
 
       const options = { displayCheck: 'none' };
@@ -482,6 +503,8 @@ describe('isFocusable', () => {
       expect(isFocusable(displayedZeroSize, options)).to.eql(true);
       expect(isFocusable(displayedNoneTop, options)).to.eql(true);
       expect(isFocusable(nestedUnderDisplayedNone, options)).to.eql(true);
+      expect(isFocusable(displayedContentsTop, options)).to.eql(true);
+      expect(isFocusable(nestedUnderDisplayedContents, options)).to.eql(true);
     });
   });
 });

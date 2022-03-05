@@ -151,12 +151,7 @@ const isHidden = function (node, displayCheck) {
     return true;
   }
   if (!displayCheck || displayCheck === 'full') {
-    while (node) {
-      if (getComputedStyle(node).display === 'none') {
-        return true;
-      }
-      node = node.parentElement;
-    }
+    return !node.getClientRects().length;
   } else if (displayCheck === 'non-zero-area') {
     const { width, height } = node.getBoundingClientRect();
     return width === 0 && height === 0;

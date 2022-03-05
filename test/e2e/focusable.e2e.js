@@ -330,6 +330,7 @@ describe('focusable', () => {
             'displayed-top',
             'displayed-nested',
             'displayed-zero-size',
+            'nested-under-displayed-contents',
           ];
           const container = document.createElement('div');
           container.innerHTML = fixtures.displayed;
@@ -348,7 +349,11 @@ describe('focusable', () => {
           );
         });
         it('return only elements with size ("non-zero-area" option)', () => {
-          const expectedFocusableIds = ['displayed-top', 'displayed-nested'];
+          const expectedFocusableIds = [
+            'displayed-top',
+            'displayed-nested',
+            'nested-under-displayed-contents',
+          ];
           const container = document.createElement('div');
           container.innerHTML = fixtures.displayed;
           document.body.append(container);
@@ -368,6 +373,8 @@ describe('focusable', () => {
             'displayed-none-top',
             'nested-under-displayed-none',
             'displayed-zero-size',
+            'displayed-contents-top',
+            'nested-under-displayed-contents',
           ];
           const container = document.createElement('div');
           container.innerHTML = fixtures.displayed;
