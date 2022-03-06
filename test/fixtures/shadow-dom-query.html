@@ -150,3 +150,15 @@
     </test-shadow>
     <input id="light-after"></input>
 </div>
+
+<div id="query-slot-display-none-closed-shadow">
+    <h2>"display=none" slot (mode=closed)</h2>
+    <test-shadow>
+        <template shadowroot="closed">
+            <div style="display:none;">
+                <slot></slot>
+            </div>
+        </template>
+        <input id="query-light-input-slotted"></input>
+    </test-shadow>
+</div>

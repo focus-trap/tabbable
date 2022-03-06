@@ -1,10 +1,15 @@
 <div id="displayed-top" tabindex="0">
-  <div id="displayed-nested" tabindex="0"></div>
+  <div id="displayed-nested" tabindex="0">displayed-nested</div>
 </div>
 <div id="displayed-none-top" tabindex="0" style="display: none">
-  <div id="nested-under-displayed-none" tabindex="0"></div>
+  <div id="nested-under-displayed-none" tabindex="0">nested-under-displayed-none</div>
 </div>
-<div id="displayed-zero-size" tabindex="0" style="width: 0; height: 0"></div>
+<div id="displayed-zero-size" tabindex="0" style="width: 0; height: 0">displayed-zero-size</div>
 <div id="displayed-contents-top" tabindex="0" style="display: contents">
-  <div id="nested-under-displayed-contents" tabindex="0"></div>
+  <div id="nested-under-displayed-contents" tabindex="0">nested-under-displayed-contents</div>
 </div>
+<style>
+  div[id*="displayed-"] {
+    outline: 1px solid lime;
+  }
+</style>
