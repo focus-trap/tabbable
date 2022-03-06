@@ -100,15 +100,22 @@ const getCandidatesIteratively = function (
       ) {
         candidates.push(element);
       }
+
       // iterate over content
       const shadowRoot = element.shadowRoot || options.getShadowRoot(element);
       if (shadowRoot) {
-        // add shadow dom scope
+        // add shadow dom scope IIF a shadow root node was given; otherwise, an undisclosed
+        //  shadow exists, so look at light dom children as fallback BUT create a scope for any
+        //  child candidates found because they're likely slotted elements (elements that are
+        //  children of the web component element (which has the shadow), in the light dom, but
+        //  slotted somewhere _inside_ the undisclosed shadow) -- the scope is created below,
+        //  _after_ we return from this recursive call
         const nestedCandidates = getCandidatesIteratively(
           shadowRoot === true ? element.children : shadowRoot.children,
           true,
           options
         );
+
         if (options.flatten) {
           candidates.push(...nestedCandidates);
         } else {
@@ -118,7 +125,8 @@ const getCandidatesIteratively = function (
           });
         }
       } else {
-        // add light dom scope
+        // there's not shadow so just dig into the element's (light dom) children
+        //  __without__ giving the element special scope treatment
         elementsToCheck.unshift(...element.children);
       }
     }
@@ -256,18 +264,19 @@ const isHidden = function (node, { displayCheck, getShadowRoot = noop }) {
   }
 
   if (!displayCheck || displayCheck === 'full') {
+    // figure out if we should consider the node to be in an undisclosed shadow and use the
+    //  'non-zero-area' fallback
+    const originalNode = node;
     while (node) {
-      if (!node.getClientRects().length) {
-        return true;
-      }
       const parentElement = node.parentElement;
       const rootNode = getRootNode(node);
       if (
         parentElement &&
         !parentElement.shadowRoot &&
-        getShadowRoot(parentElement)
+        getShadowRoot(parentElement) === true // there's a shadow, but we're not given access to it
       ) {
-        // fallback to zero area size for unreachable shadow dom
+        // node has an undisclosed shadow which means we can only treat it as a black box, so we
+        //  fall back to a non-zero-area test
         return isZeroArea(node);
       } else if (node.assignedSlot) {
         // iterate up slot
@@ -280,6 +289,15 @@ const isHidden = function (node, { displayCheck, getShadowRoot = noop }) {
         node = parentElement;
       }
     }
+    node = originalNode;
+
+    // didn't find it sitting in a non-accessible shadow so now we can just test to see if
+    //  it would normally be visible or not
+    // this works wherever the node is: if there's at least one client rect, it's
+    //  somehow displayed; it also covers the CSS 'display: contents' case where the
+    //  node itself is hidden in place of its contents; and there's no need to search
+    //  up the hierarchy either
+    return !node.getClientRects().length;
   } else if (displayCheck === 'non-zero-area') {
     return isZeroArea(node);
   }

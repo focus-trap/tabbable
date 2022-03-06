@@ -26,12 +26,14 @@ module.exports = (on, config) => {
       require('@cypress/code-coverage/use-browserify-istanbul')
     );
   }
+
   // fetch fixtures
   on('task', {
     getFixtures() {
       return require('../../test/fixtures/index');
     },
   });
+
   // IMPORTANT to return the config object
   // with the any changed environment variables
   return config;

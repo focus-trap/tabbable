@@ -92,24 +92,24 @@ describe('web-components', () => {
       // focusable
       expect(
         isFocusable(lightDisplayNoneSlotted),
-        'unable to test unknown shadow nested non display'
-      ).to.eql(true);
+        'slotted into non-displayed container so not focusable'
+      ).to.eql(false);
       expect(
         isFocusable(lightDisplayNoneSlotted, {
           getShadowRoot: (node) => node === webComp,
         }),
-        'fallback to zero size check for unreached shadow root'
+        'fallback to zero size check for unreached shadow root but still not focusable'
       ).to.eql(false);
       // tabbable
       expect(
         isTabbable(lightDisplayNoneSlotted),
-        'unable to test unknown shadow nested non display'
-      ).to.eql(true);
+        'slotted into non-displayed container so not tabbable'
+      ).to.eql(false);
       expect(
         isTabbable(lightDisplayNoneSlotted, {
           getShadowRoot: (node) => node === webComp,
         }),
-        'fallback to zero size for unreached shadow root'
+        'fallback to zero size for unreached shadow root but still not tabbable'
       ).to.eql(false);
     });
     it('should not match slot elements', () => {
@@ -371,7 +371,7 @@ describe('web-components', () => {
         },
       });
       const noKnowlageOfShadowRoot = tabbable(container, {
-        webComponents(_node) {
+        getShadowRoot(_node) {
           return false;
         },
       });
@@ -392,12 +392,60 @@ describe('web-components', () => {
       ]);
       expect(
         getIdsFromElementsArray(noKnowlageOfShadowRoot),
-        'no knowlage of shadow root'
+        'no knowledge of shadow root'
       ).to.eql(['light-slotted', 'light-before', 'light-after']);
       expect(
         getIdsFromElementsArray(unknownShadowRoot),
-        'unknown of shadow root'
+        'undisclosed shadow root'
       ).to.eql(['light-before', 'light-slotted', 'light-after']);
+    });
+
+    // NOTE: this test shows that tabbable() and focusable() will not find
+    //  query-light-input-slotted whether we give the closed shadow root to look at
+    //  or not, because it's slotted into a 'display: none' container inside
+    //  the close shadow dom
+    it('should not match elements in a non display slot', () => {
+      const expected = [];
+      const { container } = setupFixture(fixtures.shadowDomQuery, {
+        window,
+        caseId: 'query-slot-display-none-closed-shadow',
+      });
+
+      expect(
+        getIdsFromElementsArray(
+          focusable(container),
+          'focusable no options should not find'
+        )
+      ).to.eql(expected);
+
+      expect(
+        getIdsFromElementsArray(
+          focusable(container, {
+            getShadowRoot(node) {
+              return node.closedShadowRoot;
+            },
+          }),
+          'focusable with options should not find'
+        )
+      ).to.eql(expected);
+
+      expect(
+        getIdsFromElementsArray(
+          tabbable(container),
+          'tabbable no options should not find'
+        )
+      ).to.eql(expected);
+
+      expect(
+        getIdsFromElementsArray(
+          tabbable(container, {
+            getShadowRoot(node) {
+              return node.closedShadowRoot;
+            },
+          }),
+          'tabbable with options should not find'
+        )
+      ).to.eql(expected);
     });
   });
 });
