@@ -141,25 +141,22 @@ const getCandidatesIteratively = function (
   return candidates;
 };
 
-const getTabindex = function (node, isScope) {
-  const tabindexAttr = parseInt(node.getAttribute('tabindex'), 10);
-
-  if (!isNaN(tabindexAttr)) {
-    return tabindexAttr;
-  }
-
-  // in Chrome, <details/>, <audio controls/> and <video controls/> elements get a default
-  // `tabIndex` of -1 when the 'tabindex' attribute isn't specified in the DOM,
-  // yet they are still part of the regular tab order; in FF, they get a default
-  // `tabIndex` of 0; since Chrome still puts those elements in the regular tab
-  // order, consider their tab index to be 0.
-  // Also browsers do not return `tabIndex` correctly for contentEditable nodes;
-  // so if they don't have a tabindex attribute specifically set, assume it's 0.
-  if (
-    (/^(AUDIO|VIDEO|DETAILS)$/.test(node.tagName) || node.isContentEditable) &&
-    node.getAttribute('tabindex') === null
-  ) {
-    return 0;
+const getTabindex = function (node) {
+  if (node.tabIndex < 0) {
+    // in Chrome, <details/>, <audio controls/> and <video controls/> elements get a default
+    // `tabIndex` of -1 when the 'tabindex' attribute isn't specified in the DOM,
+    // yet they are still part of the regular tab order; in FF, they get a default
+    // `tabIndex` of 0; since Chrome still puts those elements in the regular tab
+    // order, consider their tab index to be 0.
+    // Also browsers do not return `tabIndex` correctly for contentEditable nodes;
+    // so if they don't have a tabindex attribute specifically set, assume it's 0.
+    if (
+      (/^(AUDIO|VIDEO|DETAILS)$/.test(node.tagName) ||
+        node.isContentEditable) &&
+      node.getAttribute('tabindex') === null
+    ) {
+      return 0;
+    }
   }
 
   return node.tabIndex;
