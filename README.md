@@ -93,6 +93,10 @@ Configures how to check if an element is displayed, see ["Display check"](#displ
 
 ##### getShadowRoot
 
+By default, tabbable overlooks (i.e. does not consider) all elements contained in shadow DOMs (whether open or closed). This has been the behavior since the beginning.
+
+Setting this option enables Shadow DOM support, which means tabbable will consider elements _inside_ web components as candidates, both open (automatically) and closed (provided this function returns the shadow root).
+
 Type: `(node: FocusableElement) => ShadowRoot | boolean | undefined`
 
 - `node` will be a descendent of the `rootNode` given to `tabbable()`, `isTabbable()`, `focusable()`, or `isFocusable()`.
