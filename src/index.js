@@ -247,12 +247,11 @@ const isNonTabbableRadio = function (node) {
   return isRadio(node) && !isTabbableRadio(node);
 };
 
-const noop = () => {};
 const isZeroArea = function (node) {
   const { width, height } = node.getBoundingClientRect();
   return width === 0 && height === 0;
 };
-const isHidden = function (node, { displayCheck, getShadowRoot = noop }) {
+const isHidden = function (node, { displayCheck, getShadowRoot }) {
   if (getComputedStyle(node).visibility === 'hidden') {
     return true;
   }
@@ -264,32 +263,34 @@ const isHidden = function (node, { displayCheck, getShadowRoot = noop }) {
   }
 
   if (!displayCheck || displayCheck === 'full') {
-    // figure out if we should consider the node to be in an undisclosed shadow and use the
-    //  'non-zero-area' fallback
-    const originalNode = node;
-    while (node) {
-      const parentElement = node.parentElement;
-      const rootNode = getRootNode(node);
-      if (
-        parentElement &&
-        !parentElement.shadowRoot &&
-        getShadowRoot(parentElement) === true // there's a shadow, but we're not given access to it
-      ) {
-        // node has an undisclosed shadow which means we can only treat it as a black box, so we
-        //  fall back to a non-zero-area test
-        return isZeroArea(node);
-      } else if (node.assignedSlot) {
-        // iterate up slot
-        node = node.assignedSlot;
-      } else if (!parentElement && rootNode !== node.ownerDocument) {
-        // cross shadow boundary
-        node = rootNode.host;
-      } else {
-        // iterate up normal dom
-        node = parentElement;
+    if (getShadowRoot) {
+      // figure out if we should consider the node to be in an undisclosed shadow and use the
+      //  'non-zero-area' fallback
+      const originalNode = node;
+      while (node) {
+        const parentElement = node.parentElement;
+        const rootNode = getRootNode(node);
+        if (
+          parentElement &&
+          !parentElement.shadowRoot &&
+          getShadowRoot(parentElement) === true // there's a shadow, but we're not given access to it
+        ) {
+          // node has an undisclosed shadow which means we can only treat it as a black box, so we
+          //  fall back to a non-zero-area test
+          return isZeroArea(node);
+        } else if (node.assignedSlot) {
+          // iterate up slot
+          node = node.assignedSlot;
+        } else if (!parentElement && rootNode !== node.ownerDocument) {
+          // cross shadow boundary
+          node = rootNode.host;
+        } else {
+          // iterate up normal dom
+          node = parentElement;
+        }
       }
+      node = originalNode;
     }
-    node = originalNode;
 
     // didn't find it sitting in a non-accessible shadow so now we can just test to see if
     //  it would normally be visible or not
