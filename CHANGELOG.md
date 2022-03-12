@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.3.0-beta.1
+
+- Add support for setting `getShadowRoot: true` as an easy way to simply _enable_ shadow DOM support. This is the equivalent of setting `getShadowRoot: () => false`, which means tabbable will find nodes in __open__ shadow roots only.
+
 ## 5.3.0-beta.0
 
 - Includes new Shadow DOM support for open shadows by default
