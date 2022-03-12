@@ -134,9 +134,13 @@ describe('web-components', () => {
         caseId: 'shadow-input',
       });
 
-      const result = tabbable(container, { getShadowRoot() {} });
+      let result = tabbable(container, { getShadowRoot() {} });
+      expect(getIdsFromElementsArray(result), 'using `() => {}`').to.eql(
+        expected
+      );
 
-      expect(getIdsFromElementsArray(result)).to.eql(expected);
+      result = tabbable(container, { getShadowRoot: true });
+      expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
     });
 
     it('should find tabbable host', () => {
@@ -151,9 +155,13 @@ describe('web-components', () => {
         caseId: 'tabbable-host',
       });
 
-      const result = tabbable(container, { getShadowRoot() {} });
+      let result = tabbable(container, { getShadowRoot() {} });
+      expect(getIdsFromElementsArray(result), 'using `() => {}`').to.eql(
+        expected
+      );
 
-      expect(getIdsFromElementsArray(result)).to.eql(expected);
+      result = tabbable(container, { getShadowRoot: true });
+      expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
     });
 
     it('should find elements inside shadow dom when directly querying the element with shadow root', () => {
@@ -164,9 +172,13 @@ describe('web-components', () => {
       });
       const shadowElement = container.querySelector('test-shadow');
 
-      const result = tabbable(shadowElement, { getShadowRoot() {} });
+      let result = tabbable(shadowElement, { getShadowRoot() {} });
+      expect(getIdsFromElementsArray(result), 'using `() => {}`').to.eql(
+        expected
+      );
 
-      expect(getIdsFromElementsArray(result)).to.eql(expected);
+      result = tabbable(shadowElement, { getShadowRoot: true });
+      expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
     });
 
     it('should find elements inside shadow dom when directly querying the element with shadow root (include container)', () => {
@@ -179,12 +191,19 @@ describe('web-components', () => {
       shadowElement.setAttribute('id', 'shadow-host');
       shadowElement.setAttribute('tabindex', 0);
 
-      const result = tabbable(shadowElement, {
+      let result = tabbable(shadowElement, {
         getShadowRoot() {},
         includeContainer: true,
       });
+      expect(getIdsFromElementsArray(result), 'using `() => {}`').to.eql(
+        expected
+      );
 
-      expect(getIdsFromElementsArray(result)).to.eql(expected);
+      result = tabbable(shadowElement, {
+        getShadowRoot: true,
+        includeContainer: true,
+      });
+      expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
     });
 
     it('should sort slots inside shadow dom', () => {
@@ -202,9 +221,13 @@ describe('web-components', () => {
         caseId: 'light-shadow-with-slots',
       });
 
-      const result = tabbable(container, { getShadowRoot() {} });
+      let result = tabbable(container, { getShadowRoot() {} });
+      expect(getIdsFromElementsArray(result), 'using `() => {}`').to.eql(
+        expected
+      );
 
-      expect(getIdsFromElementsArray(result)).to.eql(expected);
+      result = tabbable(container, { getShadowRoot: true });
+      expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
     });
 
     it('should sort shadow and light elements separately', () => {
@@ -221,9 +244,13 @@ describe('web-components', () => {
         caseId: 'light-shadow-tab-index',
       });
 
-      const result = tabbable(container, { getShadowRoot() {} });
+      let result = tabbable(container, { getShadowRoot() {} });
+      expect(getIdsFromElementsArray(result), 'using `() => {}`').to.eql(
+        expected
+      );
 
-      expect(getIdsFromElementsArray(result)).to.eql(expected);
+      result = tabbable(container, { getShadowRoot() {} });
+      expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
     });
 
     it('should sort slots content by slots tabindex', () => {
@@ -232,10 +259,13 @@ describe('web-components', () => {
         caseId: 'slots-tab-index',
       });
 
-      const tabbableList = tabbable(container, { getShadowRoot() {} });
-      const focusableList = focusable(container, { getShadowRoot() {} });
+      let tabbableList = tabbable(container, { getShadowRoot() {} });
+      let focusableList = focusable(container, { getShadowRoot() {} });
 
-      expect(getIdsFromElementsArray(tabbableList), 'tabbable').to.eql([
+      expect(
+        getIdsFromElementsArray(tabbableList),
+        'tabbable, using `() => {}`'
+      ).to.eql([
         'light-1',
         'shadow-1',
         'shadow-2',
@@ -243,7 +273,36 @@ describe('web-components', () => {
         'shadow-3',
         'light-3',
       ]);
-      expect(getIdsFromElementsArray(focusableList), 'focusable').to.eql([
+      expect(
+        getIdsFromElementsArray(focusableList),
+        'focusable, using `() => {}`'
+      ).to.eql([
+        'shadow-3',
+        'light-3',
+        'light-2',
+        'light-1',
+        'shadow-2',
+        'shadow-1',
+      ]);
+
+      tabbableList = tabbable(container, { getShadowRoot: true });
+      focusableList = focusable(container, { getShadowRoot: true });
+
+      expect(
+        getIdsFromElementsArray(tabbableList),
+        'tabbable, using `true`'
+      ).to.eql([
+        'light-1',
+        'shadow-1',
+        'shadow-2',
+        'light-2',
+        'shadow-3',
+        'light-3',
+      ]);
+      expect(
+        getIdsFromElementsArray(focusableList),
+        'focusable, using `true`'
+      ).to.eql([
         'shadow-3',
         'light-3',
         'light-2',
@@ -268,9 +327,13 @@ describe('web-components', () => {
         caseId: 'slots-nested-tab-index',
       });
 
-      const result = tabbable(container, { getShadowRoot() {} });
+      let result = tabbable(container, { getShadowRoot() {} });
+      expect(getIdsFromElementsArray(result), 'using `() => {}`').to.eql(
+        expected
+      );
 
-      expect(getIdsFromElementsArray(result)).to.eql(expected);
+      result = tabbable(container, { getShadowRoot: true });
+      expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
     });
 
     it('should query nested shadow doms for slots', () => {
@@ -286,9 +349,13 @@ describe('web-components', () => {
         caseId: 'slotted-through-multiple-shadows',
       });
 
-      const result = tabbable(container, { getShadowRoot() {} });
+      let result = tabbable(container, { getShadowRoot() {} });
+      expect(getIdsFromElementsArray(result), 'using `() => {}`').to.eql(
+        expected
+      );
 
-      expect(getIdsFromElementsArray(result)).to.eql(expected);
+      result = tabbable(container, { getShadowRoot: true });
+      expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
     });
 
     it('should find elements inside slot', () => {
@@ -302,9 +369,13 @@ describe('web-components', () => {
         'slot[name="before"]'
       );
 
-      const result = tabbable(slot, { getShadowRoot() {} });
+      let result = tabbable(slot, { getShadowRoot() {} });
+      expect(getIdsFromElementsArray(result), 'using `() => {}`').to.eql(
+        expected
+      );
 
-      expect(getIdsFromElementsArray(result)).to.eql(expected);
+      result = tabbable(slot, { getShadowRoot: true });
+      expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
     });
 
     it('should not find slot with tabindex', () => {
@@ -320,9 +391,13 @@ describe('web-components', () => {
       slot.id = 'slot-id';
       slot.tabIndex = '1';
 
-      const result = tabbable(slot, { getShadowRoot() {} });
+      let result = tabbable(slot, { getShadowRoot() {} });
+      expect(getIdsFromElementsArray(result), 'using `() => {}`').to.eql(
+        expected
+      );
 
-      expect(getIdsFromElementsArray(result)).to.eql(expected);
+      result = tabbable(slot, { getShadowRoot: true });
+      expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
     });
 
     it('should filter un-tabbable elements', () => {
@@ -336,9 +411,13 @@ describe('web-components', () => {
         caseId: 'filter-conditions',
       });
 
-      const result = tabbable(container, { getShadowRoot() {} });
+      let result = tabbable(container, { getShadowRoot() {} });
+      expect(getIdsFromElementsArray(result), 'using `() => {}`').to.eql(
+        expected
+      );
 
-      expect(getIdsFromElementsArray(result)).to.eql(expected);
+      result = tabbable(container, { getShadowRoot: true });
+      expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
     });
 
     it('should filter un-focusable elements', () => {
@@ -354,9 +433,13 @@ describe('web-components', () => {
         caseId: 'filter-conditions',
       });
 
-      const result = focusable(container, { getShadowRoot() {} });
+      let result = focusable(container, { getShadowRoot() {} });
+      expect(getIdsFromElementsArray(result), 'using `() => {}`').to.eql(
+        expected
+      );
 
-      expect(getIdsFromElementsArray(result)).to.eql(expected);
+      result = focusable(container, { getShadowRoot: true });
+      expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
     });
 
     it('should accept shadow root in order to query closed shadows', () => {
@@ -370,12 +453,15 @@ describe('web-components', () => {
           return node.closedShadowRoot;
         },
       });
-      const noKnowlageOfShadowRoot = tabbable(container, {
+      const noKnowlegeOfShadowRootFn = tabbable(container, {
         getShadowRoot(_node) {
           return false;
         },
       });
-      const unknownShadowRoot = tabbable(container, {
+      const noKnowlegeOfShadowRootTrue = tabbable(container, {
+        getShadowRoot: true,
+      });
+      const undisclosedShadowRoot = tabbable(container, {
         getShadowRoot(_node) {
           return true;
         },
@@ -391,11 +477,15 @@ describe('web-components', () => {
         'light-after',
       ]);
       expect(
-        getIdsFromElementsArray(noKnowlageOfShadowRoot),
-        'no knowledge of shadow root'
+        getIdsFromElementsArray(noKnowlegeOfShadowRootFn),
+        'no knowledge of shadow root, using `() => false`'
       ).to.eql(['light-slotted', 'light-before', 'light-after']);
       expect(
-        getIdsFromElementsArray(unknownShadowRoot),
+        getIdsFromElementsArray(noKnowlegeOfShadowRootTrue),
+        'no knowledge of shadow root, using `true`'
+      ).to.eql(getIdsFromElementsArray(noKnowlegeOfShadowRootFn));
+      expect(
+        getIdsFromElementsArray(undisclosedShadowRoot),
         'undisclosed shadow root'
       ).to.eql(['light-before', 'light-slotted', 'light-after']);
     });
@@ -414,7 +504,7 @@ describe('web-components', () => {
       expect(
         getIdsFromElementsArray(
           focusable(container),
-          'focusable no options should not find'
+          'focusable no options (shadow support disabled) should not find'
         )
       ).to.eql(expected);
 
@@ -425,14 +515,14 @@ describe('web-components', () => {
               return node.closedShadowRoot;
             },
           }),
-          'focusable with options should not find'
+          'focusable with options should not find because slot container is hidden'
         )
       ).to.eql(expected);
 
       expect(
         getIdsFromElementsArray(
           tabbable(container),
-          'tabbable no options should not find'
+          'tabbable no options (shadow support disabled) should not find'
         )
       ).to.eql(expected);
 
@@ -443,7 +533,7 @@ describe('web-components', () => {
               return node.closedShadowRoot;
             },
           }),
-          'tabbable with options should not find'
+          'tabbable with options should not find because slot container is hidden'
         )
       ).to.eql(expected);
     });
