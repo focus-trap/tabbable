@@ -35,6 +35,7 @@
     "test:e2e:dev": "cypress open",
     "test:coverage": "cypress run --env coverage=true",
     "prepare": "yarn build",
+    "prepublishOnly": "yarn test && yarn build",
     "release": "yarn build && changeset publish"
   },
   "repository": {
