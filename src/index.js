@@ -57,7 +57,9 @@ const getCandidates = function (el, includeContainer, filter) {
 
 /**
  * @typedef {Object} IterativeOptions
- * @property {GetShadowRoot} getShadowRoot returns the shadow root of an element or a boolean stating if it has a shadow root
+ * @property {GetShadowRoot|boolean} getShadowRoot true if shadow support is enabled; falsy if not;
+ *  if a function, implies shadow support is enabled and either returns the shadow root of an element
+ *  or a boolean stating if it has an undisclosed shadow root
  * @property {(node: Element) => boolean} filter filter candidates
  * @property {boolean} flatten if true then result will flatten any CandidatesScope into the returned list
  */
@@ -101,8 +103,13 @@ const getCandidatesIteratively = function (
         candidates.push(element);
       }
 
-      // iterate over content
-      const shadowRoot = element.shadowRoot || options.getShadowRoot(element);
+      // iterate over shadow content if possible
+      const shadowRoot =
+        element.shadowRoot ||
+        // check for an undisclosed shadow
+        (typeof options.getShadowRoot === 'function' &&
+          options.getShadowRoot(element));
+
       if (shadowRoot) {
         // add shadow dom scope IIF a shadow root node was given; otherwise, an undisclosed
         //  shadow exists, so look at light dom children as fallback BUT create a scope for any
@@ -263,7 +270,7 @@ const isHidden = function (node, { displayCheck, getShadowRoot }) {
   }
 
   if (!displayCheck || displayCheck === 'full') {
-    if (getShadowRoot) {
+    if (typeof getShadowRoot === 'function') {
       // figure out if we should consider the node to be in an undisclosed shadow and use the
       //  'non-zero-area' fallback
       const originalNode = node;
@@ -273,7 +280,7 @@ const isHidden = function (node, { displayCheck, getShadowRoot }) {
         if (
           parentElement &&
           !parentElement.shadowRoot &&
-          getShadowRoot(parentElement) === true // there's a shadow, but we're not given access to it
+          getShadowRoot(parentElement) === true // check if there's an undisclosed shadow
         ) {
           // node has an undisclosed shadow which means we can only treat it as a black box, so we
           //  fall back to a non-zero-area test
@@ -291,9 +298,12 @@ const isHidden = function (node, { displayCheck, getShadowRoot }) {
       }
       node = originalNode;
     }
+    // else, `getShadowRoot` might be true, but all that does is enable shadow DOM support
+    //  (i.e. it does not also presume that all nodes might have undisclosed shadows); or
+    //  it might be a falsy value, which means shadow DOM support is disabled
 
-    // didn't find it sitting in a non-accessible shadow so now we can just test to see if
-    //  it would normally be visible or not
+    // didn't find it sitting in an undisclosed shadow (or shadows are disabled) so now we
+    //  can just test to see if it would normally be visible or not
     // this works wherever the node is: if there's at least one client rect, it's
     //  somehow displayed; it also covers the CSS 'display: contents' case where the
     //  node itself is hidden in place of its contents; and there's no need to search
