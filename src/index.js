@@ -347,9 +347,9 @@ const isNodeMatchingSelectorFocusable = function (options, node) {
 
 const isNodeMatchingSelectorTabbable = function (options, node) {
   if (
-    !isNodeMatchingSelectorFocusable(options, node) ||
     isNonTabbableRadio(node) ||
-    getTabindex(node) < 0
+    getTabindex(node) < 0 ||
+    !isNodeMatchingSelectorFocusable(options, node)
   ) {
     return false;
   }
