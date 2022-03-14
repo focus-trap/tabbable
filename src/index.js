@@ -141,7 +141,7 @@ const getCandidatesIteratively = function (
   return candidates;
 };
 
-const getTabindex = function (node) {
+const getTabindex = function (node, isScope) {
   if (node.tabIndex < 0) {
     // in Chrome, <details/>, <audio controls/> and <video controls/> elements get a default
     // `tabIndex` of -1 when the 'tabindex' attribute isn't specified in the DOM,
@@ -150,8 +150,13 @@ const getTabindex = function (node) {
     // order, consider their tab index to be 0.
     // Also browsers do not return `tabIndex` correctly for contentEditable nodes;
     // so if they don't have a tabindex attribute specifically set, assume it's 0.
+    //
+    // isScope is positive for custom element with shadow root or slot that by default
+    // have tabIndex -1, but need to be sorted by document order in order for their
+    // content to be inserted in the correct position
     if (
-      (/^(AUDIO|VIDEO|DETAILS)$/.test(node.tagName) ||
+      (isScope ||
+        /^(AUDIO|VIDEO|DETAILS)$/.test(node.tagName) ||
         node.isContentEditable) &&
       node.getAttribute('tabindex') === null
     ) {
