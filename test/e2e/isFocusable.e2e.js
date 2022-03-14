@@ -109,7 +109,9 @@ describe('isFocusable', () => {
       container.innerHTML = `<div contenteditable="true">contenteditable div</div>
         <p contenteditable="true">contenteditable paragraph</p>
         <div contenteditable="true" tabindex="-1">contenteditable div focusable but not tabbable</div>
-        <div contenteditable="true" tabindex="NaN">contenteditable div focusable and tabbable</div>`;
+        <div contenteditable="true" tabindex="NaN">contenteditable div focusable and tabbable</div>
+        <audio tabindex="foo" controls>audio controls focusable and tabbable</audio>
+        <video tabindex="bar" controls>video controls focusable and tabbable</video>`;
       document.body.append(container);
 
       const editableDiv = getByText(container, 'contenteditable div');
@@ -125,11 +127,21 @@ describe('isFocusable', () => {
         container,
         'contenteditable div focusable and tabbable'
       );
+      const audioWithNanTabIndex = getByText(
+        container,
+        'audio controls focusable and tabbable'
+      );
+      const videoWithNanTabIndex = getByText(
+        container,
+        'video controls focusable and tabbable'
+      );
 
       expect(isFocusable(editableDiv)).to.eql(true);
       expect(isFocusable(editableParagraph)).to.eql(true);
       expect(isFocusable(editableDivWithNegativeTabIndex)).to.eql(true);
       expect(isFocusable(editableDivWithNanTabIndex)).to.eql(true);
+      expect(isFocusable(audioWithNanTabIndex)).to.eql(true);
+      expect(isFocusable(videoWithNanTabIndex)).to.eql(true);
     });
 
     it('returns true for any element with a non-negative `tabindex` attribute', () => {

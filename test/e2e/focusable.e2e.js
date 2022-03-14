@@ -40,7 +40,9 @@ describe('focusable', () => {
         'negative-select',
         'hiddenParentVisible-button',
         'audio-control',
+        'audio-control-NaN-tabindex',
         'video-control',
+        'video-control-NaN-tabindex',
       ];
 
       const container = document.createElement('div');
