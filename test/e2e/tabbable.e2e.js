@@ -26,6 +26,7 @@ describe('tabbable', () => {
         'tabindex-hrefless-anchor',
         'contenteditable-true',
         'contenteditable-nesting',
+        'contenteditable-NaN-tabindex',
         'input',
         'input-readonly',
         'select',

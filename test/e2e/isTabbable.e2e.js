@@ -108,7 +108,8 @@ describe('isTabbable', () => {
       const container = document.createElement('div');
       container.innerHTML = `<div contenteditable="true">contenteditable div</div>
         <p contenteditable="true">contenteditable paragraph</p>
-        <div contenteditable="true" tabindex="-1">this editable text is focusable but not tabbable</div>`;
+        <div contenteditable="true" tabindex="-1">contenteditable div focusable but not tabbable</div>
+        <div contenteditable="true" tabindex="NaN">contenteditable div focusable and tabbable</div>`;
       document.body.append(container);
 
       const editableDiv = getByText(container, 'contenteditable div');
@@ -116,14 +117,19 @@ describe('isTabbable', () => {
         container,
         'contenteditable paragraph'
       );
-      const editableParagraphWithNegativeTabIndex = getByText(
+      const editableDivWithNegativeTabIndex = getByText(
         container,
-        'this editable text is focusable but not tabbable'
+        'contenteditable div focusable but not tabbable'
+      );
+      const editableDivWithNanTabIndex = getByText(
+        container,
+        'contenteditable div focusable and tabbable'
       );
 
       expect(isTabbable(editableDiv)).to.eql(true);
       expect(isTabbable(editableParagraph)).to.eql(true);
-      expect(isTabbable(editableParagraphWithNegativeTabIndex)).to.eql(false);
+      expect(isTabbable(editableDivWithNegativeTabIndex)).to.eql(false);
+      expect(isTabbable(editableDivWithNanTabIndex)).to.eql(true);
     });
 
     it('returns true for any element with a non-negative `tabindex` attribute', () => {

@@ -158,7 +158,7 @@ const getTabindex = function (node, isScope) {
       (isScope ||
         /^(AUDIO|VIDEO|DETAILS)$/.test(node.tagName) ||
         node.isContentEditable) &&
-      node.getAttribute('tabindex') === null
+      isNaN(parseInt(node.getAttribute('tabindex'), 10))
     ) {
       return 0;
     }

@@ -26,6 +26,7 @@ describe('focusable', () => {
         'contenteditable-true',
         'contenteditable-nesting',
         'contenteditable-negative-tabindex',
+        'contenteditable-NaN-tabindex',
         'input',
         'input-readonly',
         'select',
