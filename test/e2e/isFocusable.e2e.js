@@ -107,7 +107,8 @@ describe('isFocusable', () => {
     it('returns true for any element with a `contenteditable` attribute with a truthy value', () => {
       const container = document.createElement('div');
       container.innerHTML = `<div contenteditable="true">contenteditable div</div>
-        <p contenteditable="true">contenteditable paragraph</p>`;
+        <p contenteditable="true">contenteditable paragraph</p>
+        <div contenteditable="true" tabindex="-1">this editable text is focusable but not tabbable</div>`;
       document.body.append(container);
 
       const editableDiv = getByText(container, 'contenteditable div');
@@ -115,9 +116,14 @@ describe('isFocusable', () => {
         container,
         'contenteditable paragraph'
       );
+      const editableParagraphWithNegativeTabIndex = getByText(
+        container,
+        'this editable text is focusable but not tabbable'
+      );
 
       expect(isFocusable(editableDiv)).to.eql(true);
       expect(isFocusable(editableParagraph)).to.eql(true);
+      expect(isFocusable(editableParagraphWithNegativeTabIndex)).to.eql(true);
     });
 
     it('returns true for any element with a non-negative `tabindex` attribute', () => {

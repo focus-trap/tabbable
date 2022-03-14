@@ -25,6 +25,7 @@ describe('focusable', () => {
       const expectedFocusableIds = [
         'contenteditable-true',
         'contenteditable-nesting',
+        'contenteditable-negative-tabindex',
         'input',
         'input-readonly',
         'select',
