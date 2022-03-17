@@ -26,6 +26,7 @@ describe('tabbable', () => {
         'tabindex-hrefless-anchor',
         'contenteditable-true',
         'contenteditable-nesting',
+        'contenteditable-NaN-tabindex',
         'input',
         'input-readonly',
         'select',
@@ -37,7 +38,9 @@ describe('tabbable', () => {
         'tabindex-div',
         'hiddenParentVisible-button',
         'audio-control',
+        'audio-control-NaN-tabindex',
         'video-control',
+        'video-control-NaN-tabindex',
       ];
 
       const container = document.createElement('div');

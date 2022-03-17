@@ -107,7 +107,11 @@ describe('isTabbable', () => {
     it('returns true for any element with a `contenteditable` attribute with a truthy value', () => {
       const container = document.createElement('div');
       container.innerHTML = `<div contenteditable="true">contenteditable div</div>
-        <p contenteditable="true">contenteditable paragraph</p>`;
+        <p contenteditable="true">contenteditable paragraph</p>
+        <div contenteditable="true" tabindex="-1">contenteditable div focusable but not tabbable</div>
+        <div contenteditable="true" tabindex="NaN">contenteditable div focusable and tabbable</div>
+        <audio tabindex="foo" controls>audio controls focusable and tabbable</audio>
+        <video tabindex="bar" controls>video controls focusable and tabbable</video>`;
       document.body.append(container);
 
       const editableDiv = getByText(container, 'contenteditable div');
@@ -115,9 +119,29 @@ describe('isTabbable', () => {
         container,
         'contenteditable paragraph'
       );
+      const editableDivWithNegativeTabIndex = getByText(
+        container,
+        'contenteditable div focusable but not tabbable'
+      );
+      const editableDivWithNanTabIndex = getByText(
+        container,
+        'contenteditable div focusable and tabbable'
+      );
+      const audioWithNanTabIndex = getByText(
+        container,
+        'audio controls focusable and tabbable'
+      );
+      const videoWithNanTabIndex = getByText(
+        container,
+        'video controls focusable and tabbable'
+      );
 
       expect(isTabbable(editableDiv)).to.eql(true);
       expect(isTabbable(editableParagraph)).to.eql(true);
+      expect(isTabbable(editableDivWithNegativeTabIndex)).to.eql(false);
+      expect(isTabbable(editableDivWithNanTabIndex)).to.eql(true);
+      expect(isTabbable(audioWithNanTabIndex)).to.eql(true);
+      expect(isTabbable(videoWithNanTabIndex)).to.eql(true);
     });
 
     it('returns true for any element with a non-negative `tabindex` attribute', () => {

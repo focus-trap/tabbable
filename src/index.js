@@ -141,40 +141,27 @@ const getCandidatesIteratively = function (
   return candidates;
 };
 
-const isContentEditable = function (node) {
-  return node.contentEditable === 'true';
-};
-
 const getTabindex = function (node, isScope) {
-  const tabindexAttr = parseInt(node.getAttribute('tabindex'), 10);
-
-  if (!isNaN(tabindexAttr)) {
-    return tabindexAttr;
-  }
-
-  // Browsers do not return `tabIndex` correctly for contentEditable nodes;
-  // so if they don't have a tabindex attribute specifically set, assume it's 0.
-  if (isContentEditable(node)) {
-    return 0;
-  }
-
-  // in Chrome, <details/>, <audio controls/> and <video controls/> elements get a default
-  //  `tabIndex` of -1 when the 'tabindex' attribute isn't specified in the DOM,
-  //  yet they are still part of the regular tab order; in FF, they get a default
-  //  `tabIndex` of 0; since Chrome still puts those elements in the regular tab
-  //  order, consider their tab index to be 0.
-  //
-  // isScope is positive for custom element with shadow root or slot that by default
-  // have tabIndex -1, but need to be sorted by document order in order for their
-  // content to be inserted in the correct position
-  if (
-    (isScope ||
-      node.nodeName === 'AUDIO' ||
-      node.nodeName === 'VIDEO' ||
-      node.nodeName === 'DETAILS') &&
-    node.getAttribute('tabindex') === null
-  ) {
-    return 0;
+  if (node.tabIndex < 0) {
+    // in Chrome, <details/>, <audio controls/> and <video controls/> elements get a default
+    // `tabIndex` of -1 when the 'tabindex' attribute isn't specified in the DOM,
+    // yet they are still part of the regular tab order; in FF, they get a default
+    // `tabIndex` of 0; since Chrome still puts those elements in the regular tab
+    // order, consider their tab index to be 0.
+    // Also browsers do not return `tabIndex` correctly for contentEditable nodes;
+    // so if they don't have a tabindex attribute specifically set, assume it's 0.
+    //
+    // isScope is positive for custom element with shadow root or slot that by default
+    // have tabIndex -1, but need to be sorted by document order in order for their
+    // content to be inserted in the correct position
+    if (
+      (isScope ||
+        /^(AUDIO|VIDEO|DETAILS)$/.test(node.tagName) ||
+        node.isContentEditable) &&
+      isNaN(parseInt(node.getAttribute('tabindex'), 10))
+    ) {
+      return 0;
+    }
   }
 
   return node.tabIndex;
@@ -365,9 +352,9 @@ const isNodeMatchingSelectorFocusable = function (options, node) {
 
 const isNodeMatchingSelectorTabbable = function (options, node) {
   if (
-    !isNodeMatchingSelectorFocusable(options, node) ||
     isNonTabbableRadio(node) ||
-    getTabindex(node) < 0
+    getTabindex(node) < 0 ||
+    !isNodeMatchingSelectorFocusable(options, node)
   ) {
     return false;
   }
