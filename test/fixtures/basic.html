@@ -11,6 +11,12 @@
     </div>
   </div>
 </div>
+<div id="contenteditable-negative-tabindex" contenteditable="true" tabindex="-1" style="padding:1em">
+  this editable text is focusable but not tabbable
+</div>
+<div id="contenteditable-NaN-tabindex" contenteditable="true" tabindex="NaN" style="padding:1em">
+  editable text
+</div>
 
 <input id="input" type="text" />
 <input id="input-readonly" readonly />
@@ -50,9 +56,11 @@
 
 <audio id="audio-control" controls></audio>
 <audio id="audio-nocontrol"></audio>
+<audio id="audio-control-NaN-tabindex" tabindex="foo" controls></audio>
 
 <video id="video-control" controls></video>
 <video id="video-nocontrol"></video>
+<video id="video-control-NaN-tabindex" tabindex="bar" controls></video>
 
 <iframe
   id="iframe"
