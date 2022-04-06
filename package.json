@@ -78,7 +78,7 @@
     "jest": "^27.5.1",
     "jest-watch-typeahead": "^1.0.0",
     "onchange": "^7.1.0",
-    "prettier": "^2.6.1",
+    "prettier": "^2.6.2",
     "rollup": "^2.70.1",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2",
