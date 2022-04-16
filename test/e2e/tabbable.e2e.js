@@ -188,9 +188,11 @@ describe('tabbable', () => {
 
     it('correctly identifies tabbable elements in the "radio" example', () => {
       const expectedTabbableIds = [
-        'formA-radioA',
-        'formB-radioA',
-        'formB-radioB',
+        'form1-radioA',
+        'form2-radioA',
+        'form2-radioB',
+        'form3-radioA',
+        'form3-radioB',
         'noform-radioA',
         'noform-groupB-radioA',
         'noform-groupB-radioB',
@@ -214,9 +216,11 @@ describe('tabbable', () => {
       cy.spy(console, 'error');
 
       const expectedTabbableIds = [
-        'formA-radioA',
-        'formB-radioA',
-        'formB-radioB',
+        'form1-radioA',
+        'form2-radioA',
+        'form2-radioB',
+        'form3-radioA',
+        'form3-radioB',
         'noform-radioA',
         'noform-groupB-radioA',
         'noform-groupB-radioB',
