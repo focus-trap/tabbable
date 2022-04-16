@@ -190,10 +190,12 @@ describe('focusable', () => {
 
     it('correctly identifies focusable elements in the "radio" example', () => {
       const expectedFocusableIds = [
-        'formA-radioA',
-        'formA-radioB',
-        'formB-radioA',
-        'formB-radioB',
+        'form1-radioA',
+        'form1-radioB',
+        'form2-radioA',
+        'form2-radioB',
+        'form3-radioA',
+        'form3-radioB',
         'noform-radioA',
         'noform-radioB',
         'noform-groupB-radioA',
