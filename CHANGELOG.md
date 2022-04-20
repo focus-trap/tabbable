@@ -1,8 +1,23 @@
 # Changelog
 
+## 5.3.0
+
+### Minor Changes
+
+- 685a906: Adds new Shadow DOM support (must be explicitly enabled using the new `getShadowRoot` option).
+    - When enabled, supports open shadows by default, and can support closed shadows if the option is a function that returns the shadow for a given node. See documentation for more information.
+    - Includes all updates from `5.3.0-beta.0` and `5.3.0-beta.1` releases.
+
+### Patch Changes
+
+- b341412: Made "isDisabledFromFieldset" more readable and concise (even marginally faster).
+- 685a906: Fixed a bug in `getTabIndex`: the tab index of `<audio>`, `<video>` and `<details>` was left to the browser default if explicitly set to a value that couldn't be parsed as integer, leading to inconsistent behavior across browsers. Also slightly modified the function's logic to make it more efficient. Finally added tests to cover the fix.
+- dd6d0ec: Optimized and extended `displayCheck: "full"` option (now checks for any element having no display boxes) and added test for `display: "contents"` property (this bug was never reported). [(#592)](https://github.com/focus-trap/tabbable/issues/592)
+- 193fca2: Fixed bug in `isDisabledFromFieldset`. The function wasn't checking whether the disabled `<fieldset>` containing `node` is the top-most disabled `<fieldset>` ([#596](https://github.com/focus-trap/tabbable/issues/596)).
+
 ## 5.3.0-beta.1
 
-- Add support for setting `getShadowRoot: true` as an easy way to simply *enable* shadow DOM support. This is the equivalent of setting `getShadowRoot: () => false`, which means tabbable will find nodes in **open** shadow roots only.
+- Add support for setting `getShadowRoot: true` as an easy way to simply _enable_ shadow DOM support. This is the equivalent of setting `getShadowRoot: () => false`, which means tabbable will find nodes in **open** shadow roots only.
 
 ## 5.3.0-beta.0
 
