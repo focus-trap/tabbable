@@ -107,7 +107,11 @@ describe('isTabbable', () => {
     it('returns true for any element with a `contenteditable` attribute with a truthy value', () => {
       const container = document.createElement('div');
       container.innerHTML = `<div contenteditable="true">contenteditable div</div>
-        <p contenteditable="true">contenteditable paragraph</p>`;
+        <p contenteditable="true">contenteditable paragraph</p>
+        <div contenteditable="true" tabindex="-1">contenteditable div focusable but not tabbable</div>
+        <div contenteditable="true" tabindex="NaN">contenteditable div focusable and tabbable</div>
+        <audio tabindex="foo" controls>audio controls focusable and tabbable</audio>
+        <video tabindex="bar" controls>video controls focusable and tabbable</video>`;
       document.body.append(container);
 
       const editableDiv = getByText(container, 'contenteditable div');
@@ -115,19 +119,39 @@ describe('isTabbable', () => {
         container,
         'contenteditable paragraph'
       );
+      const editableDivWithNegativeTabIndex = getByText(
+        container,
+        'contenteditable div focusable but not tabbable'
+      );
+      const editableDivWithNanTabIndex = getByText(
+        container,
+        'contenteditable div focusable and tabbable'
+      );
+      const audioWithNanTabIndex = getByText(
+        container,
+        'audio controls focusable and tabbable'
+      );
+      const videoWithNanTabIndex = getByText(
+        container,
+        'video controls focusable and tabbable'
+      );
 
       expect(isTabbable(editableDiv)).to.eql(true);
       expect(isTabbable(editableParagraph)).to.eql(true);
+      expect(isTabbable(editableDivWithNegativeTabIndex)).to.eql(false);
+      expect(isTabbable(editableDivWithNanTabIndex)).to.eql(true);
+      expect(isTabbable(audioWithNanTabIndex)).to.eql(true);
+      expect(isTabbable(videoWithNanTabIndex)).to.eql(true);
     });
 
     it('returns true for any element with a non-negative `tabindex` attribute', () => {
       const container = document.createElement('div');
-      container.innerHTML = `<p tabIndex="2">Tabbable parapgraph</p>
+      container.innerHTML = `<p tabIndex="2">Tabbable paragraph</p>
         <div tabIndex="1">Tabbable div</div>
         <span tabIndex="0">Tabbable span</span>`;
       document.body.append(container);
 
-      expect(isTabbable(getByText(container, 'Tabbable parapgraph'))).to.eql(
+      expect(isTabbable(getByText(container, 'Tabbable paragraph'))).to.eql(
         true
       );
       expect(isTabbable(getByText(container, 'Tabbable div'))).to.eql(true);
@@ -138,12 +162,12 @@ describe('isTabbable', () => {
   describe('returns false', () => {
     it('returns false for elements that are generally not tabbable', () => {
       const container = document.createElement('div');
-      container.innerHTML = `<p>parapgraph</p>
+      container.innerHTML = `<p>paragraph</p>
         <div>div</div>
         <span>span</span>`;
       document.body.append(container);
 
-      expect(isTabbable(getByText(container, 'parapgraph'))).to.eql(false);
+      expect(isTabbable(getByText(container, 'paragraph'))).to.eql(false);
       expect(isTabbable(getByText(container, 'div'))).to.eql(false);
       expect(isTabbable(getByText(container, 'span'))).to.eql(false);
     });

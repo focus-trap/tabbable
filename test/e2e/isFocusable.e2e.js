@@ -107,7 +107,11 @@ describe('isFocusable', () => {
     it('returns true for any element with a `contenteditable` attribute with a truthy value', () => {
       const container = document.createElement('div');
       container.innerHTML = `<div contenteditable="true">contenteditable div</div>
-        <p contenteditable="true">contenteditable paragraph</p>`;
+        <p contenteditable="true">contenteditable paragraph</p>
+        <div contenteditable="true" tabindex="-1">contenteditable div focusable but not tabbable</div>
+        <div contenteditable="true" tabindex="NaN">contenteditable div focusable and tabbable</div>
+        <audio tabindex="foo" controls>audio controls focusable and tabbable</audio>
+        <video tabindex="bar" controls>video controls focusable and tabbable</video>`;
       document.body.append(container);
 
       const editableDiv = getByText(container, 'contenteditable div');
@@ -115,19 +119,39 @@ describe('isFocusable', () => {
         container,
         'contenteditable paragraph'
       );
+      const editableDivWithNegativeTabIndex = getByText(
+        container,
+        'contenteditable div focusable but not tabbable'
+      );
+      const editableDivWithNanTabIndex = getByText(
+        container,
+        'contenteditable div focusable and tabbable'
+      );
+      const audioWithNanTabIndex = getByText(
+        container,
+        'audio controls focusable and tabbable'
+      );
+      const videoWithNanTabIndex = getByText(
+        container,
+        'video controls focusable and tabbable'
+      );
 
       expect(isFocusable(editableDiv)).to.eql(true);
       expect(isFocusable(editableParagraph)).to.eql(true);
+      expect(isFocusable(editableDivWithNegativeTabIndex)).to.eql(true);
+      expect(isFocusable(editableDivWithNanTabIndex)).to.eql(true);
+      expect(isFocusable(audioWithNanTabIndex)).to.eql(true);
+      expect(isFocusable(videoWithNanTabIndex)).to.eql(true);
     });
 
     it('returns true for any element with a non-negative `tabindex` attribute', () => {
       const container = document.createElement('div');
-      container.innerHTML = `<p tabIndex="2">Focusable parapgraph</p>
+      container.innerHTML = `<p tabIndex="2">Focusable paragraph</p>
         <div tabIndex="1">Focusable div</div>
         <span tabIndex="0">Focusable span</span>`;
       document.body.append(container);
 
-      expect(isFocusable(getByText(container, 'Focusable parapgraph'))).to.eql(
+      expect(isFocusable(getByText(container, 'Focusable paragraph'))).to.eql(
         true
       );
       expect(isFocusable(getByText(container, 'Focusable div'))).to.eql(true);
@@ -137,7 +161,7 @@ describe('isFocusable', () => {
     it('returns true for any element with a negative `tabindex` attribute', () => {
       const container = document.createElement('div');
       container.innerHTML = `<input tabIndex="-1" data-testid="focusableInput" />
-        <p tabIndex="-1">Focusable parapgraph</p>
+        <p tabIndex="-1">Focusable paragraph</p>
         <div tabIndex="-1">Focusable div</div>
         <span tabIndex="-1">Focusable span</span>`;
       document.body.append(container);
@@ -145,7 +169,7 @@ describe('isFocusable', () => {
       expect(isFocusable(getByTestId(container, 'focusableInput'))).to.eql(
         true
       );
-      expect(isFocusable(getByText(container, 'Focusable parapgraph'))).to.eql(
+      expect(isFocusable(getByText(container, 'Focusable paragraph'))).to.eql(
         true
       );
       expect(isFocusable(getByText(container, 'Focusable div'))).to.eql(true);
@@ -171,12 +195,12 @@ describe('isFocusable', () => {
   describe('returns false', () => {
     it('returns false for elements that are generally not Focusable', () => {
       const container = document.createElement('div');
-      container.innerHTML = `<p>parapgraph</p>
+      container.innerHTML = `<p>paragraph</p>
         <div>div</div>
         <span>span</span>`;
       document.body.append(container);
 
-      expect(isFocusable(getByText(container, 'parapgraph'))).to.eql(false);
+      expect(isFocusable(getByText(container, 'paragraph'))).to.eql(false);
       expect(isFocusable(getByText(container, 'div'))).to.eql(false);
       expect(isFocusable(getByText(container, 'span'))).to.eql(false);
     });

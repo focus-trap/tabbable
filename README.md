@@ -91,6 +91,25 @@ Type: `full` | `non-zero-area` | `none` . Default: `full`.
 
 Configures how to check if an element is displayed, see ["Display check"](#display-check) below.
 
+##### getShadowRoot
+
+By default, tabbable overlooks (i.e. does not consider) __all__ elements contained in shadow DOMs (whether open or closed). This has been the behavior since the beginning.
+
+Setting this option to a _truthy_ value enables Shadow DOM support, which means tabbable will consider elements _inside_ web components as candidates, both open (automatically) and closed (provided this function returns the shadow root).
+
+Type: `boolean | (node: FocusableElement) => ShadowRoot | boolean | undefined`
+
+- `boolean`:
+    - `true` simply enables shadow DOM support for any __open__ shadow roots, but never presumes there is an undisclosed shadow. This is the equivalent of setting `getShadowRoot: () => false`
+    - `false` (default) disables shadow DOM support.
+- `function`:
+    - `node` will be a descendent of the `rootNode` given to `tabbable()`, `isTabbable()`, `focusable()`, or `isFocusable()`.
+    - Returns: The node's `ShadowRoot` if available, `true` indicating a `ShadowRoot` is attached but not available (i.e. "undisclosed"), or a _falsy_ value indicating there is no shadow attached to the node.
+
+> If set to a function, and if it returns `true`, Tabbable assumes a closed `ShadowRoot` is attached and will treat the node as a scope, iterating its children for additional tabbable/focusable candidates as though it was looking inside the shadow, but not. This will get tabbing order _closer_ to -- but not necessarily the same as -- browser order.
+>
+> Returning `true` from a function will also inform how the node's visibility check is done, causing tabbable to use the __non-zero-area__ [Display Check](#display-check) when determining if it's visible, and so tabbable/focusable.
+
 ### isTabbable
 
 ```js
@@ -173,8 +192,8 @@ To reliably check if an element is tabbable/focusable, Tabbable defaults to the 
 
 The `displayCheck` configuration accepts the following options:
 
-- `full`: (default) Most reliably resemble browser behavior, this option checks that an element is displayed and all of his ancestors are displayed as well (Notice that this doesn't exclude `visibility: hidden` or elements with zero size). This check is by far the slowest option as it might cause layout reflow.
-- `non-zero-area`: This option checks display under the assumption that elements that are not displayed have zero area (width AND height equals zero). While not keeping true to browser behavior, this option is much less intensive then the `full` option and better for accessibility as zero-size elements with focusable content are considered a strong accessibility anti-pattern.
+- `full`: (default) Most reliably resembling browser behavior, this option checks that an element is displayed and all of his ancestors are displayed as well (notice that this doesn't exclude `visibility: hidden` or elements with zero size). This check is by far the slowest option as it will cause layout reflow.
+- `non-zero-area`: This option checks display under the assumption that elements that are not displayed have zero area (width AND height equals zero). While not keeping true to browser behavior, this option may be less intensive than the `full` option, and better for accessibility, as zero-size elements with focusable content are considered a strong accessibility anti-pattern.
 - `none`: This completely opts out of the display check. **This option is not recommended**, as it might return elements that are not displayed, and as such not tabbable/focusable and can break accessibility. Make sure you know which elements in your DOM are not displayed and can filter them out yourself before using this option.
 
 **_Feedback and contributions more than welcome!_**

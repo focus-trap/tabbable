@@ -2,6 +2,7 @@ import { focusable } from '../../src/index.js';
 import {
   setupTestWindow,
   getFixtures,
+  setupFixture,
   removeAllChildNodes,
   getIdsFromElementsArray,
 } from './e2e.helpers';
@@ -24,6 +25,8 @@ describe('focusable', () => {
       const expectedFocusableIds = [
         'contenteditable-true',
         'contenteditable-nesting',
+        'contenteditable-negative-tabindex',
+        'contenteditable-NaN-tabindex',
         'input',
         'input-readonly',
         'select',
@@ -37,7 +40,9 @@ describe('focusable', () => {
         'negative-select',
         'hiddenParentVisible-button',
         'audio-control',
+        'audio-control-NaN-tabindex',
         'video-control',
+        'video-control-NaN-tabindex',
       ];
 
       const container = document.createElement('div');
@@ -185,10 +190,12 @@ describe('focusable', () => {
 
     it('correctly identifies focusable elements in the "radio" example', () => {
       const expectedFocusableIds = [
-        'formA-radioA',
-        'formA-radioB',
-        'formB-radioA',
-        'formB-radioB',
+        'form1-radioA',
+        'form1-radioB',
+        'form2-radioA',
+        'form2-radioB',
+        'form3-radioA',
+        'form3-radioB',
         'noform-radioA',
         'noform-radioB',
         'noform-groupB-radioA',
@@ -261,17 +268,12 @@ describe('focusable', () => {
     it('correctly identifies focusable elements in the "shadow-dom" example', () => {
       const expectedFocusableIds = ['input'];
 
-      const container = document.createElement('div');
-      container.innerHTML = fixtures['shadow-dom'];
-      document.body.append(container);
+      const { container } = setupFixture(fixtures['shadow-dom'], { window });
+      const host = container.querySelector('test-shadow');
 
-      const host = container.querySelector('#shadow-host');
-      const template = container.querySelector('#shadow-root-template');
-
-      const shadow = host.attachShadow({ mode: 'open' });
-      shadow.appendChild(template.content.cloneNode(true));
-
-      const focusableElements = focusable(shadow.querySelector('#container'));
+      const focusableElements = focusable(
+        host.shadowRoot.querySelector('#container')
+      );
 
       expect(getIdsFromElementsArray(focusableElements)).to.eql(
         expectedFocusableIds

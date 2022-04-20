@@ -1,6 +1,6 @@
 {
   "name": "tabbable",
-  "version": "5.2.1",
+  "version": "5.3.0-beta.1",
   "description": "Returns an array of all tabbable DOM nodes within a containing node.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -31,10 +31,11 @@
     "test": "yarn format:check && yarn lint && yarn test:types && yarn test:unit && yarn test:e2e",
     "test:types": "tsc index.d.ts",
     "test:unit": "jest",
-    "test:e2e": "cypress run",
+    "test:e2e": "ELECTRON_ENABLE_LOGGING=1 cypress run",
     "test:e2e:dev": "cypress open",
     "test:coverage": "cypress run --env coverage=true",
     "prepare": "yarn build",
+    "prepublishOnly": "yarn test && yarn build",
     "release": "yarn build && changeset publish"
   },
   "repository": {

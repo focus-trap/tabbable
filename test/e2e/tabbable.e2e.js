@@ -2,6 +2,7 @@ import { tabbable } from '../../src/index.js';
 import {
   setupTestWindow,
   getFixtures,
+  setupFixture,
   removeAllChildNodes,
   getIdsFromElementsArray,
 } from './e2e.helpers';
@@ -25,6 +26,7 @@ describe('tabbable', () => {
         'tabindex-hrefless-anchor',
         'contenteditable-true',
         'contenteditable-nesting',
+        'contenteditable-NaN-tabindex',
         'input',
         'input-readonly',
         'select',
@@ -36,7 +38,9 @@ describe('tabbable', () => {
         'tabindex-div',
         'hiddenParentVisible-button',
         'audio-control',
+        'audio-control-NaN-tabindex',
         'video-control',
+        'video-control-NaN-tabindex',
       ];
 
       const container = document.createElement('div');
@@ -184,9 +188,11 @@ describe('tabbable', () => {
 
     it('correctly identifies tabbable elements in the "radio" example', () => {
       const expectedTabbableIds = [
-        'formA-radioA',
-        'formB-radioA',
-        'formB-radioB',
+        'form1-radioA',
+        'form2-radioA',
+        'form2-radioB',
+        'form3-radioA',
+        'form3-radioB',
         'noform-radioA',
         'noform-groupB-radioA',
         'noform-groupB-radioB',
@@ -210,9 +216,11 @@ describe('tabbable', () => {
       cy.spy(console, 'error');
 
       const expectedTabbableIds = [
-        'formA-radioA',
-        'formB-radioA',
-        'formB-radioB',
+        'form1-radioA',
+        'form2-radioA',
+        'form2-radioB',
+        'form3-radioA',
+        'form3-radioB',
         'noform-radioA',
         'noform-groupB-radioA',
         'noform-groupB-radioB',
@@ -290,17 +298,12 @@ describe('tabbable', () => {
     it('correctly identifies tabbable elements in the "shadow-dom" example', () => {
       const expectedTabbableIds = ['input'];
 
-      const container = document.createElement('div');
-      container.innerHTML = fixtures['shadow-dom'];
-      document.body.append(container);
+      const { container } = setupFixture(fixtures['shadow-dom'], { window });
+      const host = container.querySelector('test-shadow');
 
-      const host = container.querySelector('#shadow-host');
-      const template = container.querySelector('#shadow-root-template');
-
-      const shadow = host.attachShadow({ mode: 'open' });
-      shadow.appendChild(template.content.cloneNode(true));
-
-      const tabbableElements = tabbable(shadow.querySelector('#container'));
+      const tabbableElements = tabbable(
+        host.shadowRoot.querySelector('#container')
+      );
 
       expect(getIdsFromElementsArray(tabbableElements)).to.eql(
         expectedTabbableIds
