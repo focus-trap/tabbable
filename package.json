@@ -1,6 +1,6 @@
 {
   "name": "tabbable",
-  "version": "5.3.0",
+  "version": "5.3.1",
   "description": "Returns an array of all tabbable DOM nodes within a containing node.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
