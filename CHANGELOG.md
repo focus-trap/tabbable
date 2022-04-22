@@ -19,6 +19,7 @@
 - b341412: Made "isDisabledFromFieldset" more readable and concise (even marginally faster).
 - 685a906: Fixed a bug in `getTabIndex`: the tab index of `<audio>`, `<video>` and `<details>` was left to the browser default if explicitly set to a value that couldn't be parsed as integer, leading to inconsistent behavior across browsers. Also slightly modified the function's logic to make it more efficient. Finally added tests to cover the fix.
 - dd6d0ec: Optimized and extended `displayCheck: "full"` option (now checks for any element having no display boxes) and added test for `display: "contents"` property (this bug was never reported). [(#592)](https://github.com/focus-trap/tabbable/issues/592)
+  - ⚠️ This will likely break your tests __if you're using JSDom__ (e.g. with Jest). See [testing in JSDom](./README.md#testing-in-jsdom) for more info.
 - 193fca2: Fixed bug in `isDisabledFromFieldset`. The function wasn't checking whether the disabled `<fieldset>` containing `node` is the top-most disabled `<fieldset>` ([#596](https://github.com/focus-trap/tabbable/issues/596)).
 
 ## 5.3.0-beta.1
