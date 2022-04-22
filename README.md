@@ -186,6 +186,24 @@ When using test engines such as Jest that use [JSDom](https://github.com/jsdom/j
 
 Using any other `displayCheck` setting will likely lead to failed tests due to nodes expected to be tabbable/focusable being determined to be the opposite because JSDom doesn't fully support some of the DOM APIs being used (even old ones that have been around for a long time).
 
+You can globally overwrite `diplayCheck` property by including this file in your `__mocks__` folder:
+
+```jsx
+// __mocks__/tabbable.js
+
+const lib = jest.requireActual('tabbable');
+
+const tabbable = {
+   ...lib,
+   tabbable: (node, options) => lib.tabbable(node, { ...options, displayCheck: 'none' }),
+   focusable: (node, options) => lib.focusable(node, { ...options, displayCheck: 'none' }),
+   isFocusable: (node, options) => lib.isFocusable(node, { ...options, displayCheck: 'none' }),
+   isTabbable: (node, options) => lib.isTabbable(node, { ...options, displayCheck: 'none' }),
+};
+
+module.exports = tabbable;
+```
+
 ## Contributing
 
 Feedback and contributions more than welcome!
