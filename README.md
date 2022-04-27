@@ -137,8 +137,8 @@ To reliably check if an element is tabbable/focusable, Tabbable defaults to the 
 
 The `displayCheck` configuration accepts the following options:
 
-- `full`: (default) Most reliably resembling browser behavior, this option checks that an element is displayed and all of his ancestors are displayed as well (notice that this doesn't exclude `visibility: hidden` or elements with zero size). This check is by far the slowest option as it will cause layout reflow.
-- `non-zero-area`: This option checks display under the assumption that elements that are not displayed have zero area (width AND height equals zero). While not keeping true to browser behavior, this option may be less intensive than the `full` option, and better for accessibility, as zero-size elements with focusable content are considered a strong accessibility anti-pattern.
+- `full`: (default) Most reliably resembling browser behavior, this option checks that an element is displayed and all of his ancestors are displayed as well (notice that this doesn't exclude `visibility: hidden` or elements with zero size).
+- `non-zero-area`: This option checks display under the assumption that elements that are not displayed have zero area (width AND height equals zero). While not keeping true to browser behavior, this option may enhance accessibility, as zero-size elements with focusable content are considered a strong accessibility anti-pattern; it also used to be less intensive than the `full` option, but as a result of optimizations this is not the case anymore.
 - `none`: This completely opts out of the display check. **This option is not recommended**, as it might return elements that are not displayed, and as such not tabbable/focusable and can break accessibility. Make sure you know which elements in your DOM are not displayed and can filter them out yourself before using this option.
 
 > ⚠️ __Testing in JSDom__ (e.g. with Jest): See notes about [testing in JSDom](#testing-in-jsdom).
