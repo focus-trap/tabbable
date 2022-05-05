@@ -21,39 +21,80 @@ describe('focusable', () => {
   });
 
   describe('example fixtures', () => {
-    it('correctly identifies focusable elements in the "basic" example', () => {
-      const expectedFocusableIds = [
-        'contenteditable-true',
-        'contenteditable-nesting',
-        'contenteditable-negative-tabindex',
-        'contenteditable-NaN-tabindex',
-        'input',
-        'input-readonly',
-        'select',
-        'select-readonly',
-        'href-anchor',
-        'tabindex-hrefless-anchor',
-        'textarea',
-        'textarea-readonly',
-        'button',
-        'tabindex-div',
-        'negative-select',
-        'hiddenParentVisible-button',
-        'audio-control',
-        'audio-control-NaN-tabindex',
-        'video-control',
-        'video-control-NaN-tabindex',
-      ];
+    [true, false].forEach((inDocument) => {
+      it(`correctly identifies focusable elements in the "basic" example ${
+        inDocument ? '(container IN doc)' : '(container NOT in doc)'
+      }`, () => {
+        let expectedFocusableIds;
 
-      const container = document.createElement('div');
-      container.innerHTML = fixtures.basic;
-      document.body.append(container);
+        if (inDocument) {
+          expectedFocusableIds = [
+            'contenteditable-true',
+            'contenteditable-nesting',
+            'contenteditable-negative-tabindex',
+            'contenteditable-NaN-tabindex',
+            'input',
+            'input-readonly',
+            'select',
+            'select-readonly',
+            'href-anchor',
+            'tabindex-hrefless-anchor',
+            'textarea',
+            'textarea-readonly',
+            'button',
+            'tabindex-div',
+            'negative-select',
+            'hiddenParentVisible-button',
+            'displaycontents-child',
+            'audio-control',
+            'audio-control-NaN-tabindex',
+            'video-control',
+            'video-control-NaN-tabindex',
+          ];
+        } else {
+          expectedFocusableIds = [
+            'contenteditable-true',
+            'contenteditable-nesting',
+            'contenteditable-negative-tabindex',
+            'contenteditable-NaN-tabindex',
+            'input',
+            'input-readonly',
+            'select',
+            'select-readonly',
+            'href-anchor',
+            'tabindex-hrefless-anchor',
+            'textarea',
+            'textarea-readonly',
+            'button',
+            'tabindex-div',
+            'negative-select',
+            'displaynone-textarea',
+            'visibilityhidden-button',
+            'hiddenParent-button',
+            'hiddenParentVisible-button',
+            'displaycontents',
+            'displaycontents-child',
+            'displaycontents-child-displaynone',
+            'audio-control',
+            'audio-control-NaN-tabindex',
+            'video-control',
+            'video-control-NaN-tabindex',
+          ];
+        }
 
-      const focusableElements = focusable(container);
+        const container = document.createElement('div');
+        container.innerHTML = fixtures.basic;
 
-      expect(getIdsFromElementsArray(focusableElements)).to.eql(
-        expectedFocusableIds
-      );
+        if (inDocument) {
+          document.body.append(container);
+        }
+
+        const focusableElements = focusable(container);
+
+        expect(getIdsFromElementsArray(focusableElements)).to.eql(
+          expectedFocusableIds
+        );
+      });
     });
 
     it('correctly identifies focusable elements in the "nested" example', () => {

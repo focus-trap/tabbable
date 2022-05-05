@@ -426,10 +426,14 @@ describe('isTabbable', () => {
         <div data-testid="nested-under-displayed-contents" tabindex="0"></div>
       </div>
     `;
-    function setupDisplayCheck() {
+
+    function setupDisplayCheck(inDocument = true) {
       const container = document.createElement('div');
       container.innerHTML = fixture;
-      document.body.append(container);
+      if (inDocument) {
+        document.body.append(container);
+      }
+
       return {
         displayedTop: getByTestId(container, 'displayed-top'),
         displayedNested: getByTestId(container, 'displayed-nested'),
@@ -446,6 +450,7 @@ describe('isTabbable', () => {
         ),
       };
     }
+
     it('return browser visible elements by default ("full" option)', () => {
       const {
         displayedTop,
@@ -495,25 +500,31 @@ describe('isTabbable', () => {
       expect(isTabbable(displayedContentsTop, options)).to.eql(false);
       expect(isTabbable(nestedUnderDisplayedContents, options)).to.eql(true);
     });
-    it('return elements without checking display ("none" option)', () => {
-      const {
-        displayedTop,
-        displayedNested,
-        displayedZeroSize,
-        displayedNoneTop,
-        nestedUnderDisplayedNone,
-        displayedContentsTop,
-        nestedUnderDisplayedContents,
-      } = setupDisplayCheck();
 
-      const options = { displayCheck: 'none' };
-      expect(isTabbable(displayedTop, options)).to.eql(true);
-      expect(isTabbable(displayedNested, options)).to.eql(true);
-      expect(isTabbable(displayedZeroSize, options)).to.eql(true);
-      expect(isTabbable(displayedNoneTop, options)).to.eql(true);
-      expect(isTabbable(nestedUnderDisplayedNone, options)).to.eql(true);
-      expect(isTabbable(displayedContentsTop, options)).to.eql(true);
-      expect(isTabbable(nestedUnderDisplayedContents, options)).to.eql(true);
+    [true, false].forEach((inDocument) => {
+      it(`return elements without checking display ("${
+        inDocument ? 'none' : 'full'
+      }" option, container ${inDocument ? 'IN doc' : 'NOT in doc'})`, () => {
+        const {
+          displayedTop,
+          displayedNested,
+          displayedZeroSize,
+          displayedNoneTop,
+          nestedUnderDisplayedNone,
+          displayedContentsTop,
+          nestedUnderDisplayedContents,
+        } = setupDisplayCheck(inDocument);
+
+        // when container is NOT in the document, 'full' behaves like 'none'
+        const options = { displayCheck: inDocument ? 'none' : 'full' };
+        expect(isTabbable(displayedTop, options)).to.eql(true);
+        expect(isTabbable(displayedNested, options)).to.eql(true);
+        expect(isTabbable(displayedZeroSize, options)).to.eql(true);
+        expect(isTabbable(displayedNoneTop, options)).to.eql(true);
+        expect(isTabbable(nestedUnderDisplayedNone, options)).to.eql(true);
+        expect(isTabbable(displayedContentsTop, options)).to.eql(true);
+        expect(isTabbable(nestedUnderDisplayedContents, options)).to.eql(true);
+      });
     });
   });
 });

@@ -21,37 +21,78 @@ describe('tabbable', () => {
   });
 
   describe('example fixtures', () => {
-    it('correctly identifies tabbable elements in the "basic" example', () => {
-      const expectedTabbableIds = [
-        'tabindex-hrefless-anchor',
-        'contenteditable-true',
-        'contenteditable-nesting',
-        'contenteditable-NaN-tabindex',
-        'input',
-        'input-readonly',
-        'select',
-        'select-readonly',
-        'href-anchor',
-        'textarea',
-        'textarea-readonly',
-        'button',
-        'tabindex-div',
-        'hiddenParentVisible-button',
-        'audio-control',
-        'audio-control-NaN-tabindex',
-        'video-control',
-        'video-control-NaN-tabindex',
-      ];
+    [true, false].forEach((inDocument) => {
+      it(`correctly identifies tabbable elements in the "basic" example ${
+        inDocument ? '(container IN doc)' : '(container NOT in doc)'
+      }`, () => {
+        let expectedTabbableIds;
 
-      const container = document.createElement('div');
-      container.innerHTML = fixtures.basic;
-      document.body.append(container);
+        if (inDocument) {
+          expectedTabbableIds = [
+            'tabindex-hrefless-anchor',
+            'contenteditable-true',
+            'contenteditable-nesting',
+            'contenteditable-NaN-tabindex',
+            'input',
+            'input-readonly',
+            'select',
+            'select-readonly',
+            'href-anchor',
+            'textarea',
+            'textarea-readonly',
+            'button',
+            'tabindex-div',
+            'hiddenParentVisible-button',
+            'displaycontents-child',
+            'audio-control',
+            'audio-control-NaN-tabindex',
+            'video-control',
+            'video-control-NaN-tabindex',
+          ];
+        } else {
+          // any node that has 'visibility: hidden' or 'display: hidden|contents'
+          //  will be considered visible and so tabbable
+          expectedTabbableIds = [
+            'tabindex-hrefless-anchor',
+            'contenteditable-true',
+            'contenteditable-nesting',
+            'contenteditable-NaN-tabindex',
+            'input',
+            'input-readonly',
+            'select',
+            'select-readonly',
+            'href-anchor',
+            'textarea',
+            'textarea-readonly',
+            'button',
+            'tabindex-div',
+            'displaynone-textarea',
+            'visibilityhidden-button',
+            'hiddenParent-button',
+            'hiddenParentVisible-button',
+            'displaycontents',
+            'displaycontents-child',
+            'displaycontents-child-displaynone',
+            'audio-control',
+            'audio-control-NaN-tabindex',
+            'video-control',
+            'video-control-NaN-tabindex',
+          ];
+        }
 
-      const tabbableElements = tabbable(container);
+        const container = document.createElement('div');
+        container.innerHTML = fixtures.basic;
 
-      expect(getIdsFromElementsArray(tabbableElements)).to.eql(
-        expectedTabbableIds
-      );
+        if (inDocument) {
+          document.body.append(container);
+        }
+
+        const tabbableElements = tabbable(container);
+
+        expect(getIdsFromElementsArray(tabbableElements)).to.eql(
+          expectedTabbableIds
+        );
+      });
     });
 
     it('correctly identifies tabbable elements in the "nested" example', () => {

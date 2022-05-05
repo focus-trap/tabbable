@@ -37,18 +37,45 @@ describe('web-components', () => {
       const lightRadio3 = container.querySelector('#light-radio3');
 
       // always focusable
-      expect(isFocusable(shadowRadio1), 'checked in shadow').to.eql(true);
-      expect(isFocusable(shadowRadio2), 'not checked in shadow').to.eql(true);
-      expect(isFocusable(lightRadio1), 'checked in light').to.eql(true);
-      expect(isFocusable(radio2Slotted), 'not checked slotted').to.eql(true);
-      expect(isFocusable(lightRadio3), 'not checked in light').to.eql(true);
+      expect(isFocusable(shadowRadio1), '(focusable) checked in shadow').to.eql(
+        true
+      );
+      expect(
+        isFocusable(shadowRadio2),
+        '(focusable) not checked in shadow'
+      ).to.eql(true);
+      expect(isFocusable(lightRadio1), '(focusable) checked in light').to.eql(
+        true
+      );
+      expect(
+        isFocusable(radio2Slotted),
+        '(focusable) not checked slotted'
+      ).to.eql(true);
+      expect(
+        isFocusable(lightRadio3),
+        '(focusable) not checked in light'
+      ).to.eql(true);
+
       // only the first checked is tabbable
-      expect(isTabbable(shadowRadio1), 'checked in shadow').to.eql(true);
-      expect(isTabbable(shadowRadio2), 'not checked in shadow').to.eql(false);
-      expect(isTabbable(lightRadio1), 'checked in light').to.eql(true);
-      expect(isTabbable(radio2Slotted), 'not checked slotted').to.eql(false);
-      expect(isTabbable(lightRadio3), 'not checked in light').to.eql(false);
+      expect(isTabbable(shadowRadio1), '(tabbable) checked in shadow').to.eql(
+        true
+      );
+      expect(
+        isTabbable(shadowRadio2),
+        '(tabbable) not checked in shadow'
+      ).to.eql(false);
+      expect(isTabbable(lightRadio1), '(tabbable) checked in light').to.eql(
+        true
+      );
+      expect(
+        isTabbable(radio2Slotted),
+        '(tabbable) not checked slotted'
+      ).to.eql(false);
+      expect(isTabbable(lightRadio3), '(tabbable) not checked in light').to.eql(
+        false
+      );
     });
+
     it('should not match elements in shadow root with a "display=none" ancestor', () => {
       const { container } = setupFixture(fixtures.shadowDomDisplay, {
         window,
@@ -59,16 +86,24 @@ describe('web-components', () => {
       const lightInputSlotted = container.querySelector('#light-input-slotted');
 
       // focusable
-      expect(isFocusable(shadowInput), 'non display shadow').to.eql(false);
-      expect(isFocusable(lightInputSlotted), 'non display slotted').to.eql(
+      expect(isFocusable(shadowInput), '(focusable) non display shadow').to.eql(
         false
       );
+      expect(
+        isFocusable(lightInputSlotted),
+        '(focusable) non display slotted'
+      ).to.eql(false);
+
       // tabbable
-      expect(isTabbable(shadowInput), 'non display shadow').to.eql(false);
-      expect(isTabbable(lightInputSlotted), 'non display slotted').to.eql(
+      expect(isTabbable(shadowInput), '(tabbable) non display shadow').to.eql(
         false
       );
+      expect(
+        isTabbable(lightInputSlotted),
+        '(tabbable) non display slotted'
+      ).to.eql(false);
     });
+
     it('should not match elements in a non display slot', () => {
       const { container } = setupFixture(fixtures.shadowDomDisplay, {
         window,
@@ -79,6 +114,7 @@ describe('web-components', () => {
       expect(isFocusable(lightInputSlotted)).to.eql(false);
       expect(isTabbable(lightInputSlotted)).to.eql(false);
     });
+
     it('should not match elements in a closed shadow root with inner display="none" (fallback to zero-area-size)', () => {
       const { container } = setupFixture(fixtures.shadowDomDisplay, {
         window,
@@ -100,6 +136,7 @@ describe('web-components', () => {
         }),
         'fallback to zero size check for unreached shadow root but still not focusable'
       ).to.eql(false);
+
       // tabbable
       expect(
         isTabbable(lightDisplayNoneSlotted),
@@ -112,6 +149,7 @@ describe('web-components', () => {
         'fallback to zero size for unreached shadow root but still not tabbable'
       ).to.eql(false);
     });
+
     it('should not match slot elements', () => {
       const { container } = setupFixture(fixtures.shadowDomQuery, {
         window,
@@ -126,6 +164,7 @@ describe('web-components', () => {
       expect(isTabbable(slotWithTabIndex), 'slot not tabbable').to.eql(false);
     });
   });
+
   describe('query', () => {
     it('should find elements inside shadow dom', () => {
       const expected = ['light-before', 'shadow-input', 'light-after'];

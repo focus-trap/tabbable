@@ -133,12 +133,18 @@ Type: `full` | `non-zero-area` | `none` . Default: `full`.
 
 Configures how to check if an element is displayed.
 
-To reliably check if an element is tabbable/focusable, Tabbable defaults to the most reliable option to keep consistent with browser behavior, however this comes at a cost since every node needs to be validated as displayed. The `full` process checks for computed display property of an element and each of the element ancestors. For this reason Tabbable offers the ability of an alternative way to check if an element is displayed (or completely opt out of the check).
+To reliably check if an element is tabbable/focusable, Tabbable defaults to the most reliable option to keep consistent with browser behavior, however this comes at a cost since every node needs to be validated as displayed using Web APIs that cause layout reflow.
+
+For this reason Tabbable offers the ability of an alternative way to check if an element is displayed (or completely opt out of the check).
 
 The `displayCheck` configuration accepts the following options:
 
-- `full`: (default) Most reliably resembling browser behavior, this option checks that an element is displayed and all of his ancestors are displayed as well (notice that this doesn't exclude `visibility: hidden` or elements with zero size). This option will cause layout reflow, however. If that is a concern, consider the `none` option.
-- `non-zero-area`: This option checks display under the assumption that elements that are not displayed have zero area (width AND height equals zero). While not keeping true to browser behavior, this option may enhance accessibility, as zero-size elements with focusable content are considered a strong accessibility anti-pattern. Like the `full` option, this option also causes layout reflow, and should have basically the same performance. Consider the `none` option if reflow is a concern.
+- `full`: (default) Most reliably resembling browser behavior, this option checks that an element is displayed, which requires all of his ancestors are displayed as well (notice that this doesn't exclude `visibility: hidden` or elements with zero size). This option will cause layout reflow, however. If that is a concern, consider the `none` option.
+    - ⚠️ If the container given to `tabbable()` or `focusable()`, or the node given to `isTabbable()` or `isFocusable()`, is not attached to the window's main `document`, the display check will default to __"none"__ (see below for details) because the APIs used to determine a node's display are not supported unless it is attached (i.e. the browser does not calculate its display unless it is attached). This has effectively been tabbable's behavior for a _very_ long time, and you may never have encountered an issue if the nodes with which you used tabbable were always displayed anyway (i.e. the "none" mode assumption was coincidentally correct).
+    - You may encounter the above situation if, for example, you render to a node via React, and this node is [not attached](https://github.com/facebook/react/issues/9117#issuecomment-284228870) to the document (or perhaps, due to timing, it is not _yet_ attached at the time you use tabbable's APIs).
+- `non-zero-area`: This option checks display under the assumption that elements that are not displayed have zero area (width AND height equals zero). While not keeping true to browser behavior, this option may enhance accessibility, as zero-size elements with focusable content are considered a strong accessibility anti-pattern.
+    - Like the `full` option, this option also causes layout reflow, and should have basically the same performance. Consider the `none` option if reflow is a concern.
+    - ⚠️ As with the `full` option, there is a nuance in behavior depending on whether tabbable APIs are executed on attached vs detached nodes using this mode: Attached nodes that are actually displayed will be deemed visible. Detached nodes, _even though displayed_ will always be deemed __hidden__ because detached nodes always have a zero area as the browser does not calculate is dimensions.
 - `none`: This completely opts out of the display check. **This option is not recommended**, as it might return elements that are not displayed, and as such not tabbable/focusable and can break accessibility. Make sure you know which elements in your DOM are not displayed and can filter them out yourself before using this option.
 
 > ⚠️ __Testing in JSDom__ (e.g. with Jest): See notes about [testing in JSDom](#testing-in-jsdom).
@@ -153,7 +159,7 @@ Type: `boolean | (node: FocusableElement) => ShadowRoot | boolean | undefined`
 
 - `boolean`:
     - `true` simply enables shadow DOM support for any __open__ shadow roots, but never presumes there is an undisclosed shadow. This is the equivalent of setting `getShadowRoot: () => false`
-    - `false` (default) disables shadow DOM support.
+    - `false` (default) disables shadow DOM support in so far as calculated tab order and closed shadow roots are concerned. If a child of a shadow (open or closed) is given to `isTabbable()` or `isFocusable()`, the shadow DOM is still considered for visibility and display checks.
 - `function`:
     - `node` will be a descendent of the `rootNode` given to `tabbable()`, `isTabbable()`, `focusable()`, or `isFocusable()`.
     - Returns: The node's `ShadowRoot` if available, `true` indicating a `ShadowRoot` is attached but not available (i.e. "undisclosed"), or a _falsy_ value indicating there is no shadow attached to the node.
