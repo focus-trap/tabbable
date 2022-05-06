@@ -439,10 +439,15 @@ describe('isFocusable', () => {
         <div data-testid="nested-under-displayed-contents" tabindex="0"></div>
       </div>
     `;
-    function setupDisplayCheck() {
+
+    function setupDisplayCheck(inDocument = true) {
       const container = document.createElement('div');
       container.innerHTML = fixture;
-      document.body.append(container);
+
+      if (inDocument) {
+        document.body.append(container);
+      }
+
       return {
         displayedTop: getByTestId(container, 'displayed-top'),
         displayedNested: getByTestId(container, 'displayed-nested'),
@@ -510,25 +515,30 @@ describe('isFocusable', () => {
       expect(isFocusable(displayedContentsTop, options)).to.eql(false);
       expect(isFocusable(nestedUnderDisplayedContents, options)).to.eql(true);
     });
-    it('return elements without checking display ("none" option)', () => {
-      const {
-        displayedTop,
-        displayedNested,
-        displayedZeroSize,
-        displayedNoneTop,
-        nestedUnderDisplayedNone,
-        displayedContentsTop,
-        nestedUnderDisplayedContents,
-      } = setupDisplayCheck();
 
-      const options = { displayCheck: 'none' };
-      expect(isFocusable(displayedTop, options)).to.eql(true);
-      expect(isFocusable(displayedNested, options)).to.eql(true);
-      expect(isFocusable(displayedZeroSize, options)).to.eql(true);
-      expect(isFocusable(displayedNoneTop, options)).to.eql(true);
-      expect(isFocusable(nestedUnderDisplayedNone, options)).to.eql(true);
-      expect(isFocusable(displayedContentsTop, options)).to.eql(true);
-      expect(isFocusable(nestedUnderDisplayedContents, options)).to.eql(true);
+    [true, false].forEach((inDocument) => {
+      it(`return elements without checking display ("${
+        inDocument ? 'none' : 'full'
+      }" option, container ${inDocument ? 'IN doc' : 'NOT in doc'})`, () => {
+        const {
+          displayedTop,
+          displayedNested,
+          displayedZeroSize,
+          displayedNoneTop,
+          nestedUnderDisplayedNone,
+          displayedContentsTop,
+          nestedUnderDisplayedContents,
+        } = setupDisplayCheck(inDocument);
+
+        const options = { displayCheck: 'none' };
+        expect(isFocusable(displayedTop, options)).to.eql(true);
+        expect(isFocusable(displayedNested, options)).to.eql(true);
+        expect(isFocusable(displayedZeroSize, options)).to.eql(true);
+        expect(isFocusable(displayedNoneTop, options)).to.eql(true);
+        expect(isFocusable(nestedUnderDisplayedNone, options)).to.eql(true);
+        expect(isFocusable(displayedContentsTop, options)).to.eql(true);
+        expect(isFocusable(nestedUnderDisplayedContents, options)).to.eql(true);
+      });
     });
   });
 });

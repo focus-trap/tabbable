@@ -26,7 +26,8 @@ export function removeAllChildNodes(parent) {
  * Renders a fixture into the body with support for shadow dom hydration
  * @param {string} content html content to be used as fixture
  * @param {SetupFixtureOptions} options
- * @returns {HTMLDivElement} return.container the element the fixture was rendered into
+ * @returns {{ container: HTMLDivElement }}
+ *  - container: the element the fixture was rendered into
  */
 export function setupFixture(content, options = {}) {
   const win = options.window || window;
