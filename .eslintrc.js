@@ -97,9 +97,7 @@ module.exports = {
     'prefer-arrow-callback': 'off',
     'prefer-const': 'error',
 
-    //
-    // from jest plugin:
-    //
+    //// from jest plugin
 
     'jest/no-disabled-tests': 'error',
     'jest/no-focused-tests': 'error',
