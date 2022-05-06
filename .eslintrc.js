@@ -13,7 +13,7 @@ module.exports = {
     'plugin:cypress/recommended',
     'prettier', // ALWAYS LAST: disable style rules that conflict with prettier
   ],
-  plugins: ['import'],
+  plugins: ['import', 'jest'],
   env: {
     es6: true,
     commonjs: true,
@@ -96,5 +96,14 @@ module.exports = {
     'no-var': 'error',
     'prefer-arrow-callback': 'off',
     'prefer-const': 'error',
+
+    //
+    // from jest plugin:
+    //
+
+    'jest/no-disabled-tests': 'error',
+    'jest/no-focused-tests': 'error',
+    'jest/no-identical-title': 'error',
+    'jest/valid-title': 'error',
   },
 };
