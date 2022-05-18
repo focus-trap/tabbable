@@ -76,7 +76,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^26.1.5",
+    "eslint-plugin-jest": "^26.2.2",
     "jest": "^28.1.0",
     "jest-watch-typeahead": "^1.1.0",
     "onchange": "^7.1.0",
