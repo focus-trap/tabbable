@@ -36,4 +36,8 @@ module.exports = {
     path.join(__dirname, 'shadow-dom-query.html'),
     'utf8'
   ),
+  'shadow-dom-untabbable': fs.readFileSync(
+    path.join(__dirname, 'shadow-dom-untabbable.html'),
+    'utf8'
+  ),
 };

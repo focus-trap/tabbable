@@ -140,6 +140,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "BFrost",
+      "name": "bfrost",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3368761?v=4",
+      "profile": "https://github.com/BFrost",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,

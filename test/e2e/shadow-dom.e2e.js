@@ -245,6 +245,22 @@ describe('web-components', () => {
       expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
     });
 
+    it('should not find elements inside shadow dom that browsers will skip due to -1 tabindex on host', () => {
+      const expected = [];
+      const { container } = setupFixture(fixtures['shadow-dom-untabbable'], {
+        window,
+      });
+      const shadowElement = container.querySelector('test-shadow');
+
+      let result = tabbable(shadowElement, { getShadowRoot() {} });
+      expect(getIdsFromElementsArray(result), 'using `() => {}`').to.eql(
+        expected
+      );
+
+      result = tabbable(shadowElement, { getShadowRoot: true });
+      expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
+    });
+
     it('should sort slots inside shadow dom', () => {
       const expected = [
         'light-before',
