@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.3.3
+
+### Patch Changes
+
+- 0210a1c: fix: align with browser behaviour when a web component has a negative tabindex
+
 ## 5.3.2
 
 ### Patch Changes
