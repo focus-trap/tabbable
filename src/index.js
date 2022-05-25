@@ -50,6 +50,12 @@ const getCandidates = function (el, includeContainer, filter) {
  */
 
 /**
+ * @callback ShadowRootFilter
+ * @param {Element} shadowHostNode the element which contains shadow content
+ * @returns {boolean} true if a shadow root could potentially contain valid candidates.
+ */
+
+/**
  * @typedef {Object} CandidatesScope
  * @property {Element} scope contains inner candidates
  * @property {Element[]} candidates
@@ -62,6 +68,7 @@ const getCandidates = function (el, includeContainer, filter) {
  *  or a boolean stating if it has an undisclosed shadow root
  * @property {(node: Element) => boolean} filter filter candidates
  * @property {boolean} flatten if true then result will flatten any CandidatesScope into the returned list
+ * @property {ShadowRootFilter} shadowRootFilter filter shadow roots;
  */
 
 /**
@@ -110,7 +117,10 @@ const getCandidatesIteratively = function (
         (typeof options.getShadowRoot === 'function' &&
           options.getShadowRoot(element));
 
-      if (shadowRoot) {
+      const validShadowRoot =
+        !options.shadowRootFilter || options.shadowRootFilter(element);
+
+      if (shadowRoot && validShadowRoot) {
         // add shadow dom scope IIF a shadow root node was given; otherwise, an undisclosed
         //  shadow exists, so look at light dom children as fallback BUT create a scope for any
         //  child candidates found because they're likely slotted elements (elements that are
@@ -415,6 +425,16 @@ const isNodeMatchingSelectorTabbable = function (options, node) {
   return true;
 };
 
+const isValidShadowRootTabbable = function (shadowHostNode) {
+  const tabIndex = parseInt(shadowHostNode.getAttribute('tabindex'), 10);
+  if (isNaN(tabIndex) || tabIndex >= 0) {
+    return true;
+  }
+  // If a custom element has an explicit negative tabindex,
+  // browsers will not allow tab targeting said element's children.
+  return false;
+};
+
 /**
  * @param {Array.<Element|CandidatesScope>} candidates
  * @returns Element[]
@@ -462,6 +482,7 @@ const tabbable = function (el, options) {
       filter: isNodeMatchingSelectorTabbable.bind(null, options),
       flatten: false,
       getShadowRoot: options.getShadowRoot,
+      shadowRootFilter: isValidShadowRootTabbable,
     });
   } else {
     candidates = getCandidates(
