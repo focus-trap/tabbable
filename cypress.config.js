@@ -9,7 +9,7 @@ module.exports = defineConfig({
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
     setupNodeEvents(on, config) {
-      return setupPlugins(on, config); // DEBUG require('./cypress/plugins/index.js')(on, config)
+      return setupPlugins(on, config);
     },
     specPattern: 'test/e2e/**/*.e2e.js',
   },
