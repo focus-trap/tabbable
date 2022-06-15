@@ -16,7 +16,8 @@ jobs:
       matrix:
         node: [14]
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Setup environment
         id: setups
@@ -51,27 +52,31 @@ jobs:
       - name: Build # Tests to see if a build can succeed
         run: yarn build
   E2E:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     name: e2e
     strategy:
       matrix:
         browser: [chrome, firefox]
     timeout-minutes: 20
     container:
-      image: cypress/included:10.0.3
+      image: cypress/browsers:node14.17.0-chrome88-ff89
       options: --user 1001 --shm-size=2g # @see https://github.com/cypress-io/github-action/issues/104#issuecomment-666047965
-    env:
-      CYPRESS_BROWSER: ${{ matrix.browser }}
+    # env:
+    #   CYPRESS_BROWSER: ${{ matrix.browser }}
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Test E2E
-        uses: cypress-io/github-action@v2.6.1
+        uses: cypress-io/github-action@v4
         with:
           browser: ${{ matrix.browser }}
           env: coverage=true
+
       - name: Install code coverage
         run: |-
           yarn global add codecov;
           echo "$(yarn global bin)" >> $GITHUB_PATH;
+
       - name: Code coverage
         run: codecov;
