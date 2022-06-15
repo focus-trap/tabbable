@@ -20,11 +20,6 @@ module.exports = (on, config) => {
   if (config.env.coverage === true) {
     // enable coverage
     require('@cypress/code-coverage/task')(on, config);
-    // instrument code
-    on(
-      'file:preprocessor',
-      require('@cypress/code-coverage/use-browserify-istanbul')
-    );
   }
 
   // fetch fixtures

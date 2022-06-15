@@ -71,12 +71,12 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           browser: ${{ matrix.browser }}
-      #     env: coverage=true
+          env: coverage=true
 
-      # - name: Install code coverage
-      #   run: |-
-      #     yarn global add codecov;
-      #     echo "$(yarn global bin)" >> $GITHUB_PATH;
+      - name: Install code coverage
+        run: |-
+          yarn global add codecov;
+          echo "$(yarn global bin)" >> $GITHUB_PATH;
 
-      # - name: Code coverage
-      #   run: codecov;
+      - name: Code coverage
+        run: codecov;
