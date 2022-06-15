@@ -31,7 +31,7 @@
     "test": "yarn format:check && yarn lint && yarn test:types && yarn test:unit && yarn test:e2e",
     "test:types": "tsc index.d.ts",
     "test:unit": "jest",
-    "test:e2e": "ELECTRON_ENABLE_LOGGING=1 cypress run --config-file=cypress.config.js",
+    "test:e2e": "ELECTRON_ENABLE_LOGGING=1 cypress run",
     "test:e2e:dev": "cypress open --config-file=cypress.config.js --browser --e2e",
     "test:coverage": "yarn test:e2e --env coverage=true",
     "prepare": "yarn build",
