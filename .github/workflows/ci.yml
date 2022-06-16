@@ -62,6 +62,8 @@ jobs:
     container:
       image: cypress/browsers:node14.17.0-chrome88-ff89
       options: --user 1001 --shm-size=2g # @see https://github.com/cypress-io/github-action/issues/104#issuecomment-666047965
+    env:
+      BABEL_ENV: test
     steps:
       - name: Checkout
         uses: actions/checkout@v2
