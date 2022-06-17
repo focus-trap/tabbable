@@ -42,6 +42,7 @@ module.exports = {
     },
     test: {
       // Jest/Cypress
+      // @see https://github.com/istanbuljs/babel-plugin-istanbul
       plugins: [...plugins, 'istanbul'],
       presets: [['@babel/preset-env', { targets: { node: 'current' } }]],
     },
