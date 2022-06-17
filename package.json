@@ -51,6 +51,7 @@
     "url": "https://github.com/focus-trap/tabbable/issues"
   },
   "homepage": "https://github.com/focus-trap/tabbable#readme",
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.18.5",
     "@babel/eslint-parser": "^7.18.2",
