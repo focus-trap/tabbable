@@ -1431,27 +1431,6 @@
     jest-haste-map "^28.1.1"
     slash "^3.0.0"
 
-"@jest/transform@^28.1.1":
-  version "28.1.1"
-  resolved "https://registry.yarnpkg.com/@jest/transform/-/transform-28.1.1.tgz#83541f2a3f612077c8501f49cc4e205d4e4a6b27"
-  integrity sha512-PkfaTUuvjUarl1EDr5ZQcCA++oXkFCP9QFUkG0yVKVmNObjhrqDy0kbMpMebfHWm3CCDHjYNem9eUSH8suVNHQ==
-  dependencies:
-    "@babel/core" "^7.11.6"
-    "@jest/types" "^28.1.1"
-    "@jridgewell/trace-mapping" "^0.3.7"
-    babel-plugin-istanbul "^6.1.1"
-    chalk "^4.0.0"
-    convert-source-map "^1.4.0"
-    fast-json-stable-stringify "^2.0.0"
-    graceful-fs "^4.2.9"
-    jest-haste-map "^28.1.1"
-    jest-regex-util "^28.0.2"
-    jest-util "^28.1.1"
-    micromatch "^4.0.4"
-    pirates "^4.0.4"
-    slash "^3.0.0"
-    write-file-atomic "^4.0.1"
-
 "@jest/transform@^28.1.2":
   version "28.1.2"
   resolved "https://registry.yarnpkg.com/@jest/transform/-/transform-28.1.2.tgz#b367962c53fd53821269bde050ce373e111327c1"
@@ -2466,19 +2445,6 @@ aws4@^1.8.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.11.0.tgz#d61f46d83b2519250e2784daf5b09479a8b41c59"
   integrity sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
-
-babel-jest@^28.1.1:
-  version "28.1.1"
-  resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-28.1.1.tgz#2a3a4ae50964695b2d694ccffe4bec537c5a3586"
-  integrity sha512-MEt0263viUdAkTq5D7upHPNxvt4n9uLUGa6pPz3WviNBMtOmStb1lIXS3QobnoqM+qnH+vr4EKlvhe8QcmxIYw==
-  dependencies:
-    "@jest/transform" "^28.1.1"
-    "@types/babel__core" "^7.1.14"
-    babel-plugin-istanbul "^6.1.1"
-    babel-preset-jest "^28.1.1"
-    chalk "^4.0.0"
-    graceful-fs "^4.2.9"
-    slash "^3.0.0"
 
 babel-jest@^28.1.2:
   version "28.1.2"
@@ -5089,12 +5055,7 @@ globby@^11.0.4:
     merge2 "^1.4.1"
     slash "^3.0.0"
 
-graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.5, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.9:
-  version "4.2.9"
-  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.9.tgz#041b05df45755e587a24942279b9d113146e1c96"
-  integrity sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==
-
-graceful-fs@^4.2.4:
+graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.5, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4, graceful-fs@^4.2.9:
   version "4.2.10"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.10.tgz#147d3a006da4ca3ce14728c7aefc287c367d7a6c"
   integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
