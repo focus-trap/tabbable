@@ -42,17 +42,23 @@ Any of the above will _not_ be considered tabbable, though, if any of the follow
 
 ## Browser Support
 
-Basically IE9+.
+As old and as broad as _reasonably_ possible, excluding browsers that are out of support or have nearly no user base.
 
-Why? It uses [Element.querySelectorAll()](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelectorAll) and [Window.getComputedStyle()](https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle).
+Focused on desktop browsers, particularly Chrome, Edge, FireFox, Safari, and Opera.
 
-**Note:** When used with any version of IE, [CSS.escape](https://developer.mozilla.org/en-US/docs/Web/API/CSS/escape) needs a [polyfill](https://www.npmjs.com/package/css.escape) for tabbable to work properly with radio buttons that have `name` attributes containing special characters.
+Tabbable is not officially tested on any mobile browsers or devices.
+
+> ⚠️ Microsoft [no longer supports](https://blogs.windows.com/windowsexperience/2022/06/15/internet-explorer-11-has-retired-and-is-officially-out-of-support-what-you-need-to-know/) any version of IE, so IE is no longer supported by this library.
+
+> 💬 Keep in mind that performance optimization and old browser support are often at odds, so tabbable may not always be able to use the most optimal (typically modern) APIs in all cases.
 
 ## Installation
 
 ```
 npm install tabbable
 ```
+
+> 💬 Some very old browsers may need a [polyfill](https://www.npmjs.com/package/css.escape) for the [CSS.escape](https://developer.mozilla.org/en-US/docs/Web/API/CSS/escape) API for tabbable to work properly with radio buttons that have `name` attributes containing special characters.
 
 ## API
 
@@ -171,7 +177,7 @@ Type: `boolean | (node: FocusableElement) => ShadowRoot | boolean | undefined`
 ## More details
 
 - **Tabbable tries to identify elements that are reliably tabbable across (not dead) browsers.** Browsers are inconsistent in their behavior, though — especially for edge-case elements like `<object>` and `<iframe>` — so this means _some_ elements that you _can_ tab to in _some_ browsers will be left out of the results. (To learn more about this inconsistency, see this [amazing table](https://allyjs.io/data-tables/focusable.html)). To provide better consistency across browsers and ensure the elements you _want_ in your tabbables list show up there, **try adding `tabindex="0"` to edge-case elements that Tabbable ignores**.
-- (Exemplifying the above ^^:) **The tabbability of `<iframe>`, `<embed>`, `<object>`, `<summary>`, and `<svg>` nodes is [inconsistent across browsers](https://allyjs.io/data-tables/focusable.html)**, so if you need an accurate read on one of these elements you should try giving it a `tabindex`. (You'll also need to pay attention to the `focusable` attribute on SVGs in IE & Edge.) But you also might _not_ be able to get an accurate read — so you should avoid relying on it.
+- (Exemplifying the above ^^:) **The tabbability of `<iframe>`, `<embed>`, `<object>`, `<summary>`, and `<svg>` nodes is [inconsistent across browsers](https://allyjs.io/data-tables/focusable.html)**, so if you need an accurate read on one of these elements you should try giving it a `tabindex`. (You'll also need to pay attention to the `focusable` attribute on SVGs in Edge.) But you also might _not_ be able to get an accurate read — so you should avoid relying on it.
 - **Radio groups have some edge cases, which you can avoid by always having a `checked` one in each group** (and that is what you should usually do anyway). If there is no `checked` radio in the radio group, _all_ of the radios will be considered tabbable. (Some browsers do this, otherwise don't — there's not consistency.)
 - If you're thinking, "Why not just use the right `querySelectorAll`?", you _may_ be on to something ... but, as with most "just" statements, you're probably not. For example, a simple `querySelectorAll` approach will not figure out whether an element is _hidden_, and therefore not actually tabbable. (That said, if you do think Tabbable can be simplified or otherwise improved, I'd love to hear your idea.)
 - jQuery UI's `:tabbable` selector ignores elements with height and width of `0`. I'm not sure why — because I've found that I can still tab to those elements. So I kept them in. Only elements hidden with `display: none` or `visibility: hidden` are left out. See ["Display check"](#display-check) below for other options.
