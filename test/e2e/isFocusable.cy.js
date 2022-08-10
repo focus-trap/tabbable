@@ -465,37 +465,54 @@ describe('isFocusable', () => {
       };
     }
 
-    it('return browser visible elements by default ("full" option)', () => {
-      const {
-        displayedTop,
-        displayedNested,
-        displayedZeroSize,
-        displayedNoneTop,
-        nestedUnderDisplayedNone,
-        displayedContentsTop,
-        nestedUnderDisplayedContents,
-      } = setupDisplayCheck();
+    [undefined, 'full', 'legacy-full'].forEach((displayCheck) => {
+      [true, false].forEach((inDocument) => {
+        it(`returns browser visible elements by default ("${
+          displayCheck || '(default)'
+        }" option, container ${inDocument ? '' : 'NOT '}in doc)`, () => {
+          const {
+            displayedTop,
+            displayedNested,
+            displayedZeroSize,
+            displayedNoneTop,
+            nestedUnderDisplayedNone,
+            displayedContentsTop,
+            nestedUnderDisplayedContents,
+          } = setupDisplayCheck(inDocument);
 
-      // default
-      expect(isFocusable(displayedTop)).to.eql(true);
-      expect(isFocusable(displayedNested)).to.eql(true);
-      expect(isFocusable(displayedZeroSize)).to.eql(true);
-      expect(isFocusable(displayedNoneTop)).to.eql(false);
-      expect(isFocusable(nestedUnderDisplayedNone)).to.eql(false);
-      expect(isFocusable(displayedContentsTop)).to.eql(false);
-      expect(isFocusable(nestedUnderDisplayedContents)).to.eql(true);
-      // full
-      const options = { displayCheck: 'full' };
-      expect(isFocusable(displayedTop, options)).to.eql(true);
-      expect(isFocusable(displayedNested, options)).to.eql(true);
-      expect(isFocusable(displayedZeroSize, options)).to.eql(true);
-      expect(isFocusable(displayedNoneTop, options)).to.eql(false);
-      expect(isFocusable(nestedUnderDisplayedNone, options)).to.eql(false);
-      expect(isFocusable(displayedContentsTop, options)).to.eql(false);
-      expect(isFocusable(nestedUnderDisplayedContents, options)).to.eql(true);
+          const options = { displayCheck };
+          expect(isFocusable(displayedTop, options)).to.eql(
+            inDocument || displayCheck === 'legacy-full' ? true : false
+          );
+          expect(isFocusable(displayedNested, options)).to.eql(
+            inDocument || displayCheck === 'legacy-full' ? true : false
+          );
+          expect(isFocusable(displayedZeroSize, options)).to.eql(
+            inDocument || displayCheck === 'legacy-full' ? true : false
+          );
+          expect(isFocusable(displayedNoneTop, options)).to.eql(
+            inDocument || displayCheck === 'legacy-full'
+              ? !inDocument && displayCheck === 'legacy-full'
+              : false
+          );
+          expect(isFocusable(nestedUnderDisplayedNone, options)).to.eql(
+            inDocument || displayCheck === 'legacy-full'
+              ? !inDocument && displayCheck === 'legacy-full'
+              : false
+          );
+          expect(isFocusable(displayedContentsTop, options)).to.eql(
+            inDocument || displayCheck === 'legacy-full'
+              ? !inDocument && displayCheck === 'legacy-full'
+              : false
+          );
+          expect(isFocusable(nestedUnderDisplayedContents, options)).to.eql(
+            inDocument || displayCheck === 'legacy-full' ? true : false
+          );
+        });
+      });
     });
 
-    it('return only elements with size ("non-zero-area" option)', () => {
+    it('returns only elements with size ("non-zero-area" option)', () => {
       const {
         displayedTop,
         displayedNested,
@@ -517,7 +534,7 @@ describe('isFocusable', () => {
     });
 
     [true, false].forEach((inDocument) => {
-      it(`return elements without checking display ("${
+      it(`returns elements without checking display ("${
         inDocument ? 'none' : 'full'
       }" option, container ${inDocument ? 'IN doc' : 'NOT in doc'})`, () => {
         const {

@@ -21,79 +21,84 @@ describe('focusable', () => {
   });
 
   describe('example fixtures', () => {
-    [true, false].forEach((inDocument) => {
-      it(`correctly identifies focusable elements in the "basic" example ${
-        inDocument ? '(container IN doc)' : '(container NOT in doc)'
-      }`, () => {
-        let expectedFocusableIds;
+    [undefined, 'full', 'legacy-full'].forEach((displayCheck) => {
+      [true, false].forEach((inDocument) => {
+        it(`correctly identifies focusable elements in the "basic" example ${
+          inDocument ? '(container IN doc' : '(container NOT in doc'
+        }, displayCheck=${displayCheck || '<default>'})`, () => {
+          let expectedFocusableIds;
 
-        if (inDocument) {
-          expectedFocusableIds = [
-            'contenteditable-true',
-            'contenteditable-nesting',
-            'contenteditable-negative-tabindex',
-            'contenteditable-NaN-tabindex',
-            'input',
-            'input-readonly',
-            'select',
-            'select-readonly',
-            'href-anchor',
-            'tabindex-hrefless-anchor',
-            'textarea',
-            'textarea-readonly',
-            'button',
-            'tabindex-div',
-            'negative-select',
-            'hiddenParentVisible-button',
-            'displaycontents-child',
-            'audio-control',
-            'audio-control-NaN-tabindex',
-            'video-control',
-            'video-control-NaN-tabindex',
-          ];
-        } else {
-          expectedFocusableIds = [
-            'contenteditable-true',
-            'contenteditable-nesting',
-            'contenteditable-negative-tabindex',
-            'contenteditable-NaN-tabindex',
-            'input',
-            'input-readonly',
-            'select',
-            'select-readonly',
-            'href-anchor',
-            'tabindex-hrefless-anchor',
-            'textarea',
-            'textarea-readonly',
-            'button',
-            'tabindex-div',
-            'negative-select',
-            'displaynone-textarea',
-            'visibilityhidden-button',
-            'hiddenParent-button',
-            'hiddenParentVisible-button',
-            'displaycontents',
-            'displaycontents-child',
-            'displaycontents-child-displaynone',
-            'audio-control',
-            'audio-control-NaN-tabindex',
-            'video-control',
-            'video-control-NaN-tabindex',
-          ];
-        }
+          if (inDocument) {
+            expectedFocusableIds = [
+              'contenteditable-true',
+              'contenteditable-nesting',
+              'contenteditable-negative-tabindex',
+              'contenteditable-NaN-tabindex',
+              'input',
+              'input-readonly',
+              'select',
+              'select-readonly',
+              'href-anchor',
+              'tabindex-hrefless-anchor',
+              'textarea',
+              'textarea-readonly',
+              'button',
+              'tabindex-div',
+              'negative-select',
+              'hiddenParentVisible-button',
+              'displaycontents-child',
+              'audio-control',
+              'audio-control-NaN-tabindex',
+              'video-control',
+              'video-control-NaN-tabindex',
+            ];
+          } else if (displayCheck === 'legacy-full') {
+            expectedFocusableIds = [
+              'contenteditable-true',
+              'contenteditable-nesting',
+              'contenteditable-negative-tabindex',
+              'contenteditable-NaN-tabindex',
+              'input',
+              'input-readonly',
+              'select',
+              'select-readonly',
+              'href-anchor',
+              'tabindex-hrefless-anchor',
+              'textarea',
+              'textarea-readonly',
+              'button',
+              'tabindex-div',
+              'negative-select',
+              'displaynone-textarea',
+              'visibilityhidden-button',
+              'hiddenParent-button',
+              'hiddenParentVisible-button',
+              'displaycontents',
+              'displaycontents-child',
+              'displaycontents-child-displaynone',
+              'audio-control',
+              'audio-control-NaN-tabindex',
+              'video-control',
+              'video-control-NaN-tabindex',
+            ];
+          } else {
+            // should find nothing because the container will be detached
+            expectedFocusableIds = [];
+          }
 
-        const container = document.createElement('div');
-        container.innerHTML = fixtures.basic;
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.basic;
 
-        if (inDocument) {
-          document.body.append(container);
-        }
+          if (inDocument) {
+            document.body.append(container);
+          }
 
-        const focusableElements = focusable(container);
+          const focusableElements = focusable(container, { displayCheck });
 
-        expect(getIdsFromElementsArray(focusableElements)).to.eql(
-          expectedFocusableIds
-        );
+          expect(getIdsFromElementsArray(focusableElements)).to.eql(
+            expectedFocusableIds
+          );
+        });
       });
     });
 
