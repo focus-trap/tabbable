@@ -135,7 +135,7 @@ These options apply to all APIs.
 
 ### displayCheck option
 
-Type: `full` | `non-zero-area` | `none` . Default: `full`.
+Type: `full` | `full-with-hidden` | `non-zero-area` | `none` . Default: `full`.
 
 Configures how to check if an element is displayed.
 
@@ -145,9 +145,14 @@ For this reason Tabbable offers the ability of an alternative way to check if an
 
 The `displayCheck` configuration accepts the following options:
 
-- `full`: (default) Most reliably resembling browser behavior, this option checks that an element is displayed, which requires all of his ancestors are displayed as well (notice that this doesn't exclude `visibility: hidden` or elements with zero size). This option will cause layout reflow, however. If that is a concern, consider the `none` option.
-    - ⚠️ If the container given to `tabbable()` or `focusable()`, or the node given to `isTabbable()` or `isFocusable()`, is not attached to the window's main `document`, the display check will default to __"none"__ (see below for details) because the APIs used to determine a node's display are not supported unless it is attached (i.e. the browser does not calculate its display unless it is attached). This has effectively been tabbable's behavior for a _very_ long time, and you may never have encountered an issue if the nodes with which you used tabbable were always displayed anyway (i.e. the "none" mode assumption was coincidentally correct).
-    - You may encounter the above situation if, for example, you render to a node via React, and this node is [not attached](https://github.com/facebook/react/issues/9117#issuecomment-284228870) to the document (or perhaps, due to timing, it is not _yet_ attached at the time you use tabbable's APIs).
+- `full`: (default) Most reliably resembling browser behavior, this option checks that an element is displayed, which requires it to be attached to the DOM, and for all of his ancestors to be displayed (notice this doesn't exclude `visibility: hidden` or elements with zero size). This option will cause layout reflow, however. If that is a concern, consider the `none` option.
+    - ⚠️ If the container given to `tabbable()` or `focusable()`, or the node given to `isTabbable()` or `isFocusable()`, is not attached to the window's main `document`, the node will be considered hidden and neither tabbable nor focusable. This behavior is new as of `v6.0.0`.
+    - If your code relies on the legacy behavior where detached nodes were considered visible, and you are unable to fix your code to use tabbable once the node is attached, use the `legacy-full` option.
+- `legacy-full`: Same as `full` but restores the __legacy behavior__ of treating detached nodes as visible. This means that if a node is detached, it's then treated as though the display check was set to `none` (see below for details).
+    - ❗️ Since detached nodes are not treated as tabbable/focusable by browsers, using this option is __not recommended__ as it knowingly diverges from browser behavior.
+    - ⚠️ This option may be removed in the future. Tabbable will not maintain it at the expense of new features or if having it makes the code disproportionately more complex. It only exists to make the upgrade path to the correct behavior (i.e. the `full` option) as long and smooth as reasonably possible.
+    - The APIs used to determine a node's display are not supported unless its attached (i.e. the browser does not calculate its display unless it is attached). This has effectively been tabbable's behavior for a _very_ long time (up until the `v6.0.0` release), and you may never have encountered an issue if the nodes with which you used tabbable were always displayed anyway (i.e. the `none` mode assumption was coincidentally correct).
+    - You may encounter the above situation if, for example, you render to a node via React, and this node is [not attached](https://github.com/facebook/react/issues/9117#issuecomment-284228870) to the document (or perhaps, due to timing, it is not _yet_ attached at the time you use tabbable's APIs on it).
 - `non-zero-area`: This option checks display under the assumption that elements that are not displayed have zero area (width AND height equals zero). While not keeping true to browser behavior, this option may enhance accessibility, as zero-size elements with focusable content are considered a strong accessibility anti-pattern.
     - Like the `full` option, this option also causes layout reflow, and should have basically the same performance. Consider the `none` option if reflow is a concern.
     - ⚠️ As with the `full` option, there is a nuance in behavior depending on whether tabbable APIs are executed on attached vs detached nodes using this mode: Attached nodes that are actually displayed will be deemed visible. Detached nodes, _even though displayed_ will always be deemed __hidden__ because detached nodes always have a zero area as the browser does not calculate is dimensions.
