@@ -11,7 +11,7 @@ jobs:
     env:
       CI: true
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
