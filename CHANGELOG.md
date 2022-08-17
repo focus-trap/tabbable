@@ -1,5 +1,14 @@
 # Changelog
 
+## 6.0.0
+
+### Major Changes
+
+- 5f40c8e: Revised and clarified official browser support (still as broad and deep as _reasonably_ possible).
+- 5f40c8e: 🚨 **Breaking:** Dropped support of IE browsers, all versions.
+  - IE11 was [officially retired](https://blogs.windows.com/windowsexperience/2022/06/15/internet-explorer-11-has-retired-and-is-officially-out-of-support-what-you-need-to-know/) on June 15, 2022 (6 weeks ago). There are no longer any versions of IE that are still maintained or even supported by Microsoft.
+- a09ba0b: 🚨 **Breaking:** Default `displayCheck` 'full' option no longer treats detached nodes as visible. Use the new 'legacy-full' option to restore old (incorrect) behavior only if you must. Ideally, make sure tabbable only runs once all nodes of interest have been attached to the document.
+
 ## 5.3.3
 
 ### Patch Changes
