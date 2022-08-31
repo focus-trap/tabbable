@@ -72,7 +72,7 @@
     "babel-plugin-istanbul": "^6.1.1",
     "brfs": "^2.0.2",
     "browserify": "^17.0.0",
-    "budo": "^11.7.0",
+    "budo": "^11.8.4",
     "cross-env": "^7.0.3",
     "cypress": "^10.6.0",
     "eslint": "^8.22.0",
