@@ -26,11 +26,6 @@
   resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.19.3.tgz#707b939793f867f5a73b2666e6d9a3396eb03151"
   integrity sha512-prBHMK4JYYK+wDjJF1q99KK4JLL+egWS4nmNqdlMUgCExMZ+iZW0hGhyC3VEbsPjvaN0TBhW//VIFwBrk8sEiw==
 
-"@babel/compat-data@^7.19.3":
-  version "7.19.3"
-  resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.19.3.tgz#707b939793f867f5a73b2666e6d9a3396eb03151"
-  integrity sha512-prBHMK4JYYK+wDjJF1q99KK4JLL+egWS4nmNqdlMUgCExMZ+iZW0hGhyC3VEbsPjvaN0TBhW//VIFwBrk8sEiw==
-
 "@babel/core@^7.11.6", "@babel/core@^7.12.3", "@babel/core@^7.19.3", "@babel/core@^7.7.5":
   version "7.19.3"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.19.3.tgz#2519f62a51458f43b682d61583c3810e7dcee64c"
@@ -85,7 +80,7 @@
     "@babel/helper-explode-assignable-expression" "^7.18.6"
     "@babel/types" "^7.18.6"
 
-"@babel/helper-compilation-targets@^7.17.7", "@babel/helper-compilation-targets@^7.18.9", "@babel/helper-compilation-targets@^7.19.0", "@babel/helper-compilation-targets@^7.19.1", "@babel/helper-compilation-targets@^7.19.3":
+"@babel/helper-compilation-targets@^7.17.7", "@babel/helper-compilation-targets@^7.18.9", "@babel/helper-compilation-targets@^7.19.0", "@babel/helper-compilation-targets@^7.19.3":
   version "7.19.3"
   resolved "https://registry.yarnpkg.com/@babel/helper-compilation-targets/-/helper-compilation-targets-7.19.3.tgz#a10a04588125675d7c7ae299af86fa1b2ee038ca"
   integrity sha512-65ESqLGyGmLvgR0mst5AdW1FkNlj9rQsCKduzEoEPhBCDFGXvz2jW6bXFG6i0/MrV2s7hhXjjb2yAzcPuQlLwg==
@@ -3429,10 +3424,10 @@ csv@^5.5.0:
     csv-stringify "^5.6.5"
     stream-transform "^2.1.3"
 
-cypress@^10.8.0:
-  version "10.8.0"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-10.8.0.tgz#12a681f2642b6f13d636bab65d5b71abdb1497a5"
-  integrity sha512-QVse0dnLm018hgti2enKMVZR9qbIO488YGX06nH5j3Dg1isL38DwrBtyrax02CANU6y8F4EJUuyW6HJKw1jsFA==
+cypress@^10.9.0:
+  version "10.9.0"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-10.9.0.tgz#273a61a6304766f9d6423e5ac8d4a9a11ed8b485"
+  integrity sha512-MjIWrRpc+bQM9U4kSSdATZWZ2hUqHGFEQTF7dfeZRa4MnalMtc88FIE49USWP2ZVtfy5WPBcgfBX+YorFqGElA==
   dependencies:
     "@cypress/request" "^2.88.10"
     "@cypress/xvfb" "^1.2.4"
