@@ -10,6 +10,7 @@ const candidateSelectors = [
   '[contenteditable]:not([contenteditable="false"])',
   'details>summary:first-of-type',
   'details',
+  '[role=button]'
 ];
 const candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
 
