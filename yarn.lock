@@ -1524,27 +1524,6 @@
     jest-haste-map "^29.2.1"
     slash "^3.0.0"
 
-"@jest/transform@^29.2.1", "@jest/transform@^29.2.2":
-  version "29.2.2"
-  resolved "https://registry.yarnpkg.com/@jest/transform/-/transform-29.2.2.tgz#dfc03fc092b31ffea0c55917728e75bfcf8b5de6"
-  integrity sha512-aPe6rrletyuEIt2axxgdtxljmzH8O/nrov4byy6pDw9S8inIrTV+2PnjyP/oFHMSynzGxJ2s6OHowBNMXp/Jzg==
-  dependencies:
-    "@babel/core" "^7.11.6"
-    "@jest/types" "^29.2.1"
-    "@jridgewell/trace-mapping" "^0.3.15"
-    babel-plugin-istanbul "^6.1.1"
-    chalk "^4.0.0"
-    convert-source-map "^1.4.0"
-    fast-json-stable-stringify "^2.1.0"
-    graceful-fs "^4.2.9"
-    jest-haste-map "^29.2.1"
-    jest-regex-util "^29.2.0"
-    jest-util "^29.2.1"
-    micromatch "^4.0.4"
-    pirates "^4.0.4"
-    slash "^3.0.0"
-    write-file-atomic "^4.0.1"
-
 "@jest/transform@^29.2.2":
   version "29.2.2"
   resolved "https://registry.yarnpkg.com/@jest/transform/-/transform-29.2.2.tgz#dfc03fc092b31ffea0c55917728e75bfcf8b5de6"
@@ -2541,19 +2520,6 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.11.0.tgz#d61f46d83b2519250e2784daf5b09479a8b41c59"
   integrity sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
 
-babel-jest@^29.2.1, babel-jest@^29.2.2:
-  version "29.2.2"
-  resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-29.2.2.tgz#2c15abd8c2081293c9c3f4f80a4ed1d51542fee5"
-  integrity sha512-kkq2QSDIuvpgfoac3WZ1OOcHsQQDU5xYk2Ql7tLdJ8BVAYbefEXal+NfS45Y5LVZA7cxC8KYcQMObpCt1J025w==
-  dependencies:
-    "@jest/transform" "^29.2.2"
-    "@types/babel__core" "^7.1.14"
-    babel-plugin-istanbul "^6.1.1"
-    babel-preset-jest "^29.2.0"
-    chalk "^4.0.0"
-    graceful-fs "^4.2.9"
-    slash "^3.0.0"
-
 babel-jest@^29.2.2:
   version "29.2.2"
   resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-29.2.2.tgz#2c15abd8c2081293c9c3f4f80a4ed1d51542fee5"
@@ -3505,10 +3471,10 @@ csv@^5.5.0:
     csv-stringify "^5.6.5"
     stream-transform "^2.1.3"
 
-cypress@^10.10.0:
-  version "10.10.0"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-10.10.0.tgz#fd671297b2ca3e64dfffd55fe3857c388cfbb695"
-  integrity sha512-bU8r44x1NIYAUNNXt3CwJpLOVth7HUv2hUhYCxZmgZ1IugowDvuHNpevnoZRQx1KKOEisLvIJW+Xen5Pjn41pg==
+cypress@^10.11.0:
+  version "10.11.0"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-10.11.0.tgz#e9fbdd7638bae3d8fb7619fd75a6330d11ebb4e8"
+  integrity sha512-lsaE7dprw5DoXM00skni6W5ElVVLGAdRUUdZjX2dYsGjbY/QnpzWZ95Zom1mkGg0hAaO/QVTZoFVS7Jgr/GUPA==
   dependencies:
     "@cypress/request" "^2.88.10"
     "@cypress/xvfb" "^1.2.4"
