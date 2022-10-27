@@ -149,6 +149,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "les-lim",
+      "name": "Les Lim",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7660876?v=4",
+      "profile": "https://github.com/les-lim",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
