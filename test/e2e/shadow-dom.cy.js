@@ -165,7 +165,7 @@ describe('web-components', () => {
     });
   });
 
-  describe('query', () => {
+  describe('tabbable/focusable', () => {
     it('should find elements inside shadow dom', () => {
       const expected = ['light-before', 'shadow-input', 'light-after'];
       const { container } = setupFixture(fixtures.shadowDomQuery, {
@@ -201,6 +201,25 @@ describe('web-components', () => {
 
       result = tabbable(container, { getShadowRoot: true });
       expect(getIdsFromElementsArray(result), 'using `true`').to.eql(expected);
+    });
+
+    // make sure we're not conflicting with valid `scope` attribute on <th> elements
+    //  when we're sorting nodes in tab order (we don't test focusable() because
+    //  there's no focus order)
+    it('should find tabbable scoped headers', () => {
+      const expected = [
+        'header-athlete-col',
+        'header-swim-col',
+        'header-bike-col',
+        'header-run-col',
+      ];
+      const { container } = setupFixture(fixtures.shadowDomQuery, {
+        window,
+        caseId: 'table-with-tabbable-scoped-headers',
+      });
+
+      const result = tabbable(container);
+      expect(getIdsFromElementsArray(result), 'tabbable').to.eql(expected);
     });
 
     it('should find elements inside shadow dom when directly querying the element with shadow root', () => {

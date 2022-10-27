@@ -162,3 +162,33 @@
         <input id="query-light-input-slotted"></input>
     </test-shadow>
 </div>
+
+<div id="table-with-tabbable-scoped-headers">
+    <h2>table with tabbable scoped headers</h2>
+    <table>
+        <tr>
+            <th scope="col" tabindex="0" id="header-athlete-col">Athlete</th>
+            <th scope="col" tabindex="0" id="header-swim-col">Swim</th>
+            <th scope="col" tabindex="0" id="header-bike-col">Bike</th>
+            <th scope="col" tabindex="0" id="header-run-col">Run</th>
+        </tr>
+        <tr>
+            <th scope="row" id="header-athlete-row">John</th>
+            <td>7</td>
+            <td>12</td>
+            <td>10</td>
+        </tr>
+        <tr>
+            <th scope="row">Lisa</th>
+            <td>3</td>
+            <td>15</td>
+            <td>9</td>
+        </tr>
+        <tr>
+            <th scope="row">Paul</th>
+            <td>9</td>
+            <td>8</td>
+            <td>12</td>
+        </tr>
+    </table>
+</div>
