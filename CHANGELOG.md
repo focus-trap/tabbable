@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.0.1
+
+### Patch Changes
+
+- 0aab1e3: Fix crash with tabbable scoped table header elements ([#832](https://github.com/focus-trap/tabbable/issues/832))
+
 ## 6.0.0
 
 ### Major Changes
