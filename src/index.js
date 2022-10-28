@@ -56,9 +56,9 @@ const getCandidates = function (el, includeContainer, filter) {
  */
 
 /**
- * @typedef {Object} CandidatesScope
- * @property {Element} scope contains inner candidates
- * @property {Element[]} candidates
+ * @typedef {Object} CandidateScope
+ * @property {Element} scopeParent contains inner candidates
+ * @property {Element[]} candidates list of candidates found in the scope parent
  */
 
 /**
@@ -67,7 +67,7 @@ const getCandidates = function (el, includeContainer, filter) {
  *  if a function, implies shadow support is enabled and either returns the shadow root of an element
  *  or a boolean stating if it has an undisclosed shadow root
  * @property {(node: Element) => boolean} filter filter candidates
- * @property {boolean} flatten if true then result will flatten any CandidatesScope into the returned list
+ * @property {boolean} flatten if true then result will flatten any CandidateScope into the returned list
  * @property {ShadowRootFilter} shadowRootFilter filter shadow roots;
  */
 
@@ -75,7 +75,7 @@ const getCandidates = function (el, includeContainer, filter) {
  * @param {Element[]} elements list of element containers to match candidates from
  * @param {boolean} includeContainer add container list to check
  * @param {IterativeOptions} options
- * @returns {Array.<Element|CandidatesScope>}
+ * @returns {Array.<Element|CandidateScope>}
  */
 const getCandidatesIteratively = function (
   elements,
@@ -95,7 +95,7 @@ const getCandidatesIteratively = function (
         candidates.push(...nestedCandidates);
       } else {
         candidates.push({
-          scope: element,
+          scopeParent: element,
           candidates: nestedCandidates,
         });
       }
@@ -137,7 +137,7 @@ const getCandidatesIteratively = function (
           candidates.push(...nestedCandidates);
         } else {
           candidates.push({
-            scope: element,
+            scopeParent: element,
             candidates: nestedCandidates,
           });
         }
@@ -464,15 +464,15 @@ const isValidShadowRootTabbable = function (shadowHostNode) {
 };
 
 /**
- * @param {Array.<Element|CandidatesScope>} candidates
+ * @param {Array.<Element|CandidateScope>} candidates
  * @returns Element[]
  */
 const sortByOrder = function (candidates) {
   const regularTabbables = [];
   const orderedTabbables = [];
   candidates.forEach(function (item, i) {
-    const isScope = !!item.scope;
-    const element = isScope ? item.scope : item;
+    const isScope = !!item.scopeParent;
+    const element = isScope ? item.scopeParent : item;
     const candidateTabindex = getTabindex(element, isScope);
     const elements = isScope ? sortByOrder(item.candidates) : element;
     if (candidateTabindex === 0) {
