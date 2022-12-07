@@ -9,11 +9,15 @@ import {
 
 describe('tabbable', () => {
   let document, fixtures;
+
   before(() => {
+    getFixtures((f) => (fixtures = f));
+  });
+
+  beforeEach(() => {
     setupTestWindow((testWindow) => {
       document = testWindow.document;
     });
-    getFixtures((f) => (fixtures = f));
   });
 
   afterEach(() => {
