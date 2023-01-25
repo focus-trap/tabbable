@@ -276,10 +276,10 @@ const isNodeAttached = function (node) {
   //  if a tabbable/focusable node was quickly added to the DOM, focused, and then removed
   //  from the DOM as in https://github.com/focus-trap/focus-trap-react/issues/905), then
   //  `ownerDocument` will be `null`, hence the optional chaining on it.
-  let nodeRootHost = getRootNode(node).host;
+  let nodeRootHost = node && getRootNode(node).host;
   let attached = !!(
     nodeRootHost?.ownerDocument?.contains(nodeRootHost) ||
-    node.ownerDocument?.contains(node)
+    node?.ownerDocument?.contains(node)
   );
 
   while (!attached && nodeRootHost) {
@@ -287,7 +287,7 @@ const isNodeAttached = function (node) {
     //  which means we need to get the host's host and check if that parent host is contained
     //  in (i.e. attached to) the document
     nodeRootHost = getRootNode(nodeRootHost).host;
-    attached = !!nodeRootHost?.ownerDocument.contains(nodeRootHost);
+    attached = !!nodeRootHost?.ownerDocument?.contains(nodeRootHost);
   }
 
   return attached;
