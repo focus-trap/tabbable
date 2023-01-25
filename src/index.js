@@ -272,10 +272,14 @@ const isNodeAttached = function (node) {
   //  to ignore the rootNode at this point, and use `node.ownerDocument`. Otherwise,
   //  using `rootNode.contains(node)` will _always_ be true we'll get false-positives when
   //  node is actually detached.
+  // NOTE: If `nodeRootHost` or `node` happens to be the `document` itself (which is possible
+  //  if a tabbable/focusable node was quickly added to the DOM, focused, and then removed
+  //  from the DOM as in https://github.com/focus-trap/focus-trap-react/issues/905), then
+  //  `ownerDocument` will be `null`, hence the optional chaining on it.
   let nodeRootHost = getRootNode(node).host;
   let attached = !!(
-    nodeRootHost?.ownerDocument.contains(nodeRootHost) ||
-    node.ownerDocument.contains(node)
+    nodeRootHost?.ownerDocument?.contains(nodeRootHost) ||
+    node.ownerDocument?.contains(node)
   );
 
   while (!attached && nodeRootHost) {
