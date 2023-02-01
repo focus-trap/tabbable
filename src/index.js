@@ -23,8 +23,8 @@ const matches = NoElement
 
 const getRootNode =
   !NoElement && Element.prototype.getRootNode
-    ? (element) => element.getRootNode()
-    : (element) => element.ownerDocument;
+    ? (element) => element?.getRootNode?.()
+    : (element) => element?.ownerDocument;
 
 /**
  * @param {Element} el container to check in
@@ -276,18 +276,26 @@ const isNodeAttached = function (node) {
   //  if a tabbable/focusable node was quickly added to the DOM, focused, and then removed
   //  from the DOM as in https://github.com/focus-trap/focus-trap-react/issues/905), then
   //  `ownerDocument` will be `null`, hence the optional chaining on it.
-  let nodeRootHost = node && getRootNode(node).host;
-  let attached = !!(
-    nodeRootHost?.ownerDocument?.contains(nodeRootHost) ||
-    node?.ownerDocument?.contains(node)
-  );
+  let nodeRoot = node && getRootNode(node);
+  let nodeRootHost = nodeRoot?.host;
 
-  while (!attached && nodeRootHost) {
-    // since it's not attached and we have a root host, the node MUST be in a nested shadow DOM,
-    //  which means we need to get the host's host and check if that parent host is contained
-    //  in (i.e. attached to) the document
-    nodeRootHost = getRootNode(nodeRootHost).host;
-    attached = !!nodeRootHost?.ownerDocument?.contains(nodeRootHost);
+  // in some cases, a detached node will return itself as the root instead of a document or
+  //  shadow root object, in which case, we shouldn't try to look further up the host chain
+  let attached = false;
+  if (nodeRoot && nodeRoot !== node) {
+    attached = !!(
+      nodeRootHost?.ownerDocument?.contains(nodeRootHost) ||
+      node?.ownerDocument?.contains(node)
+    );
+
+    while (!attached && nodeRootHost) {
+      // since it's not attached and we have a root host, the node MUST be in a nested shadow DOM,
+      //  which means we need to get the host's host and check if that parent host is contained
+      //  in (i.e. attached to) the document
+      nodeRoot = getRootNode(nodeRootHost);
+      nodeRootHost = nodeRoot?.host;
+      attached = !!nodeRootHost?.ownerDocument?.contains(nodeRootHost);
+    }
   }
 
   return attached;
