@@ -407,6 +407,43 @@ describe('isTabbable', () => {
         isTabbable(getByTestId(container, 'fieldset-disabled-anchor'))
       ).to.eql(true);
     });
+
+    describe('inertness', () => {
+      it('returns false for any inert element', () => {
+        const container = document.createElement('div');
+        container.innerHTML = fixtures.inert;
+        document.body.append(container);
+
+        for (const child of container.children) {
+          expect(isTabbable(child)).to.eql(false);
+        }
+      });
+
+      it('returns false for any element inside an inert parent', () => {
+        const container = document.createElement('div');
+        container.innerHTML = fixtures.basic;
+        container.inert = true;
+        document.body.append(container);
+
+        for (const child of container.children) {
+          expect(isTabbable(child), child.id).to.eql(false);
+        }
+      });
+
+      it('returns false for any element inside an inert ancestor', () => {
+        const container = document.createElement('div');
+        container.innerHTML = fixtures.basic;
+
+        const parent = document.createElement('div');
+        parent.inert = true;
+        parent.appendChild(container);
+        document.body.append(parent);
+
+        for (const child of container.children) {
+          expect(isTabbable(child), child.id).to.eql(false);
+        }
+      });
+    });
   });
 
   describe('display check', () => {

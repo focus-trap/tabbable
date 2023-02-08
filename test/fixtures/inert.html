@@ -1,0 +1,79 @@
+<div inert id="contenteditable-true" contenteditable="true" style="padding:1em">
+  editable text
+</div>
+<div inert id="contenteditable-false" contenteditable="false" style="padding:1em">
+  not editable text
+</div>
+<div inert id="contenteditable-nesting" contenteditable style="padding:1em">
+  <div>
+    <div>
+      editable text
+    </div>
+  </div>
+</div>
+<div inert id="contenteditable-negative-tabindex" contenteditable="true" tabindex="-1" style="padding:1em">
+  this editable text is focusable but not tabbable
+</div>
+<div inert id="contenteditable-NaN-tabindex" contenteditable="true" tabindex="NaN" style="padding:1em">
+  editable text
+</div>
+
+<input inert id="input" type="text" />
+<input inert id="input-readonly" readonly />
+<select inert id="select">
+  <option value="foo">foo</option>
+</select>
+<select inert id="select-readonly" readyonly>
+  <option value="foo">foo</option>
+</select>
+<a inert id="href-anchor" href="#">foo</a>
+<a inert id="tabindex-hrefless-anchor" tabindex="1">foo</a>
+<textarea inert id="textarea" cols="30" rows="10"></textarea>
+<textarea inert id="textarea-readonly" readyonly cols="30" rows="10"></textarea>
+<button inert id="button">foo</button>
+<div inert id="tabindex-div" tabindex="0">foo</div>
+
+<input inert id="disabled-input" type="text" disabled />
+<input inert id="hidden-input" type="hidden" />
+<select inert id="negative-select" tabindex="-1">
+  <option value="foo">foo</option>
+</select>
+<a inert id="hrefless-anchor">foo</a>
+<textarea
+  inert
+  id="displaynone-textarea"
+  cols="30"
+  rows="10"
+  style="display:none;"
+></textarea>
+<button inert id="visibilityhidden-button" style="visibility:hidden;">foo</button>
+<div inert style="visibility:hidden;">
+  <button inert id="hiddenParent-button">foo</button>
+  <button inert id="hiddenParentVisible-button" style="visibility:visible;">
+    bar
+  </button>
+</div>
+<div inert id="noindex-div">foo</div>
+
+<div inert id="displaycontents" style="display: contents; background-color: lime;" tabindex="0">
+  <div inert id="displaycontents-child" tabindex="0">displaycontents-child</div>
+  <div inert id="displaycontents-child-displaynone" style="display: none" tabindex="0">displaycontents-child-displaynone</div>
+</div>
+
+<audio inert id="audio-control" controls></audio>
+<audio inert id="audio-nocontrol"></audio>
+<audio inert id="audio-control-NaN-tabindex" tabindex="foo" controls></audio>
+
+<video inert id="video-control" controls></video>
+<video inert id="video-nocontrol"></video>
+<video inert id="video-control-NaN-tabindex" tabindex="bar" controls></video>
+
+<iframe
+  inert
+  id="iframe"
+  src="https://en.wikipedia.org/wiki/Mars_Reconnaissance_Orbiter"
+></iframe>
+
+<div inert id="inert-parent-div">
+  <button id="inert-parent-button">foo</button>
+</div>

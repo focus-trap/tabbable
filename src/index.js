@@ -1,15 +1,15 @@
 const candidateSelectors = [
-  'input',
-  'select',
-  'textarea',
-  'a[href]',
-  'button',
-  '[tabindex]:not(slot)',
-  'audio[controls]',
-  'video[controls]',
-  '[contenteditable]:not([contenteditable="false"])',
-  'details>summary:first-of-type',
-  'details',
+  'input:not([inert] *)',
+  'select:not([inert] *)',
+  'textarea:not([inert] *)',
+  'a[href]:not([inert] *)',
+  'button:not([inert] *)',
+  '[tabindex]:not(slot):not([inert] *)',
+  'audio[controls]:not([inert] *)',
+  'video[controls]:not([inert] *)',
+  '[contenteditable]:not([contenteditable="false"]):not([inert] *)',
+  'details>summary:first-of-type:not([inert] *)',
+  'details:not([inert] *)',
 ];
 const candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
 
@@ -27,12 +27,28 @@ const getRootNode =
     : (element) => element?.ownerDocument;
 
 /**
+ * Determines if a node is inert or in an inert ancestor.
+ * @param {Element} node
+ * @param {boolean} [lookUp] If true and `node` is not inert, looks up at ancestors to
+ *  see if any of them are inert. If false, only `node` itself is considered.
+ * @returns {boolean} True if inert itself or by way of being in an inert ancestor.
+ *  False if `node` is falsy.
+ */
+const isInert = function (node, lookUp = true) {
+  return !!(node?.inert || (lookUp && node && isInert(node.parentNode))); // recursive
+};
+
+/**
  * @param {Element} el container to check in
  * @param {boolean} includeContainer add container to check
  * @param {(node: Element) => boolean} filter filter candidates
  * @returns {Element[]}
  */
 const getCandidates = function (el, includeContainer, filter) {
+  if (isInert(el)) {
+    return [];
+  }
+
   let candidates = Array.prototype.slice.apply(
     el.querySelectorAll(candidateSelector)
   );
@@ -86,6 +102,12 @@ const getCandidatesIteratively = function (
   const elementsToCheck = Array.from(elements);
   while (elementsToCheck.length) {
     const element = elementsToCheck.shift();
+    if (isInert(element, false)) {
+      // no need to look up since we're drilling down
+      // anything inside this container will also be inert
+      continue;
+    }
+
     if (element.tagName === 'SLOT') {
       // add shadow dom slot scope (slot itself cannot be focusable)
       const assigned = element.assignedElements();
@@ -117,8 +139,12 @@ const getCandidatesIteratively = function (
         (typeof options.getShadowRoot === 'function' &&
           options.getShadowRoot(element));
 
+      // no inert look up because we're already drilling down and checking for inertness
+      //  on the way down, so all containers to this root node should have already been
+      //  vetted as non-inert
       const validShadowRoot =
-        !options.shadowRootFilter || options.shadowRootFilter(element);
+        !isInert(shadowRoot, false) &&
+        (!options.shadowRootFilter || options.shadowRootFilter(element));
 
       if (shadowRoot && validShadowRoot) {
         // add shadow dom scope IIF a shadow root node was given; otherwise, an undisclosed
@@ -443,6 +469,10 @@ const isDisabledFromFieldset = function (node) {
 const isNodeMatchingSelectorFocusable = function (options, node) {
   if (
     node.disabled ||
+    // no inert look up: we should have looked up from the container already and
+    //  the `candidateSelector` results should have also filtered out any elements
+    //  inside an inert ancestor
+    isInert(node, false) ||
     isHiddenInput(node) ||
     isHidden(node, options) ||
     // For a details element with a summary, the summary element gets the focus
@@ -567,7 +597,7 @@ const isTabbable = function (node, options) {
 };
 
 const focusableCandidateSelector = /* #__PURE__ */ candidateSelectors
-  .concat('iframe')
+  .concat('iframe:not([inert] *)')
   .join(',');
 
 const isFocusable = function (node, options) {

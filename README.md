@@ -30,6 +30,7 @@ Any of the above will _not_ be considered tabbable, though, if any of the follow
 - is nested under a closed `<details>` element (with the exception of the first `<summary>` element)
 - is an `<input type="radio">` element and a different radio in its group is `checked`
 - is a form field (button, input, select, textarea) inside a disabled `<fieldset>`
+- is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert) or in an inert container
 
 **If you think a node should be included in your array of tabbables _but it's not_, all you need to do is add `tabindex="0"` to deliberately include it.** (Or if it is in your array but you don't want it, you can add `tabindex="-1"` to deliberately exclude it.) This will also result in more consistent cross-browser behavior. For information about why your special node might _not_ be included, see ["More details"](#more-details), below.
 
@@ -75,6 +76,7 @@ tabbable(rootNode, [options]);
     - All the [common options](#common-options).
     - `includeContainer: boolean` (default: false)
         - If set to `true`, `rootNode` will be included in the returned tabbable node array, if `rootNode` is tabbable.
+        - Note that whether this option is true or false, if the `rootNode` is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert), none of its children (deep) will be considered tabbable.
 
 Returns an array of ordered tabbable nodes (i.e. in tab order) within the `rootNode`.
 
@@ -97,6 +99,8 @@ isTabbable(node, [options]);
 
 Returns a boolean indicating whether the provided node is considered tabbable.
 
+> 💬 If the node has an [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert) ancestor, it will not be tabbable.
+
 ### focusable
 
 ```js
@@ -110,6 +114,7 @@ focusable(rootNode, [options]);
     - All the [common options](#common-options).
     - `includeContainer: boolean` (default: false)
         - If set to `true`, `rootNode` will be included in the returned focusable node array, if `rootNode` is focusable.
+        - Note that whether this option is true or false, if the `rootNode` is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert), none of its children (deep) will be considered focusable.
 
 Returns an array of focusable nodes within the `rootNode`, in DOM order. This will not match the order in which `tabbable()` returns nodes.
 
@@ -127,7 +132,7 @@ isFocusable(node, [options]);
 
 Returns a boolean indicating whether the provided node is considered _focusable_.
 
-> 💬 All tabbable elements are focusable, but not all focusable elements are tabbable. For example, elements with `tabindex="-1"` are focusable but not tabbable.
+> 💬 All tabbable elements are focusable, but not all focusable elements are tabbable. For example, elements with `tabindex="-1"` are focusable but not tabbable. Also note that if the node has an[inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert) ancestor, it will not be focusable.
 
 ## Common Options
 

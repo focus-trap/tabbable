@@ -106,6 +106,78 @@ describe('focusable', () => {
       });
     });
 
+    [undefined, 'full', 'legacy-full', 'non-zero-area', 'none'].forEach(
+      (displayCheck) => {
+        it(`correctly identifies focusable elements in the "inert" example with displayCheck=${
+          displayCheck || '<default>'
+        }`, () => {
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.inert;
+          document.body.append(container);
+
+          // non-inert container, but every element inside of it is
+          const focusableElements = focusable(container, { displayCheck });
+
+          expect(getIdsFromElementsArray(focusableElements)).to.eql([]);
+        });
+
+        it(`correctly identifies focusable elements in the "basic" example with displayCheck=${
+          displayCheck || '<default>'
+        } when placed directly inside an inert container`, () => {
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.basic;
+          container.inert = true;
+          document.body.append(container);
+
+          // inert container has non-inert children
+          const focusableElements = focusable(container, { displayCheck });
+
+          expect(getIdsFromElementsArray(focusableElements)).to.eql([]);
+        });
+
+        it(`correctly identifies focusable elements in the "basic" example with displayCheck=${
+          displayCheck || '<default>'
+        } when nested inside an inert container`, () => {
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.basic;
+          container.inert = true;
+
+          const parentContainer = document.createElement('div');
+          parentContainer.appendChild(container);
+          document.body.append(parentContainer);
+
+          // non-inert parent has inert container which has non-inert children
+          const focusableElements = focusable(parentContainer, {
+            displayCheck,
+          });
+
+          expect(getIdsFromElementsArray(focusableElements)).to.eql([]);
+        });
+
+        it(`correctly identifies focusable elements in the "basic" example with displayCheck=${
+          displayCheck || '<default>'
+        } when deeply nested inside an inert container`, () => {
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.basic;
+
+          const parentContainer = document.createElement('div');
+          parentContainer.inert = true;
+          parentContainer.appendChild(container);
+
+          const grandparentContainer = document.createElement('div');
+          grandparentContainer.appendChild(parentContainer);
+          document.body.append(grandparentContainer);
+
+          // non-inert grandparent has inert parent, which has non-container with children
+          const focusableElements = focusable(grandparentContainer, {
+            displayCheck,
+          });
+
+          expect(getIdsFromElementsArray(focusableElements)).to.eql([]);
+        });
+      }
+    );
+
     it('correctly identifies focusable elements in the "nested" example', () => {
       const expectedFocusableIds = [
         'tabindex-div-0',
