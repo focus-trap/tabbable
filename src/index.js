@@ -1,15 +1,17 @@
+// separate `:not()` selectors has broader browser support than the newer
+//  `:not([inert], [inert] *)` (Feb 2023)
 const candidateSelectors = [
-  'input:not([inert] *)',
-  'select:not([inert] *)',
-  'textarea:not([inert] *)',
-  'a[href]:not([inert] *)',
-  'button:not([inert] *)',
-  '[tabindex]:not(slot):not([inert] *)',
-  'audio[controls]:not([inert] *)',
-  'video[controls]:not([inert] *)',
-  '[contenteditable]:not([contenteditable="false"]):not([inert] *)',
-  'details>summary:first-of-type:not([inert] *)',
-  'details:not([inert] *)',
+  'input:not([inert]):not([inert] *)',
+  'select:not([inert]):not([inert] *)',
+  'textarea:not([inert]):not([inert] *)',
+  'a[href]:not([inert]):not([inert] *)',
+  'button:not([inert]):not([inert] *)',
+  '[tabindex]:not(slot):not([inert]):not([inert] *)',
+  'audio[controls]:not([inert]):not([inert] *)',
+  'video[controls]:not([inert]):not([inert] *)',
+  '[contenteditable]:not([contenteditable="false"]):not([inert]):not([inert] *)',
+  'details>summary:first-of-type:not([inert]):not([inert] *)',
+  'details:not([inert]):not([inert] *)',
 ];
 const candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
 
@@ -35,6 +37,9 @@ const getRootNode =
  *  False if `node` is falsy.
  */
 const isInert = function (node, lookUp = true) {
+  // NOTE: this could also be handled with `node.matches('[inert], :is([inert] *)')`
+  //  if it weren't for `matches()` not being a function on shadow roots; the following
+  //  code works for any kind of node
   return !!(node?.inert || (lookUp && node && isInert(node.parentNode))); // recursive
 };
 
