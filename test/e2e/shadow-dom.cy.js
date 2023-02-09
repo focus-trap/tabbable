@@ -320,7 +320,8 @@ describe('web-components', () => {
         );
       });
 
-      it('should filter un-tabbable elements', () => {
+      // TODO[ff-inert-support]: FF does not yet (Feb 2023) support the `inert` attribute
+      it('should filter un-tabbable elements', { browser: '!firefox' }, () => {
         const expected = [
           'shadow-summary',
           'shadow-details-without-summary',
@@ -342,7 +343,8 @@ describe('web-components', () => {
         );
       });
 
-      it('should filter un-focusable elements', () => {
+      // TODO[ff-inert-support]: FF does not yet (Feb 2023) support the `inert` attribute
+      it('should filter un-focusable elements', { browser: '!firefox' }, () => {
         const expected = [
           'shadow-summary',
           'shadow-details-without-summary',
