@@ -408,7 +408,8 @@ describe('isTabbable', () => {
       ).to.eql(true);
     });
 
-    describe('inertness', () => {
+    // TODO[ff-inert-support]: FF does not yet (Feb 2023) support the `inert` attribute
+    describe('inertness', { browser: '!firefox' }, () => {
       it('returns false for any inert element', () => {
         const container = document.createElement('div');
         container.innerHTML = fixtures.inert;
