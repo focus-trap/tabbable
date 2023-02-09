@@ -30,7 +30,9 @@ Any of the above will _not_ be considered tabbable, though, if any of the follow
 - is nested under a closed `<details>` element (with the exception of the first `<summary>` element)
 - is an `<input type="radio">` element and a different radio in its group is `checked`
 - is a form field (button, input, select, textarea) inside a disabled `<fieldset>`
-- is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert) or in an inert container
+- is [inert](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/inert) or in an inert container
+    - ❗️ Only supported in [newer browsers](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/inert#browser_compatibility) that support this new attribute)
+    - ⚠️ Notably __not (yet) supported__ on Firefox and Safari (Feb 2023)
 
 **If you think a node should be included in your array of tabbables _but it's not_, all you need to do is add `tabindex="0"` to deliberately include it.** (Or if it is in your array but you don't want it, you can add `tabindex="-1"` to deliberately exclude it.) This will also result in more consistent cross-browser behavior. For information about why your special node might _not_ be included, see ["More details"](#more-details), below.
 
