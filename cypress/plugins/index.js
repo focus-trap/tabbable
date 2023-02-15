@@ -26,7 +26,7 @@ module.exports = (on, config) => {
   // fetch fixtures
   on('task', {
     getFixtures() {
-      return require('../../test/fixtures/index');
+      return require('../../test/fixtures/fixtures');
     },
   });
 
