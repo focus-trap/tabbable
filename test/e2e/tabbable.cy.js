@@ -104,6 +104,81 @@ describe('tabbable', () => {
       });
     });
 
+    // TODO[ff-inert-support]: FF does not yet (Feb 2023) support the `inert` attribute
+    describe('inertness', { browser: '!firefox' }, () => {
+      [undefined, 'full', 'legacy-full', 'non-zero-area', 'none'].forEach(
+        (displayCheck) => {
+          it(`correctly identifies tabbable elements in the "inert" example with displayCheck=${
+            displayCheck || '<default>'
+          }`, () => {
+            const container = document.createElement('div');
+            container.innerHTML = fixtures.inert;
+            document.body.append(container);
+
+            // non-inert container, but every element inside of it is
+            const tabbableElements = tabbable(container, { displayCheck });
+
+            expect(getIdsFromElementsArray(tabbableElements)).to.eql([]);
+          });
+
+          it(`correctly identifies tabbable elements in the "basic" example with displayCheck=${
+            displayCheck || '<default>'
+          } when placed directly inside an inert container`, () => {
+            const container = document.createElement('div');
+            container.innerHTML = fixtures.basic;
+            container.inert = true;
+            document.body.append(container);
+
+            // inert container has non-inert children
+            const tabbableElements = tabbable(container, { displayCheck });
+
+            expect(getIdsFromElementsArray(tabbableElements)).to.eql([]);
+          });
+
+          it(`correctly identifies tabbable elements in the "basic" example with displayCheck=${
+            displayCheck || '<default>'
+          } when nested inside an inert container`, () => {
+            const container = document.createElement('div');
+            container.innerHTML = fixtures.basic;
+            container.inert = true;
+
+            const parentContainer = document.createElement('div');
+            parentContainer.appendChild(container);
+            document.body.append(parentContainer);
+
+            // non-inert parent has inert container which has non-inert children
+            const tabbableElements = tabbable(parentContainer, {
+              displayCheck,
+            });
+
+            expect(getIdsFromElementsArray(tabbableElements)).to.eql([]);
+          });
+
+          it(`correctly identifies tabbable elements in the "basic" example with displayCheck=${
+            displayCheck || '<default>'
+          } when deeply nested inside an inert container`, () => {
+            const container = document.createElement('div');
+            container.innerHTML = fixtures.basic;
+
+            const parentContainer = document.createElement('div');
+            parentContainer.inert = true;
+            parentContainer.appendChild(container);
+
+            const grandparentContainer = document.createElement('div');
+            grandparentContainer.appendChild(parentContainer);
+            document.body.append(grandparentContainer);
+
+            // non-inert grandparent has inert parent, which has non-container with children
+            const tabbableElements = tabbable(grandparentContainer, {
+              displayCheck,
+            });
+
+            expect(getIdsFromElementsArray(tabbableElements)).to.eql([]);
+          });
+        }
+      );
+    });
+
     it('correctly identifies tabbable elements in the "nested" example', () => {
       const expectedTabbableIds = ['tabindex-div-2', 'tabindex-div-0', 'input'];
 

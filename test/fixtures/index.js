@@ -5,6 +5,7 @@ const fs = require('fs');
 
 module.exports = {
   basic: fs.readFileSync(path.join(__dirname, 'basic.html'), 'utf8'),
+  inert: fs.readFileSync(path.join(__dirname, 'inert.html'), 'utf8'),
   'changing-content': fs.readFileSync(
     path.join(__dirname, 'changing-content.html'),
     'utf8'
