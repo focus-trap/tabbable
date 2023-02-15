@@ -1,17 +1,20 @@
-// separate `:not()` selectors has broader browser support than the newer
+// NOTE: separate `:not()` selectors has broader browser support than the newer
 //  `:not([inert], [inert] *)` (Feb 2023)
+// CAREFUL: JSDom does not support `:not([inert] *)` as a selector; using it causes
+//  the entire query to fail, resulting in no nodes found, which will break a lot
+//  of things... so we have to rely on JS to identify nodes inside an inert container
 const candidateSelectors = [
-  'input:not([inert]):not([inert] *)',
-  'select:not([inert]):not([inert] *)',
-  'textarea:not([inert]):not([inert] *)',
-  'a[href]:not([inert]):not([inert] *)',
-  'button:not([inert]):not([inert] *)',
-  '[tabindex]:not(slot):not([inert]):not([inert] *)',
-  'audio[controls]:not([inert]):not([inert] *)',
-  'video[controls]:not([inert]):not([inert] *)',
-  '[contenteditable]:not([contenteditable="false"]):not([inert]):not([inert] *)',
-  'details>summary:first-of-type:not([inert]):not([inert] *)',
-  'details:not([inert]):not([inert] *)',
+  'input:not([inert])',
+  'select:not([inert])',
+  'textarea:not([inert])',
+  'a[href]:not([inert])',
+  'button:not([inert])',
+  '[tabindex]:not(slot):not([inert])',
+  'audio[controls]:not([inert])',
+  'video[controls]:not([inert])',
+  '[contenteditable]:not([contenteditable="false"]):not([inert])',
+  'details>summary:first-of-type:not([inert])',
+  'details:not([inert])',
 ];
 const candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
 
@@ -30,17 +33,40 @@ const getRootNode =
 
 /**
  * Determines if a node is inert or in an inert ancestor.
- * @param {Element} node
+ * @param {Element} [node]
  * @param {boolean} [lookUp] If true and `node` is not inert, looks up at ancestors to
  *  see if any of them are inert. If false, only `node` itself is considered.
  * @returns {boolean} True if inert itself or by way of being in an inert ancestor.
  *  False if `node` is falsy.
  */
 const isInert = function (node, lookUp = true) {
+  // CAREFUL: JSDom does not support inert at all, so we can't use the `HTMLElement.inert`
+  //  JS API property; we have to check the attribute, which can either be empty or 'true';
+  //  if it's `null` (not specified) or 'false', it's an active element
+  const inertAtt = node?.getAttribute?.('inert');
+  const inert = inertAtt === '' || inertAtt === 'true';
+
   // NOTE: this could also be handled with `node.matches('[inert], :is([inert] *)')`
   //  if it weren't for `matches()` not being a function on shadow roots; the following
   //  code works for any kind of node
-  return !!(node?.inert || (lookUp && node && isInert(node.parentNode))); // recursive
+  // CAREFUL: JSDom does not appear to support certain selectors like `:not([inert] *)`
+  //  so it likely would not support `:is([inert] *)` either...
+  const result = inert || (lookUp && node && isInert(node.parentNode)); // recursive
+
+  return result;
+};
+
+/**
+ * Determines if a node's content is editable.
+ * @param {Element} [node]
+ * @returns True if it's content-editable; false if it's not or `node` is falsy.
+ */
+const isContentEditable = function (node) {
+  // CAREFUL: JSDom does not support the `HTMLElement.isContentEditable` API so we have
+  //  to use the attribute directly to check for this, which can either be empty or 'true';
+  //  if it's `null` (not specified) or 'false', it's a non-editable element
+  const attValue = node?.getAttribute?.('contenteditable');
+  return attValue === '' || attValue === 'true';
 };
 
 /**
@@ -50,6 +76,8 @@ const isInert = function (node, lookUp = true) {
  * @returns {Element[]}
  */
 const getCandidates = function (el, includeContainer, filter) {
+  // even if `includeContainer=false`, we still have to check it for inertness because
+  //  if it's inert, all its children are inert
   if (isInert(el)) {
     return [];
   }
@@ -198,7 +226,7 @@ const getTabindex = function (node, isScope) {
     if (
       (isScope ||
         /^(AUDIO|VIDEO|DETAILS)$/.test(node.tagName) ||
-        node.isContentEditable) &&
+        isContentEditable(node)) &&
       isNaN(parseInt(node.getAttribute('tabindex'), 10))
     ) {
       return 0;
@@ -474,10 +502,10 @@ const isDisabledFromFieldset = function (node) {
 const isNodeMatchingSelectorFocusable = function (options, node) {
   if (
     node.disabled ||
-    // no inert look up: we should have looked up from the container already and
-    //  the `candidateSelector` results should have also filtered out any elements
-    //  inside an inert ancestor
-    isInert(node, false) ||
+    // we must do an inert look up to filter out any elements inside an inert ancestor
+    //  because we're limited in the type of selectors we can use in JSDom (see related
+    //  note related to `candidateSelectors`)
+    isInert(node) ||
     isHiddenInput(node) ||
     isHidden(node, options) ||
     // For a details element with a summary, the summary element gets the focus
@@ -602,7 +630,7 @@ const isTabbable = function (node, options) {
 };
 
 const focusableCandidateSelector = /* #__PURE__ */ candidateSelectors
-  .concat('iframe:not([inert] *)')
+  .concat('iframe')
   .join(',');
 
 const isFocusable = function (node, options) {

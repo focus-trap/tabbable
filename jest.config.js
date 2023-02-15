@@ -1,4 +1,5 @@
 module.exports = {
+  testEnvironment: 'jsdom', // requires separate 'jest-environment-jsdom' package
   clearMocks: true,
   collectCoverageFrom: ['<rootDir>/src/*.js'],
   coverageDirectory: '<rootDir>/coverage',
