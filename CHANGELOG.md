@@ -1,5 +1,15 @@
 # Changelog
 
+## 6.1.0
+
+### Minor Changes
+
+- 1756c90: Add support for new [inert](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/inert#browser_compatibility) attribute ([#292](https://github.com/focus-trap/tabbable/issues/292))
+
+### Patch Changes
+
+- b8c7550: Fix a corner case where a node's root node can be itself, indicating detachment from the DOM, leading to a crash in `isHidden() -> isNodeAttached() -> getRootNode()` if not handled properly ([focus-trap-react #905](https://github.com/focus-trap/focus-trap-react/issues/905))
+
 ## 6.0.1
 
 ### Patch Changes
