@@ -1,4 +1,6 @@
-const { ...testCases } = require('./fixtures');
+/* eslint-env node */
+
+const { ...testCases } = require('./fixtures/fixtures.js');
 const { appendHTMLWithShadowRoots } = require('./shadow-root-utils');
 global.tabbable = require('../dist/index.js');
 
