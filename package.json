@@ -90,6 +90,6 @@
     "rollup-plugin-terser": "^7.0.2",
     "typescript": "^5.0.4",
     "watchify": "^4.0.0",
-    "webpack": "^5.78.0"
+    "webpack": "^5.79.0"
   }
 }
