@@ -65,7 +65,7 @@
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@testing-library/dom": "^9.2.0",
     "@testing-library/jest-dom": "^5.16.5",
-    "@types/node": "^18.16.1",
+    "@types/node": "^18.16.3",
     "all-contributors-cli": "^6.25.0",
     "babel-jest": "^29.5.0",
     "babel-loader": "^9.1.2",
