@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.1.2
+
+### Patch Changes
+
+- b39b217: Pin jsdom downstream dependency nwsapi to v2.2.2 while awaiting fix ([#982](https://github.com/focus-trap/tabbable/issues/982))
+
 ## 6.1.1
 
 ### Patch Changes
