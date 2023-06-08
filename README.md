@@ -70,17 +70,17 @@ npm install tabbable
 ```js
 import { tabbable } from 'tabbable';
 
-tabbable(rootNode, [options]);
+tabbable(container, [options]);
 ```
 
-- `rootNode: Node | Array<Node>` (**Required**)
+- `container: Element | Array<Element>` (**Required**)
 - `options`:
     - All the [common options](#common-options).
     - `includeContainer: boolean` (default: false)
-        - If set to `true`, any `rootNode` that is tabbable will be included in the returned tabbable node array.
-        - Note that whether this option is true or false, if a `rootNode` is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert), none of its children (deep) will be considered tabbable.
+        - If set to `true`, any `container` that is tabbable will be included in the returned tabbable node array.
+        - Note that whether this option is true or false, if a `container` is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert), none of its children (deep) will be considered tabbable.
 
-Returns an array of ordered tabbable nodes (i.e. in tab order) within the given `rootNode`(s).
+Returns an array of ordered tabbable nodes (i.e. in tab order) within the given `container`(s).
 
 Summary of ordering principles:
 
@@ -95,7 +95,7 @@ import { isTabbable } from 'tabbable';
 isTabbable(node, [options]);
 ```
 
-- `node: Node` (**Required**)
+- `node: Element` (**Required**)
 - `options`:
     - All the [common options](#common-options).
 
@@ -108,17 +108,17 @@ Returns a boolean indicating whether the provided node is considered tabbable.
 ```js
 import { focusable } from 'tabbable';
 
-focusable(rootNode, [options]);
+focusable(container, [options]);
 ```
 
-- `rootNode: Node | Array<Node>`: **Required**
+- `container: Element | Array<Element>`: **Required**
 - `options`:
     - All the [common options](#common-options).
     - `includeContainer: boolean` (default: false)
-        - If set to `true`, any `rootNode` that is focusable will be included in the returned focusable node array.
-        - Note that whether this option is true or false, if a `rootNode` is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert), none of its children (deep) will be considered focusable.
+        - If set to `true`, any `container` that is focusable will be included in the returned focusable node array.
+        - Note that whether this option is true or false, if a `container` is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert), none of its children (deep) will be considered focusable.
 
-Returns an array of focusable nodes within the given `rootNode`(s), in DOM order. This will not match the order in which `tabbable()` returns nodes.
+Returns an array of focusable nodes within the given `container`(s), in DOM order. This will not match the order in which `tabbable()` returns nodes.
 
 ### isFocusable
 
@@ -128,13 +128,27 @@ import { isFocusable } from 'tabbable';
 isFocusable(node, [options]);
 ```
 
-- `node: Node` (**Required**)
+- `node: Element` (**Required**)
 - `options`:
     - All the [common options](#common-options).
 
 Returns a boolean indicating whether the provided node is considered _focusable_.
 
 > 💬 All tabbable elements are focusable, but not all focusable elements are tabbable. For example, elements with `tabindex="-1"` are focusable but not tabbable. Also note that if the node has an[inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert) ancestor, it will not be focusable.
+
+### getTabIndex
+
+```js
+import { getTabIndex } from 'tabbable';
+
+getTabIndex(node);
+```
+
+- `node: Element` (**Required**)
+
+Returns a negative, 0, or positive number that expresses the node's tab index in the DOM, with exceptions made where there are browser inconsistencies related to `<audio>`, `<video>`, `<details>`, and elements with the `contenteditable="true"` attribute.
+
+The specific exceptions may change over time. See the implementation for specific behavior.
 
 ## Common Options
 
