@@ -5,6 +5,7 @@ const fs = require('fs');
 
 module.exports = {
   basic: fs.readFileSync(path.join(__dirname, 'basic.html'), 'utf8'),
+  containers: fs.readFileSync(path.join(__dirname, 'containers.html'), 'utf8'),
   inert: fs.readFileSync(path.join(__dirname, 'inert.html'), 'utf8'),
   'changing-content': fs.readFileSync(
     path.join(__dirname, 'changing-content.html'),
@@ -41,4 +42,5 @@ module.exports = {
     path.join(__dirname, 'shadow-dom-untabbable.html'),
     'utf8'
   ),
+  tabindex: fs.readFileSync(path.join(__dirname, 'tabindex.html'), 'utf8'),
 };

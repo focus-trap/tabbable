@@ -211,6 +211,7 @@ const getCandidatesIteratively = function (
 };
 
 /**
+ * @private
  * Determines if the node has an explicitly specified `tabindex` attribute.
  * @param {Element} node
  * @returns {boolean} True if so; false if not.
@@ -223,8 +224,13 @@ const hasTabIndex = function (node) {
  * Determine the tab index of a given node.
  * @param {Element} node
  * @returns {number} Tab order (negative, 0, or positive number).
+ * @throws {Error} If `node` is falsy.
  */
 const getTabIndex = function (node) {
+  if (!node) {
+    throw new Error('No node provided');
+  }
+
   if (node.tabIndex < 0) {
     // in Chrome, <details/>, <audio controls/> and <video controls/> elements get a default
     // `tabIndex` of -1 when the 'tabindex' attribute isn't specified in the DOM,
@@ -246,6 +252,7 @@ const getTabIndex = function (node) {
 };
 
 /**
+ * @private
  * Determine the tab index of a given node __for sort order purposes__.
  * @param {Element} node
  * @param {boolean} [isScope] True for a custom element with shadow root or slot that, by default,
