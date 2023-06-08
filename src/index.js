@@ -603,10 +603,12 @@ const sortByOrder = function (candidates) {
     .concat(regularTabbables);
 };
 
+const byDocumentOrder = (a, b) => (a.compareDocumentPosition(b) & 4 ? -1 : 1);
+
 const tabbable = function (el, options) {
   options = options || {};
 
-  const containers = Array.isArray(el) ? el : [el];
+  const containers = (Array.isArray(el) ? [...el] : [el]).sort(byDocumentOrder);
 
   let candidates;
   if (options.getShadowRoot) {
@@ -642,7 +644,7 @@ const tabbable = function (el, options) {
 const focusable = function (el, options) {
   options = options || {};
 
-  const containers = Array.isArray(el) ? el : [el];
+  const containers = (Array.isArray(el) ? [...el] : [el]).sort(byDocumentOrder);
 
   let candidates;
   if (options.getShadowRoot) {
