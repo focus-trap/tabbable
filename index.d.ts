@@ -10,12 +10,12 @@ export type TabbableOptions = {
 };
 
 export declare function tabbable(
-  container: Element,
+  container: Element | Array<Element>,
   options?: TabbableOptions & CheckOptions
 ): FocusableElement[];
 
 export declare function focusable(
-  container: Element,
+  container: Element | Array<Element>,
   options?: TabbableOptions & CheckOptions
 ): FocusableElement[];
 

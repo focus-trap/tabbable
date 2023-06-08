@@ -73,14 +73,14 @@ import { tabbable } from 'tabbable';
 tabbable(rootNode, [options]);
 ```
 
-- `rootNode: Node` (**Required**)
+- `rootNode: Node | Array<Node>` (**Required**)
 - `options`:
     - All the [common options](#common-options).
     - `includeContainer: boolean` (default: false)
-        - If set to `true`, `rootNode` will be included in the returned tabbable node array, if `rootNode` is tabbable.
-        - Note that whether this option is true or false, if the `rootNode` is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert), none of its children (deep) will be considered tabbable.
+        - If set to `true`, any `rootNode` that is tabbable will be included in the returned tabbable node array.
+        - Note that whether this option is true or false, if a `rootNode` is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert), none of its children (deep) will be considered tabbable.
 
-Returns an array of ordered tabbable nodes (i.e. in tab order) within the `rootNode`.
+Returns an array of ordered tabbable nodes (i.e. in tab order) within the given `rootNode`(s).
 
 Summary of ordering principles:
 
@@ -111,14 +111,14 @@ import { focusable } from 'tabbable';
 focusable(rootNode, [options]);
 ```
 
-- `rootNode: Node`: **Required**
+- `rootNode: Node | Array<Node>`: **Required**
 - `options`:
     - All the [common options](#common-options).
     - `includeContainer: boolean` (default: false)
-        - If set to `true`, `rootNode` will be included in the returned focusable node array, if `rootNode` is focusable.
-        - Note that whether this option is true or false, if the `rootNode` is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert), none of its children (deep) will be considered focusable.
+        - If set to `true`, any `rootNode` that is focusable will be included in the returned focusable node array.
+        - Note that whether this option is true or false, if a `rootNode` is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert), none of its children (deep) will be considered focusable.
 
-Returns an array of focusable nodes within the `rootNode`, in DOM order. This will not match the order in which `tabbable()` returns nodes.
+Returns an array of focusable nodes within the given `rootNode`(s), in DOM order. This will not match the order in which `tabbable()` returns nodes.
 
 ### isFocusable
 

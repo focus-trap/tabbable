@@ -614,18 +614,32 @@ const tabbable = function (el, options) {
 const focusable = function (el, options) {
   options = options || {};
 
+  const containers = Array.isArray(el) ? el : [el];
+
   let candidates;
   if (options.getShadowRoot) {
-    candidates = getCandidatesIteratively([el], options.includeContainer, {
-      filter: isNodeMatchingSelectorFocusable.bind(null, options),
-      flatten: true,
-      getShadowRoot: options.getShadowRoot,
-    });
+    candidates = containers.reduce(
+      (prev, curr) =>
+        prev.concat(
+          getCandidatesIteratively([curr], options.includeContainer, {
+            filter: isNodeMatchingSelectorFocusable.bind(null, options),
+            flatten: true,
+            getShadowRoot: options.getShadowRoot,
+          })
+        ),
+      []
+    );
   } else {
-    candidates = getCandidates(
-      el,
-      options.includeContainer,
-      isNodeMatchingSelectorFocusable.bind(null, options)
+    candidates = containers.reduce(
+      (prev, curr) =>
+        prev.concat(
+          getCandidates(
+            curr,
+            options.includeContainer,
+            isNodeMatchingSelectorFocusable.bind(null, options)
+          )
+        ),
+      []
     );
   }
 
