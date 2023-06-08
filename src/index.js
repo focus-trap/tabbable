@@ -579,19 +579,33 @@ const sortByOrder = function (candidates) {
 const tabbable = function (el, options) {
   options = options || {};
 
+  const containers = Array.isArray(el) ? el : [el];
+
   let candidates;
   if (options.getShadowRoot) {
-    candidates = getCandidatesIteratively([el], options.includeContainer, {
-      filter: isNodeMatchingSelectorTabbable.bind(null, options),
-      flatten: false,
-      getShadowRoot: options.getShadowRoot,
-      shadowRootFilter: isValidShadowRootTabbable,
-    });
+    candidates = containers.reduce(
+      (prev, curr) =>
+        prev.concat(
+          getCandidatesIteratively([curr], options.includeContainer, {
+            filter: isNodeMatchingSelectorTabbable.bind(null, options),
+            flatten: false,
+            getShadowRoot: options.getShadowRoot,
+            shadowRootFilter: isValidShadowRootTabbable,
+          })
+        ),
+      []
+    );
   } else {
-    candidates = getCandidates(
-      el,
-      options.includeContainer,
-      isNodeMatchingSelectorTabbable.bind(null, options)
+    candidates = containers.reduce(
+      (prev, curr) =>
+        prev.concat(
+          getCandidates(
+            curr,
+            options.includeContainer,
+            isNodeMatchingSelectorTabbable.bind(null, options)
+          )
+        ),
+      []
     );
   }
   return sortByOrder(candidates);
