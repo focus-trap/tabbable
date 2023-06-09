@@ -610,8 +610,8 @@ const sortByOrder = function (candidates) {
     .concat(regularTabbables);
 };
 
-// DEBUG TODO: need to de-dup and check for nesting as Davide suggests here, and add a test for it: https://github.com/focus-trap/focus-trap/issues/375#issuecomment-1583483065
 const tabbable = function (el, options) {
+  // DEBUG TODO: need to de-dup and check for nesting as Davide suggests here, and add a test for it: https://github.com/focus-trap/focus-trap/issues/375#issuecomment-1583483065
   options = options || {};
 
   const containers = Array.isArray(el) ? el : [el];
@@ -647,8 +647,8 @@ const tabbable = function (el, options) {
   return sortByOrder(candidates);
 };
 
-// DEBUG TODO: need to de-dup and check for nesting as Davide suggests here, and add a test for it: https://github.com/focus-trap/focus-trap/issues/375#issuecomment-1583483065
 const focusable = function (el, options) {
+  // DEBUG TODO: need to de-dup and check for nesting as Davide suggests here, and add a test for it: https://github.com/focus-trap/focus-trap/issues/375#issuecomment-1583483065
   options = options || {};
 
   const containers = Array.isArray(el) ? el : [el];
