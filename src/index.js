@@ -610,10 +610,12 @@ const sortByOrder = function (candidates) {
     .concat(regularTabbables);
 };
 
-const byDocumentOrder = (a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
+const byDocumentOrder = (a, b) =>
+  a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
 
+// DEBUG TODO: need to de-dup and check for nesting as Davide suggests here, and add a test for it: https://github.com/focus-trap/focus-trap/issues/375#issuecomment-1583483065
+// DEBUG TODO: will need to be careful with 'contains()' check and shadow DOM since it doesn't see inside...
 const tabbable = function (el, options) {
-  // DEBUG TODO: need to de-dup and check for nesting as Davide suggests here, and add a test for it: https://github.com/focus-trap/focus-trap/issues/375#issuecomment-1583483065
   options = options || {};
 
   const containers = (Array.isArray(el) ? [...el] : [el]).sort(byDocumentOrder);
@@ -649,8 +651,9 @@ const tabbable = function (el, options) {
   return sortByOrder(candidates);
 };
 
+// DEBUG TODO: need to de-dup and check for nesting as Davide suggests here, and add a test for it: https://github.com/focus-trap/focus-trap/issues/375#issuecomment-1583483065
+// DEBUG TODO: will need to be careful with 'contains()' check and shadow DOM since it doesn't see inside...
 const focusable = function (el, options) {
-  // DEBUG TODO: need to de-dup and check for nesting as Davide suggests here, and add a test for it: https://github.com/focus-trap/focus-trap/issues/375#issuecomment-1583483065
   options = options || {};
 
   const containers = (Array.isArray(el) ? [...el] : [el]).sort(byDocumentOrder);
