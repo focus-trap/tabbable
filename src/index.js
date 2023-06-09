@@ -603,7 +603,7 @@ const sortByOrder = function (candidates) {
     .concat(regularTabbables);
 };
 
-const byDocumentOrder = (a, b) => (a.compareDocumentPosition(b) & 4 ? -1 : 1);
+const byDocumentOrder = (a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
 
 const tabbable = function (el, options) {
   options = options || {};
