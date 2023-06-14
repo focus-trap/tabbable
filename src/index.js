@@ -611,21 +611,10 @@ const sortByOrder = function (candidates) {
     .concat(regularTabbables);
 };
 
-const byDocumentOrder = (a, b) =>
-  a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
-
-// DEBUG TODO: need to de-dup and check for nesting as Davide suggests here, and add a test for it: https://github.com/focus-trap/focus-trap/issues/375#issuecomment-1583483065
-// DEBUG TODO: will need to be careful with 'contains()' check and shadow DOM since it doesn't see inside...
 const tabbable = function (el, options) {
   options = options || {};
 
-  // DEBUG TODO: do we really want to sort by document order, or respect the order in which the containers
-  //  were listed by the consumer -- since that's currently what focus-trap is doing when its given
-  //  multiple containers...
-  // PLUS: Node.compareDocumentPosition() does not work well when straddling a shadow root per
-  //  https://github.com/whatwg/dom/issues/320 so as it stands, this code doesn't support
-  //  shadow DOM very well
-  const containers = (Array.isArray(el) ? [...el] : [el]).sort(byDocumentOrder);
+  const containers = Array.isArray(el) ? el : [el];
 
   // DEBUG TODO: and since focus-trap uses the containers order verbatim, we might NOT want to reduce()
   //  into a single flat array; we might want to `sortByOrder()` each resulting array independently,
@@ -662,18 +651,10 @@ const tabbable = function (el, options) {
   return sortByOrder(candidates);
 };
 
-// DEBUG TODO: need to de-dup and check for nesting as Davide suggests here, and add a test for it: https://github.com/focus-trap/focus-trap/issues/375#issuecomment-1583483065
-// DEBUG TODO: will need to be careful with 'contains()' check and shadow DOM since it doesn't see inside...
 const focusable = function (el, options) {
   options = options || {};
 
-  // DEBUG TODO: do we really want to sort by document order, or respect the order in which the containers
-  //  were listed by the consumer -- since that's currently what focus-trap is doing when its given
-  //  multiple containers...
-  // PLUS: Node.compareDocumentPosition() does not work well when straddling a shadow root per
-  //  https://github.com/whatwg/dom/issues/320 so as it stands, this code doesn't support
-  //  shadow DOM very well
-  const containers = (Array.isArray(el) ? [...el] : [el]).sort(byDocumentOrder);
+  const containers = Array.isArray(el) ? el : [el];
 
   // DEBUG TODO: and since focus-trap uses the containers order verbatim, we might NOT want to reduce()
   //  into a single flat array; we might want to `sortByOrder()` each resulting array independently,
