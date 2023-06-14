@@ -611,6 +611,12 @@ const sortByOrder = function (candidates) {
     .concat(regularTabbables);
 };
 
+/**
+ * @template T
+ * @param {T[]} array
+ */
+const dedupeArray = (array) => Array.from(new Set(array));
+
 const tabbable = function (el, options) {
   options = options || {};
 
@@ -648,7 +654,7 @@ const tabbable = function (el, options) {
     );
   }
 
-  return sortByOrder(candidates);
+  return dedupeArray(sortByOrder(candidates));
 };
 
 const focusable = function (el, options) {
@@ -687,7 +693,7 @@ const focusable = function (el, options) {
     );
   }
 
-  return candidates;
+  return dedupeArray(candidates);
 };
 
 const isTabbable = function (node, options) {
