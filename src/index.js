@@ -622,10 +622,6 @@ const tabbable = function (el, options) {
 
   const containers = Array.isArray(el) ? el : [el];
 
-  // DEBUG TODO: and since focus-trap uses the containers order verbatim, we might NOT want to reduce()
-  //  into a single flat array; we might want to `sortByOrder()` each resulting array independently,
-  //  and then return the concatenation in original given container order...
-
   let candidates;
   if (options.getShadowRoot) {
     candidates = containers.reduce(
@@ -661,10 +657,6 @@ const focusable = function (el, options) {
   options = options || {};
 
   const containers = Array.isArray(el) ? el : [el];
-
-  // DEBUG TODO: and since focus-trap uses the containers order verbatim, we might NOT want to reduce()
-  //  into a single flat array; we might want to `sortByOrder()` each resulting array independently,
-  //  and then return the concatenation in original given container order...
 
   let candidates;
   if (options.getShadowRoot) {
