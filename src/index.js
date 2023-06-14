@@ -124,7 +124,8 @@ const getCandidates = function (el, includeContainer, filter) {
  * @param {Element[]} elements list of element containers to match candidates from
  * @param {boolean} includeContainer add container list to check
  * @param {IterativeOptions} options
- * @returns {Array.<Element|CandidateScope>}
+ * @returns {Array.<Element|CandidateScope>} Note the returned list __may__ contain
+ *  `CandidateScope` objects if `options.flatten=true`, but __will not__ if `flatten=false`.
  */
 const getCandidatesIteratively = function (
   elements,
@@ -618,7 +619,17 @@ const byDocumentOrder = (a, b) =>
 const tabbable = function (el, options) {
   options = options || {};
 
+  // DEBUG TODO: do we really want to sort by document order, or respect the order in which the containers
+  //  were listed by the consumer -- since that's currently what focus-trap is doing when its given
+  //  multiple containers...
+  // PLUS: Node.compareDocumentPosition() does not work well when straddling a shadow root per
+  //  https://github.com/whatwg/dom/issues/320 so as it stands, this code doesn't support
+  //  shadow DOM very well
   const containers = (Array.isArray(el) ? [...el] : [el]).sort(byDocumentOrder);
+
+  // DEBUG TODO: and since focus-trap uses the containers order verbatim, we might NOT want to reduce()
+  //  into a single flat array; we might want to `sortByOrder()` each resulting array independently,
+  //  and then return the concatenation in original given container order...
 
   let candidates;
   if (options.getShadowRoot) {
@@ -656,7 +667,17 @@ const tabbable = function (el, options) {
 const focusable = function (el, options) {
   options = options || {};
 
+  // DEBUG TODO: do we really want to sort by document order, or respect the order in which the containers
+  //  were listed by the consumer -- since that's currently what focus-trap is doing when its given
+  //  multiple containers...
+  // PLUS: Node.compareDocumentPosition() does not work well when straddling a shadow root per
+  //  https://github.com/whatwg/dom/issues/320 so as it stands, this code doesn't support
+  //  shadow DOM very well
   const containers = (Array.isArray(el) ? [...el] : [el]).sort(byDocumentOrder);
+
+  // DEBUG TODO: and since focus-trap uses the containers order verbatim, we might NOT want to reduce()
+  //  into a single flat array; we might want to `sortByOrder()` each resulting array independently,
+  //  and then return the concatenation in original given container order...
 
   let candidates;
   if (options.getShadowRoot) {
@@ -665,7 +686,7 @@ const focusable = function (el, options) {
         prev.concat(
           getCandidatesIteratively([curr], options.includeContainer, {
             filter: isNodeMatchingSelectorFocusable.bind(null, options),
-            flatten: true,
+            flatten: true, // flattening ensures the function returns only `Element[]`
             getShadowRoot: options.getShadowRoot,
           })
         ),
