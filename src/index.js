@@ -610,15 +610,146 @@ const sortByOrder = function (candidates) {
 };
 
 /**
+ * Get children of an element belonging to a shadow root.
+ * @param {Element | ShadowRoot} el
+ * @returns {HTMLCollection | Element[]}
+ */
+const getShadyChildren = (el) => {
+  // Return either the slotted elements or the fallback content.
+  if (el instanceof HTMLSlotElement) {
+    return el.assignedElements();
+  }
+
+  return el.children;
+};
+
+/**
+ * Get the flat tree of `Element`s within a shadow root (plus the root itself).
+ * @param {ShadowRoot} root
+ * @returns {(Element | ShadowRoot)[]}
+ */
+const getShadyFlatTree = (root) => {
+  const flatTree = [];
+
+  (function recursivelyPushDescendants(el) {
+    flatTree.push(el);
+    [...getShadyChildren(el)].forEach((child) =>
+      recursivelyPushDescendants(child)
+    );
+  })(root);
+
+  return flatTree;
+};
+
+/**
+ * Assess whether two elements belonging to the same shadow root
+ * are passed to the function in document order.
+ * @param {Element} a
+ * @param {Element} b
+ * @returns {boolean}
+ */
+// Not checking whether the two elements belong to same shadow root,
+// because calling this function makes sense only after said check is performed.
+const areOrderedWithinSameShadowRoot = (a, b) => {
+  const tree = getShadyFlatTree(a.getRootNode());
+
+  return tree.findIndex((el) => el === a) <= tree.findIndex((el) => el === b);
+};
+
+/**
+ * If `el` belongs to a shadow root, return the `host`, otherwise return `el`.
+ * @param {Element} el
+ * @returns {Element}
+ */
+const elementOrHost = (el) => (el instanceof ShadowRoot ? el.host : el);
+
+/**
+ * Assess whether two elements are passed to the function in document order.
+ * @param {Element} a
+ * @param {Element} b
+ * @returns {boolean}
+ */
+const areOrdered = (a, b) => {
+  const aOrHost = elementOrHost(a);
+  const bOrHost = elementOrHost(b);
+
+  return aOrHost === bOrHost && a.shadowRoot
+    ? areOrderedWithinSameShadowRoot(a, b)
+    : aOrHost.compareDocumentPosition(bOrHost) &
+        Node.DOCUMENT_POSITION_PRECEDING;
+};
+
+/**
+ * `compareFn` for `Array.prototype.sort()` that allows sorting
+ * by document order.
+ * @param {Element} a
+ * @param {Element} b
+ * @returns {number}
+ */
+const byDocumentOrder = (a, b) => (areOrdered(a, b) ? 1 : -1);
+
+/**
+ * Dedudpe references within an array of generic objects.
  * @template T
  * @param {T[]} array
+ * @returns {T[]}
  */
 const dedupeArray = (array) => Array.from(new Set(array));
+
+/**
+ * Return whether `el` contains `otherEl`.
+ * It works for elements in both shadow and regular DOM.
+ * @param {Element} el
+ * @param {Element} otherEl
+ * @returns {boolean}
+ */
+const elementContains = (el, otherEl) => {
+  const elRootNode = el.getRootNode();
+  const otherElRootNode = otherEl.getRootNode();
+
+  if (!(elRootNode instanceof ShadowRoot)) {
+    return el.contains(
+      otherElRootNode instanceof ShadowRoot
+        ? otherEl.getRootNode({ composed: true })
+        : otherEl
+    );
+  }
+
+  if (otherElRootNode instanceof ShadowRoot && elRootNode === otherElRootNode) {
+    for (
+      let otherAncestor = otherEl;
+      !(otherAncestor instanceof ShadowRoot) && otherAncestor;
+      otherAncestor = otherEl.assignedSlot ?? otherEl.parentNode
+    ) {
+      if (otherAncestor === el) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+/**
+ * `callbackFn` for `Array.prototype.filter()` that allows filtering
+ * out elements that are nested within the DOM tree of other elements.
+ * @param {Element} el
+ * @param {number} _index
+ * @param {Element[]} elements
+ * @returns {Element[]}
+ */
+const outNestedElements = (el, _index, elements) => {
+  return elements.every(
+    (anotherEl) => !elementContains(anotherEl, el) || anotherEl === el
+  );
+};
 
 const tabbable = function (el, options) {
   options = options || {};
 
-  const containers = Array.isArray(el) ? el : [el];
+  const containers = Array.isArray(el)
+    ? dedupeArray(el).filter(outNestedElements).sort(byDocumentOrder)
+    : [el];
 
   let candidates;
   if (options.getShadowRoot) {
@@ -648,13 +779,15 @@ const tabbable = function (el, options) {
     );
   }
 
-  return dedupeArray(sortByOrder(candidates));
+  return sortByOrder(candidates);
 };
 
 const focusable = function (el, options) {
   options = options || {};
 
-  const containers = Array.isArray(el) ? el : [el];
+  const containers = Array.isArray(el)
+    ? dedupeArray(el).filter(outNestedElements)
+    : [el];
 
   let candidates;
   if (options.getShadowRoot) {
@@ -683,7 +816,7 @@ const focusable = function (el, options) {
     );
   }
 
-  return dedupeArray(candidates);
+  return candidates;
 };
 
 const isTabbable = function (node, options) {
