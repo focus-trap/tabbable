@@ -694,7 +694,7 @@ const dedupeArray = (array) => Array.from(new Set(array));
 const tabbable = function (el, options) {
   options = options || {};
 
-  const containers = Array.isArray(el) ? el.sort(byDocumentOrder) : [el];
+  const containers = Array.isArray(el) ? [...el].sort(byDocumentOrder) : [el];
 
   let candidates;
   if (options.getShadowRoot) {
