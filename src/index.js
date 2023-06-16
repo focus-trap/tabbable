@@ -222,17 +222,14 @@ const hasTabIndex = function (node) {
 };
 
 /**
- * Determine the tab index of a given node.
- * @param {Element} node
+ * Determine the tab index of a given element.
+ * `el` is expected to be an `Element` with a numeric `tabIndex` property.
+ * @param {Element} el
  * @returns {number} Tab order (negative, 0, or positive number).
  * @throws {Error} If `node` is falsy.
  */
-const getTabIndex = function (node) {
-  if (!node) {
-    throw new Error('No node provided');
-  }
-
-  if (node.tabIndex < 0) {
+const getTabIndex = function (el) {
+  if (el.tabIndex < 0) {
     // in Chrome, <details/>, <audio controls/> and <video controls/> elements get a default
     // `tabIndex` of -1 when the 'tabindex' attribute isn't specified in the DOM,
     // yet they are still part of the regular tab order; in FF, they get a default
@@ -241,15 +238,14 @@ const getTabIndex = function (node) {
     // Also browsers do not return `tabIndex` correctly for contentEditable nodes;
     // so if they don't have a tabindex attribute specifically set, assume it's 0.
     if (
-      (/^(AUDIO|VIDEO|DETAILS)$/.test(node.tagName) ||
-        isContentEditable(node)) &&
-      !hasTabIndex(node)
+      (/^(AUDIO|VIDEO|DETAILS)$/.test(el.tagName) || isContentEditable(el)) &&
+      !hasTabIndex(el)
     ) {
       return 0;
     }
   }
 
-  return node.tabIndex;
+  return el.tabIndex;
 };
 
 /**
@@ -555,7 +551,9 @@ const isNodeMatchingSelectorFocusable = function (options, node) {
 const isNodeMatchingSelectorTabbable = function (options, node) {
   if (
     isNonTabbableRadio(node) ||
-    getTabIndex(node) < 0 ||
+    ('tabIndex' in node &&
+      typeof node.tabIndex === 'number' &&
+      getTabIndex(node) < 0) ||
     !isNodeMatchingSelectorFocusable(options, node)
   ) {
     return false;
