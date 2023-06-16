@@ -696,60 +696,10 @@ const byDocumentOrder = (a, b) => (areOrdered(a, b) ? 1 : -1);
  */
 const dedupeArray = (array) => Array.from(new Set(array));
 
-/**
- * Return whether `el` contains `otherEl`.
- * It works for elements in both shadow and regular DOM.
- * @param {Element} el
- * @param {Element} otherEl
- * @returns {boolean}
- */
-const elementContains = (el, otherEl) => {
-  const elRootNode = el.getRootNode();
-  const otherElRootNode = otherEl.getRootNode();
-
-  if (!(elRootNode instanceof ShadowRoot)) {
-    return el.contains(
-      otherElRootNode instanceof ShadowRoot
-        ? otherEl.getRootNode({ composed: true })
-        : otherEl
-    );
-  }
-
-  if (otherElRootNode instanceof ShadowRoot && elRootNode === otherElRootNode) {
-    for (
-      let otherAncestor = otherEl;
-      !(otherAncestor instanceof ShadowRoot) && otherAncestor;
-      otherAncestor = otherEl.assignedSlot ?? otherEl.parentNode
-    ) {
-      if (otherAncestor === el) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-};
-
-/**
- * `callbackFn` for `Array.prototype.filter()` that allows filtering
- * out elements that are nested within the DOM tree of other elements.
- * @param {Element} el
- * @param {number} _index
- * @param {Element[]} elements
- * @returns {Element[]}
- */
-const outNestedElements = (el, _index, elements) => {
-  return elements.every(
-    (anotherEl) => !elementContains(anotherEl, el) || anotherEl === el
-  );
-};
-
 const tabbable = function (el, options) {
   options = options || {};
 
-  const containers = Array.isArray(el)
-    ? dedupeArray(el).filter(outNestedElements).sort(byDocumentOrder)
-    : [el];
+  const containers = Array.isArray(el) ? el.sort(byDocumentOrder) : [el];
 
   let candidates;
   if (options.getShadowRoot) {
@@ -779,15 +729,13 @@ const tabbable = function (el, options) {
     );
   }
 
-  return sortByOrder(candidates);
+  return sortByOrder(dedupeArray(candidates));
 };
 
 const focusable = function (el, options) {
   options = options || {};
 
-  const containers = Array.isArray(el)
-    ? dedupeArray(el).filter(outNestedElements)
-    : [el];
+  const containers = Array.isArray(el) ? el : [el];
 
   let candidates;
   if (options.getShadowRoot) {
@@ -816,7 +764,7 @@ const focusable = function (el, options) {
     );
   }
 
-  return candidates;
+  return dedupeArray(candidates);
 };
 
 const isTabbable = function (node, options) {
