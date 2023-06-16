@@ -551,9 +551,9 @@ const isNodeMatchingSelectorFocusable = function (options, node) {
 const isNodeMatchingSelectorTabbable = function (options, node) {
   if (
     isNonTabbableRadio(node) ||
-    ('tabIndex' in node &&
-      typeof node.tabIndex === 'number' &&
-      getTabIndex(node) < 0) ||
+    !('tabIndex' in node) ||
+    !(typeof node.tabIndex === 'number') ||
+    getTabIndex(node) < 0 ||
     !isNodeMatchingSelectorFocusable(options, node)
   ) {
     return false;
@@ -615,12 +615,7 @@ const sortByOrder = function (candidates) {
  * @returns {HTMLCollection | Element[]}
  */
 const getShadyChildren = (el) => {
-  // Return either the slotted elements or the fallback content.
-  if (el instanceof HTMLSlotElement) {
-    return el.assignedElements();
-  }
-
-  return el.children;
+  return el instanceof HTMLSlotElement ? el.assignedElements() : el.children;
 };
 
 /**
@@ -643,7 +638,7 @@ const getShadyFlatTree = (root) => {
 
 /**
  * Assess whether two elements belonging to the same shadow root
- * are passed to the function in document order.
+ * are passed to the function by document order.
  * @param {Element} a
  * @param {Element} b
  * @returns {boolean}
@@ -653,7 +648,7 @@ const getShadyFlatTree = (root) => {
 const areOrderedWithinSameShadowRoot = (a, b) => {
   const tree = getShadyFlatTree(a.getRootNode());
 
-  return tree.findIndex((el) => el === a) <= tree.findIndex((el) => el === b);
+  return tree.indexOf(a) <= tree.indexOf(b);
 };
 
 /**
@@ -681,7 +676,7 @@ const areOrdered = (a, b) => {
 
 /**
  * `compareFn` for `Array.prototype.sort()` that allows sorting
- * by document order.
+ * elements by document order (no matter if they are in Shadow or regular DOM).
  * @param {Element} a
  * @param {Element} b
  * @returns {number}
