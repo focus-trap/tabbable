@@ -673,7 +673,7 @@ const areOrdered = (a, b) => {
     (a.shadowRoot
       ? areOrderedWithinSameShadowRoot(a, b)
       : aOrHost.compareDocumentPosition(bOrHost) &
-        Node.DOCUMENT_POSITION_PRECEDING)
+        Node.DOCUMENT_POSITION_FOLLOWING)
   );
 };
 
@@ -684,7 +684,7 @@ const areOrdered = (a, b) => {
  * @param {Element} b
  * @returns {number}
  */
-const byDocumentOrder = (a, b) => (areOrdered(a, b) ? 1 : -1);
+const byDocumentOrder = (a, b) => (areOrdered(a, b) ? -1 : 1);
 
 /**
  * Dedudpe references within an array of generic objects.
