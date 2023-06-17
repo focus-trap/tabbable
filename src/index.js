@@ -160,7 +160,9 @@ const getTabIndex = function (el) {
     // Also browsers do not return `tabIndex` correctly for contentEditable nodes;
     // so if they don't have a tabindex attribute specifically set, assume it's 0.
     if (
-      (/^(AUDIO|VIDEO|DETAILS)$/.test(el.tagName) || isContentEditable(el)) &&
+      (/^(AUDIO|VIDEO|DETAILS)$/.test(el.tagName) ||
+        isContentEditable(el) ||
+        el.getShadowRoot() instanceof ShadowRoot) &&
       !hasTabIndex(el)
     ) {
       return 0;
@@ -512,32 +514,13 @@ const byDocumentOrder = (a, b) => {
 
 /**
  * `compareFn` for `Array.prototype.sort()` that allows sorting elements
- * by ascending tab index values.
+ * by ascending tab index values (no matter if we are in the Shadow or regular DOM).
  * @param {Element} a
  * @param {Element} b
  * @returns {number}
  */
 const byTabIndex = (a, b) => {
   return getTabIndex(a) - getTabIndex(b);
-};
-
-/**
- * Return `0` (zero) if `el` belongs to a shadow root and has no tab index.
- * @param {Element} el
- * @returns {number} Tab order (negative, 0, or positive number).
- */
-const getTabIndexOrZero = function (el) {
-  const tabIndex = getTabIndex(el);
-
-  if (
-    tabIndex < 0 &&
-    !hasTabIndex(el) &&
-    el.getShadowRoot() instanceof ShadowRoot
-  ) {
-    return 0;
-  }
-
-  return tabIndex;
 };
 
 /**
@@ -550,7 +533,7 @@ const getTabIndexOrZero = function (el) {
 const sortByTabbableOrder = (elements) => {
   const { zero, positive } = elements.reduce(
     (prev, curr) => {
-      prev[getTabIndexOrZero(curr) ? 'positive' : 'zero'].push(curr);
+      prev[getTabIndex(curr) ? 'positive' : 'zero'].push(curr);
       return prev;
     },
     { zero: [], positive: [] }
