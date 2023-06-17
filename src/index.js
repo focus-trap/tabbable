@@ -70,6 +70,38 @@ const isContentEditable = function (node) {
 };
 
 /**
+ * Get children of an element belonging to a shadow root.
+ * @param {Element | ShadowRoot} el
+ * @returns {HTMLCollection | Element[]}
+ */
+const getShadyChildren = (el) => {
+  return el instanceof HTMLSlotElement
+    ? el.assignedNodes().length
+      ? el.assignedElements({ flatten: true })
+      : el.children
+    : el.children;
+};
+
+/**
+ * Get the flat tree of `Element`s within an element in the Shadow DOM (plus the element itself).
+ * @param {Element | ShadowRoot} root
+ * @param {(el: Element | ShadowRoot) => boolean} [filter = false]
+ * @returns {(Element | ShadowRoot)[]}
+ */
+const getShadyFlatTree = (root, filter) => {
+  const flatTree = [];
+
+  (function recursivelyPushDescendants(el) {
+    flatTree.push(el);
+    [...getShadyChildren(el)].forEach(
+      (child) => (!filter || filter(child)) && recursivelyPushDescendants(child)
+    );
+  })(root);
+
+  return flatTree;
+};
+
+/**
  * @param {Element} el container to check in
  * @param {boolean} includeContainer add container to check
  * @param {(node: Element) => boolean} filter filter candidates
@@ -82,132 +114,26 @@ const getCandidates = function (el, includeContainer, filter) {
     return [];
   }
 
-  let candidates = Array.prototype.slice.apply(
-    el.querySelectorAll(candidateSelector)
-  );
-  if (includeContainer && matches.call(el, candidateSelector)) {
-    candidates.unshift(el);
-  }
-  candidates = candidates.filter(filter);
-  return candidates;
-};
+  let candidates;
 
-/**
- * @callback GetShadowRoot
- * @param {Element} element to check for shadow root
- * @returns {ShadowRoot|boolean} ShadowRoot if available or boolean indicating if a shadowRoot is attached but not available.
- */
+  if (el.getRootNode() instanceof ShadowRoot) {
+    candidates = getShadyFlatTree(el, (x) => !isInert(x) && filter(x));
 
-/**
- * @callback ShadowRootFilter
- * @param {Element} shadowHostNode the element which contains shadow content
- * @returns {boolean} true if a shadow root could potentially contain valid candidates.
- */
-
-/**
- * @typedef {Object} CandidateScope
- * @property {Element} scopeParent contains inner candidates
- * @property {Element[]} candidates list of candidates found in the scope parent
- */
-
-/**
- * @typedef {Object} IterativeOptions
- * @property {GetShadowRoot|boolean} getShadowRoot true if shadow support is enabled; falsy if not;
- *  if a function, implies shadow support is enabled and either returns the shadow root of an element
- *  or a boolean stating if it has an undisclosed shadow root
- * @property {(node: Element) => boolean} filter filter candidates
- * @property {boolean} flatten if true then result will flatten any CandidateScope into the returned list
- * @property {ShadowRootFilter} shadowRootFilter filter shadow roots;
- */
-
-/**
- * @param {Element[]} elements list of element containers to match candidates from
- * @param {boolean} includeContainer add container list to check
- * @param {IterativeOptions} options
- * @returns {Array.<Element|CandidateScope>} Note the returned list __may__ contain
- *  `CandidateScope` objects if `options.flatten=true`, but __will not__ if `flatten=false`.
- */
-const getCandidatesIteratively = function (
-  elements,
-  includeContainer,
-  options
-) {
-  const candidates = [];
-  const elementsToCheck = Array.from(elements);
-  while (elementsToCheck.length) {
-    const element = elementsToCheck.shift();
-    if (isInert(element, false)) {
-      // no need to look up since we're drilling down
-      // anything inside this container will also be inert
-      continue;
+    if (!includeContainer && candidates[0] === el) {
+      candidates.shift();
     }
+  } else {
+    candidates = Array.prototype.slice.apply(
+      el.querySelectorAll(candidateSelector)
+    );
 
-    if (element.tagName === 'SLOT') {
-      // add shadow dom slot scope (slot itself cannot be focusable)
-      const assigned = element.assignedElements();
-      const content = assigned.length ? assigned : element.children;
-      const nestedCandidates = getCandidatesIteratively(content, true, options);
-      if (options.flatten) {
-        candidates.push(...nestedCandidates);
-      } else {
-        candidates.push({
-          scopeParent: element,
-          candidates: nestedCandidates,
-        });
-      }
-    } else {
-      // check candidate element
-      const validCandidate = matches.call(element, candidateSelector);
-      if (
-        validCandidate &&
-        options.filter(element) &&
-        (includeContainer || !elements.includes(element))
-      ) {
-        candidates.push(element);
-      }
+    candidates = candidates.filter(filter);
 
-      // iterate over shadow content if possible
-      const shadowRoot =
-        element.shadowRoot ||
-        // check for an undisclosed shadow
-        (typeof options.getShadowRoot === 'function' &&
-          options.getShadowRoot(element));
-
-      // no inert look up because we're already drilling down and checking for inertness
-      //  on the way down, so all containers to this root node should have already been
-      //  vetted as non-inert
-      const validShadowRoot =
-        !isInert(shadowRoot, false) &&
-        (!options.shadowRootFilter || options.shadowRootFilter(element));
-
-      if (shadowRoot && validShadowRoot) {
-        // add shadow dom scope IIF a shadow root node was given; otherwise, an undisclosed
-        //  shadow exists, so look at light dom children as fallback BUT create a scope for any
-        //  child candidates found because they're likely slotted elements (elements that are
-        //  children of the web component element (which has the shadow), in the light dom, but
-        //  slotted somewhere _inside_ the undisclosed shadow) -- the scope is created below,
-        //  _after_ we return from this recursive call
-        const nestedCandidates = getCandidatesIteratively(
-          shadowRoot === true ? element.children : shadowRoot.children,
-          true,
-          options
-        );
-
-        if (options.flatten) {
-          candidates.push(...nestedCandidates);
-        } else {
-          candidates.push({
-            scopeParent: element,
-            candidates: nestedCandidates,
-          });
-        }
-      } else {
-        // there's not shadow so just dig into the element's (light dom) children
-        //  __without__ giving the element special scope treatment
-        elementsToCheck.unshift(...element.children);
-      }
+    if (includeContainer && matches.call(el, candidateSelector)) {
+      candidates.unshift(el);
     }
   }
+
   return candidates;
 };
 
@@ -246,31 +172,6 @@ const getTabIndex = function (el) {
   }
 
   return el.tabIndex;
-};
-
-/**
- * @private
- * Determine the tab index of a given node __for sort order purposes__.
- * @param {Element} node
- * @param {boolean} [isScope] True for a custom element with shadow root or slot that, by default,
- *  has tabIndex -1, but needs to be sorted by document order in order for its content to be
- *  inserted into the correct sort position.
- * @returns {number} Tab order (negative, 0, or positive number).
- */
-const getSortOrderTabIndex = function (node, isScope) {
-  const tabIndex = getTabIndex(node);
-
-  if (tabIndex < 0 && isScope && !hasTabIndex(node)) {
-    return 0;
-  }
-
-  return tabIndex;
-};
-
-const sortOrderedTabbables = function (a, b) {
-  return a.tabIndex === b.tabIndex
-    ? a.documentOrder - b.documentOrder
-    : a.tabIndex - b.tabIndex;
 };
 
 const isInput = function (node) {
@@ -561,81 +462,6 @@ const isNodeMatchingSelectorTabbable = function (options, node) {
   return true;
 };
 
-const isValidShadowRootTabbable = function (shadowHostNode) {
-  const tabIndex = parseInt(shadowHostNode.getAttribute('tabindex'), 10);
-  if (isNaN(tabIndex) || tabIndex >= 0) {
-    return true;
-  }
-  // If a custom element has an explicit negative tabindex,
-  // browsers will not allow tab targeting said element's children.
-  return false;
-};
-
-/**
- * @param {Array.<Element|CandidateScope>} candidates
- * @returns Element[]
- */
-const sortByOrder = function (candidates) {
-  const regularTabbables = [];
-  const orderedTabbables = [];
-  candidates.forEach(function (item, i) {
-    const isScope = !!item.scopeParent;
-    const element = isScope ? item.scopeParent : item;
-    const candidateTabindex = getSortOrderTabIndex(element, isScope);
-    const elements = isScope ? sortByOrder(item.candidates) : element;
-    if (candidateTabindex === 0) {
-      isScope
-        ? regularTabbables.push(...elements)
-        : regularTabbables.push(element);
-    } else {
-      orderedTabbables.push({
-        documentOrder: i,
-        tabIndex: candidateTabindex,
-        item: item,
-        isScope: isScope,
-        content: elements,
-      });
-    }
-  });
-
-  return orderedTabbables
-    .sort(sortOrderedTabbables)
-    .reduce((acc, sortable) => {
-      sortable.isScope
-        ? acc.push(...sortable.content)
-        : acc.push(sortable.content);
-      return acc;
-    }, [])
-    .concat(regularTabbables);
-};
-
-/**
- * Get children of an element belonging to a shadow root.
- * @param {Element | ShadowRoot} el
- * @returns {HTMLCollection | Element[]}
- */
-const getShadyChildren = (el) => {
-  return el instanceof HTMLSlotElement ? el.assignedElements() : el.children;
-};
-
-/**
- * Get the flat tree of `Element`s within a shadow root (plus the root itself).
- * @param {ShadowRoot} root
- * @returns {(Element | ShadowRoot)[]}
- */
-const getShadyFlatTree = (root) => {
-  const flatTree = [];
-
-  (function recursivelyPushDescendants(el) {
-    flatTree.push(el);
-    [...getShadyChildren(el)].forEach((child) =>
-      recursivelyPushDescendants(child)
-    );
-  })(root);
-
-  return flatTree;
-};
-
 /**
  * Assess whether two elements belonging to the same shadow root
  * are passed to the function by document order.
@@ -678,13 +504,64 @@ const areOrdered = (a, b) => {
 };
 
 /**
- * `compareFn` for `Array.prototype.sort()` that allows sorting
- * elements by document order (no matter if they are in Shadow or regular DOM).
+ * `compareFn` for `Array.prototype.sort()` that allows sorting elements
+ * by document order (no matter if we are in the Shadow or regular DOM).
  * @param {Element} a
  * @param {Element} b
  * @returns {number}
  */
-const byDocumentOrder = (a, b) => (areOrdered(a, b) ? -1 : 1);
+const byDocumentOrder = (a, b) => {
+  return areOrdered(a, b) ? -1 : 1;
+};
+
+/**
+ * `compareFn` for `Array.prototype.sort()` that allows sorting elements
+ * by ascending tab index values.
+ * @param {Element} a
+ * @param {Element} b
+ * @returns {number}
+ */
+const byTabIndex = (a, b) => {
+  return getTabIndex(a) - getTabIndex(b);
+};
+
+/**
+ * Return `0` (zero) if `el` belongs to a shadow root and has no tab index.
+ * @param {Element} el
+ * @returns {number} Tab order (negative, 0, or positive number).
+ */
+const getTabIndexOrZero = function (el) {
+  const tabIndex = getTabIndex(el);
+
+  if (
+    tabIndex < 0 &&
+    !hasTabIndex(el) &&
+    el.getShadowRoot() instanceof ShadowRoot
+  ) {
+    return 0;
+  }
+
+  return tabIndex;
+};
+
+/**
+ * Return a new array of elements sorted by tabbable order
+ * (no matter if we are in the Shadow or regular DOM).
+ * @param {Element} a
+ * @param {Element} b
+ * @returns {number}
+ */
+const sortByTabbableOrder = (elements) => {
+  const { zero, positive } = elements.reduce(
+    (prev, curr) => {
+      prev[getTabIndexOrZero(curr) ? 'positive' : 'zero'].push(curr);
+      return prev;
+    },
+    { zero: [], positive: [] }
+  );
+
+  return positive.sort(byTabIndex).concat(zero.sort(byDocumentOrder));
+};
 
 /**
  * Dedudpe references within an array of generic objects.
@@ -697,37 +574,21 @@ const dedupeArray = (array) => Array.from(new Set(array));
 const tabbable = function (el, options) {
   options = options || {};
 
-  const containers = Array.isArray(el) ? [...el].sort(byDocumentOrder) : [el];
+  const containers = Array.isArray(el) ? el : [el];
 
-  let candidates;
-  if (options.getShadowRoot) {
-    candidates = containers.reduce(
-      (prev, curr) =>
-        prev.concat(
-          getCandidatesIteratively([curr], options.includeContainer, {
-            filter: isNodeMatchingSelectorTabbable.bind(null, options),
-            flatten: false,
-            getShadowRoot: options.getShadowRoot,
-            shadowRootFilter: isValidShadowRootTabbable,
-          })
-        ),
-      []
-    );
-  } else {
-    candidates = containers.reduce(
-      (prev, curr) =>
-        prev.concat(
-          getCandidates(
-            curr,
-            options.includeContainer,
-            isNodeMatchingSelectorTabbable.bind(null, options)
-          )
-        ),
-      []
-    );
-  }
+  const candidates = containers.reduce(
+    (prev, curr) =>
+      prev.concat(
+        getCandidates(
+          curr,
+          options.includeContainer,
+          isNodeMatchingSelectorTabbable.bind(null, options)
+        )
+      ),
+    []
+  );
 
-  return sortByOrder(dedupeArray(candidates));
+  return sortByTabbableOrder(dedupeArray(candidates));
 };
 
 const focusable = function (el, options) {
@@ -735,32 +596,17 @@ const focusable = function (el, options) {
 
   const containers = Array.isArray(el) ? el : [el];
 
-  let candidates;
-  if (options.getShadowRoot) {
-    candidates = containers.reduce(
-      (prev, curr) =>
-        prev.concat(
-          getCandidatesIteratively([curr], options.includeContainer, {
-            filter: isNodeMatchingSelectorFocusable.bind(null, options),
-            flatten: true, // flattening ensures the function returns only `Element[]`
-            getShadowRoot: options.getShadowRoot,
-          })
-        ),
-      []
-    );
-  } else {
-    candidates = containers.reduce(
-      (prev, curr) =>
-        prev.concat(
-          getCandidates(
-            curr,
-            options.includeContainer,
-            isNodeMatchingSelectorFocusable.bind(null, options)
-          )
-        ),
-      []
-    );
-  }
+  const candidates = containers.reduce(
+    (prev, curr) =>
+      prev.concat(
+        getCandidates(
+          curr,
+          options.includeContainer,
+          isNodeMatchingSelectorFocusable.bind(null, options)
+        )
+      ),
+    []
+  );
 
   return dedupeArray(candidates);
 };
