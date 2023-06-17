@@ -85,7 +85,7 @@ const getShadyChildren = (el) => {
 /**
  * Get the flat tree of `Element`s within an element in the Shadow DOM (plus the element itself).
  * @param {Element | ShadowRoot} root
- * @param {(el: Element | ShadowRoot) => boolean} [filter = false]
+ * @param {(el: Element | ShadowRoot) => boolean} [filter]
  * @returns {(Element | ShadowRoot)[]}
  */
 const getShadyFlatTree = (root, filter) => {
