@@ -668,10 +668,13 @@ const areOrdered = (a, b) => {
   const aOrHost = elementOrHost(a);
   const bOrHost = elementOrHost(b);
 
-  return aOrHost === bOrHost && a.shadowRoot
-    ? areOrderedWithinSameShadowRoot(a, b)
-    : aOrHost.compareDocumentPosition(bOrHost) &
-        Node.DOCUMENT_POSITION_PRECEDING;
+  return (
+    aOrHost === bOrHost &&
+    (a.shadowRoot
+      ? areOrderedWithinSameShadowRoot(a, b)
+      : aOrHost.compareDocumentPosition(bOrHost) &
+        Node.DOCUMENT_POSITION_PRECEDING)
+  );
 };
 
 /**
