@@ -75,11 +75,7 @@ const isContentEditable = function (node) {
  * @returns {HTMLCollection | Element[]}
  */
 const getShadyChildren = (el) => {
-  return el instanceof HTMLSlotElement
-    ? el.assignedNodes().length
-      ? el.assignedElements({ flatten: true })
-      : el.children
-    : el.children;
+  return el instanceof HTMLSlotElement ? el.assignedElements : el.children;
 };
 
 /**
