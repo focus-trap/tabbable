@@ -75,7 +75,7 @@
     "budo": "^11.8.4",
     "cross-env": "^7.0.3",
     "cypress": "^12.14.0",
-    "eslint": "^8.42.0",
+    "eslint": "^8.43.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-cypress": "^2.13.3",
     "eslint-plugin-import": "^2.27.5",
