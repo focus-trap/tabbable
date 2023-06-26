@@ -1,0 +1,28 @@
+<a id="anchor-tabindex-none" href="#">no tabindex</a>
+<button id="btn-tabindex-1" tabindex="1">tabindex=1</button>
+
+<div id="contenteditable-tabindex-none" contenteditable="true" style="padding:1em">
+  editable text, no tabindex
+</div>
+<div id="contenteditable-tabindex-neg" contenteditable="true" style="padding:1em" tabindex="-1">
+  editable text, neg tabindex
+</div>
+
+<audio id="audio-control-tabindex-none" controls></audio>
+<audio id="audio-nocontrol-tabindex-none"></audio>
+<audio id="audio-control-tabindex-invalid" tabindex="foo" controls></audio>
+<audio id="audio-control-tabindex-2" tabindex="2" controls></audio>
+
+<video id="video-control-tabindex-none" controls></video>
+<video id="video-nocontrol-tabindex-none"></video>
+<video id="video-control-tabindex-invalid" tabindex="bar" controls></video>
+<video id="video-control-tabindex-3" tabindex="3" controls></video>
+
+<details id="details-tabindex-none">
+  <summary>details tabindex-none title</summary>
+  details tabindex-none content
+</details>
+<details id="details-tabindex-neg" tabindex="-1">
+  <summary>details tabindex-neg title</summary>
+  details tabindex-neg content
+</details>

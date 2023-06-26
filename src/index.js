@@ -210,7 +210,27 @@ const getCandidatesIteratively = function (
   return candidates;
 };
 
-const getTabindex = function (node, isScope) {
+/**
+ * @private
+ * Determines if the node has an explicitly specified `tabindex` attribute.
+ * @param {HTMLElement} node
+ * @returns {boolean} True if so; false if not.
+ */
+const hasTabIndex = function (node) {
+  return !isNaN(parseInt(node.getAttribute('tabindex'), 10));
+};
+
+/**
+ * Determine the tab index of a given node.
+ * @param {HTMLElement} node
+ * @returns {number} Tab order (negative, 0, or positive number).
+ * @throws {Error} If `node` is falsy.
+ */
+const getTabIndex = function (node) {
+  if (!node) {
+    throw new Error('No node provided');
+  }
+
   if (node.tabIndex < 0) {
     // in Chrome, <details/>, <audio controls/> and <video controls/> elements get a default
     // `tabIndex` of -1 when the 'tabindex' attribute isn't specified in the DOM,
@@ -219,21 +239,34 @@ const getTabindex = function (node, isScope) {
     // order, consider their tab index to be 0.
     // Also browsers do not return `tabIndex` correctly for contentEditable nodes;
     // so if they don't have a tabindex attribute specifically set, assume it's 0.
-    //
-    // isScope is positive for custom element with shadow root or slot that by default
-    // have tabIndex -1, but need to be sorted by document order in order for their
-    // content to be inserted in the correct position
     if (
-      (isScope ||
-        /^(AUDIO|VIDEO|DETAILS)$/.test(node.tagName) ||
+      (/^(AUDIO|VIDEO|DETAILS)$/.test(node.tagName) ||
         isContentEditable(node)) &&
-      isNaN(parseInt(node.getAttribute('tabindex'), 10))
+      !hasTabIndex(node)
     ) {
       return 0;
     }
   }
 
   return node.tabIndex;
+};
+
+/**
+ * Determine the tab index of a given node __for sort order purposes__.
+ * @param {HTMLElement} node
+ * @param {boolean} [isScope] True for a custom element with shadow root or slot that, by default,
+ *  has tabIndex -1, but needs to be sorted by document order in order for its content to be
+ *  inserted into the correct sort position.
+ * @returns {number} Tab order (negative, 0, or positive number).
+ */
+const getSortOrderTabIndex = function (node, isScope) {
+  const tabIndex = getTabIndex(node);
+
+  if (tabIndex < 0 && isScope && !hasTabIndex(node)) {
+    return 0;
+  }
+
+  return tabIndex;
 };
 
 const sortOrderedTabbables = function (a, b) {
@@ -520,7 +553,7 @@ const isNodeMatchingSelectorFocusable = function (options, node) {
 const isNodeMatchingSelectorTabbable = function (options, node) {
   if (
     isNonTabbableRadio(node) ||
-    getTabindex(node) < 0 ||
+    getTabIndex(node) < 0 ||
     !isNodeMatchingSelectorFocusable(options, node)
   ) {
     return false;
@@ -548,7 +581,7 @@ const sortByOrder = function (candidates) {
   candidates.forEach(function (item, i) {
     const isScope = !!item.scopeParent;
     const element = isScope ? item.scopeParent : item;
-    const candidateTabindex = getTabindex(element, isScope);
+    const candidateTabindex = getSortOrderTabIndex(element, isScope);
     const elements = isScope ? sortByOrder(item.candidates) : element;
     if (candidateTabindex === 0) {
       isScope
@@ -576,20 +609,24 @@ const sortByOrder = function (candidates) {
     .concat(regularTabbables);
 };
 
-const tabbable = function (el, options) {
+const tabbable = function (container, options) {
   options = options || {};
 
   let candidates;
   if (options.getShadowRoot) {
-    candidates = getCandidatesIteratively([el], options.includeContainer, {
-      filter: isNodeMatchingSelectorTabbable.bind(null, options),
-      flatten: false,
-      getShadowRoot: options.getShadowRoot,
-      shadowRootFilter: isValidShadowRootTabbable,
-    });
+    candidates = getCandidatesIteratively(
+      [container],
+      options.includeContainer,
+      {
+        filter: isNodeMatchingSelectorTabbable.bind(null, options),
+        flatten: false,
+        getShadowRoot: options.getShadowRoot,
+        shadowRootFilter: isValidShadowRootTabbable,
+      }
+    );
   } else {
     candidates = getCandidates(
-      el,
+      container,
       options.includeContainer,
       isNodeMatchingSelectorTabbable.bind(null, options)
     );
@@ -597,19 +634,23 @@ const tabbable = function (el, options) {
   return sortByOrder(candidates);
 };
 
-const focusable = function (el, options) {
+const focusable = function (container, options) {
   options = options || {};
 
   let candidates;
   if (options.getShadowRoot) {
-    candidates = getCandidatesIteratively([el], options.includeContainer, {
-      filter: isNodeMatchingSelectorFocusable.bind(null, options),
-      flatten: true,
-      getShadowRoot: options.getShadowRoot,
-    });
+    candidates = getCandidatesIteratively(
+      [container],
+      options.includeContainer,
+      {
+        filter: isNodeMatchingSelectorFocusable.bind(null, options),
+        flatten: true,
+        getShadowRoot: options.getShadowRoot,
+      }
+    );
   } else {
     candidates = getCandidates(
-      el,
+      container,
       options.includeContainer,
       isNodeMatchingSelectorFocusable.bind(null, options)
     );
@@ -644,4 +685,4 @@ const isFocusable = function (node, options) {
   return isNodeMatchingSelectorFocusable(options, node);
 };
 
-export { tabbable, focusable, isTabbable, isFocusable };
+export { tabbable, focusable, isTabbable, isFocusable, getTabIndex };
