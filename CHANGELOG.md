@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.2.0
+
+### Minor Changes
+
+- 18a093f: Add new `getTabIndex()` API which enables Focus-trap to determine tab indexes in the same way as Tabbable when necessary (see [focus-trap#974](https://github.com/focus-trap/focus-trap/pull/974)).
+
 ## 6.1.2
 
 ### Patch Changes
