@@ -1,5 +1,5 @@
 const fixtures = require('../fixtures/fixtures');
-const { tabbable, focusable } = require('../../src/index.js');
+const { tabbable, focusable, getTabIndex } = require('../../src/index.js');
 
 const getElementIds = function (elements) {
   return elements.map((el) => el.id);
@@ -138,6 +138,42 @@ describe('unit tests', () => {
         const elements = focusable(container, options);
 
         expectElementsInOrder(getElementIds(elements), []);
+      });
+    });
+  });
+
+  describe('getTabIndex', () => {
+    describe('tabindex example', () => {
+      let container;
+
+      beforeEach(() => {
+        container = document.createElement('div');
+        container.innerHTML = fixtures.tabindex;
+        document.body.append(container);
+      });
+
+      it('correctly identifies tab index of elements', () => {
+        const results = Array.from(container.children).map((child) => [
+          child.id,
+          getTabIndex(child),
+        ]);
+
+        expect(results).toEqual([
+          ['anchor-tabindex-none', 0],
+          ['btn-tabindex-1', 1],
+          ['contenteditable-tabindex-none', 0],
+          ['contenteditable-tabindex-neg', -1],
+          ['audio-control-tabindex-none', 0],
+          ['audio-nocontrol-tabindex-none', 0],
+          ['audio-control-tabindex-invalid', 0],
+          ['audio-control-tabindex-2', 2],
+          ['video-control-tabindex-none', 0],
+          ['video-nocontrol-tabindex-none', 0],
+          ['video-control-tabindex-invalid', 0],
+          ['video-control-tabindex-3', 3],
+          ['details-tabindex-none', 0],
+          ['details-tabindex-neg', -1],
+        ]);
       });
     });
   });

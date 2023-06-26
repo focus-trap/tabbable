@@ -41,4 +41,5 @@ module.exports = {
     path.join(__dirname, 'shadow-dom-untabbable.html'),
     'utf8'
   ),
+  tabindex: fs.readFileSync(path.join(__dirname, 'tabindex.html'), 'utf8'),
 };

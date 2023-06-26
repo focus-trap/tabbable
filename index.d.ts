@@ -20,11 +20,15 @@ export declare function focusable(
 ): FocusableElement[];
 
 export declare function isTabbable(
-  element: Element,
+  node: Element,
   options?: CheckOptions
 ): boolean;
 
 export declare function isFocusable(
-  element: Element,
+  node: Element,
   options?: CheckOptions
 ): boolean;
+
+export declare function getTabIndex(
+  node: Element,
+): number;

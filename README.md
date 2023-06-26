@@ -25,7 +25,7 @@ Any of the above will _not_ be considered tabbable, though, if any of the follow
 
 - has a negative `tabindex` attribute
 - has a `disabled` attribute
-- either the node itself _or an ancestor of it_ is hidden via `display: none` (*see ["Display check"](#display-check) below to modify this behavior)
+- either the node itself _or an ancestor of it_ is hidden via `display: none` (*see ["Display check"](#displaycheck-option) below to modify this behavior)
 - has `visibility: hidden` style
 - is nested under a closed `<details>` element (with the exception of the first `<summary>` element)
 - is an `<input type="radio">` element and a different radio in its group is `checked`
@@ -70,17 +70,17 @@ npm install tabbable
 ```js
 import { tabbable } from 'tabbable';
 
-tabbable(rootNode, [options]);
+tabbable(container, [options]);
 ```
 
-- `rootNode: Node` (**Required**)
+- `container: Node` (**Required**)
 - `options`:
     - All the [common options](#common-options).
     - `includeContainer: boolean` (default: false)
-        - If set to `true`, `rootNode` will be included in the returned tabbable node array, if `rootNode` is tabbable.
-        - Note that whether this option is true or false, if the `rootNode` is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert), none of its children (deep) will be considered tabbable.
+        - If set to `true`, `container` will be included in the returned tabbable node array, if `container` is tabbable.
+        - Note that whether this option is true or false, if the `container` is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert), none of its children (deep) will be considered tabbable.
 
-Returns an array of ordered tabbable nodes (i.e. in tab order) within the `rootNode`.
+Returns an array of ordered tabbable nodes (i.e. in tab order) within the `container`.
 
 Summary of ordering principles:
 
@@ -108,17 +108,17 @@ Returns a boolean indicating whether the provided node is considered tabbable.
 ```js
 import { focusable } from 'tabbable';
 
-focusable(rootNode, [options]);
+focusable(container, [options]);
 ```
 
-- `rootNode: Node`: **Required**
+- `container: Node`: **Required**
 - `options`:
     - All the [common options](#common-options).
     - `includeContainer: boolean` (default: false)
-        - If set to `true`, `rootNode` will be included in the returned focusable node array, if `rootNode` is focusable.
-        - Note that whether this option is true or false, if the `rootNode` is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert), none of its children (deep) will be considered focusable.
+        - If set to `true`, `container` will be included in the returned focusable node array, if `container` is focusable.
+        - Note that whether this option is true or false, if the `container` is [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert), none of its children (deep) will be considered focusable.
 
-Returns an array of focusable nodes within the `rootNode`, in DOM order. This will not match the order in which `tabbable()` returns nodes.
+Returns an array of focusable nodes within the `container`, in DOM order. This will not match the order in which `tabbable()` returns nodes.
 
 ### isFocusable
 
@@ -135,6 +135,20 @@ isFocusable(node, [options]);
 Returns a boolean indicating whether the provided node is considered _focusable_.
 
 > 💬 All tabbable elements are focusable, but not all focusable elements are tabbable. For example, elements with `tabindex="-1"` are focusable but not tabbable. Also note that if the node has an[inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert) ancestor, it will not be focusable.
+
+### getTabIndex
+
+```js
+import { getTabIndex } from 'tabbable';
+
+getTabIndex(node);
+```
+
+- `node: Element` (**Required**)
+
+Returns a negative, 0, or positive number that expresses the node's tab index in the DOM, with exceptions made where there are browser inconsistencies related to `<audio>`, `<video>`, `<details>`, and elements with the `contenteditable="true"` attribute.
+
+The specific exceptions may change over time. See the implementation for specific behavior.
 
 ## Common Options
 
@@ -179,12 +193,12 @@ Type: `boolean | (node: FocusableElement) => ShadowRoot | boolean | undefined`
     - `true` simply enables shadow DOM support for any __open__ shadow roots, but never presumes there is an undisclosed shadow. This is the equivalent of setting `getShadowRoot: () => false`
     - `false` (default) disables shadow DOM support in so far as calculated tab order and closed shadow roots are concerned. If a child of a shadow (open or closed) is given to `isTabbable()` or `isFocusable()`, the shadow DOM is still considered for visibility and display checks.
 - `function`:
-    - `node` will be a descendent of the `rootNode` given to `tabbable()`, `isTabbable()`, `focusable()`, or `isFocusable()`.
+    - `node` will be a descendent of the `container` given to `tabbable()`, `isTabbable()`, `focusable()`, or `isFocusable()`.
     - Returns: The node's `ShadowRoot` if available, `true` indicating a `ShadowRoot` is attached but not available (i.e. "undisclosed"), or a _falsy_ value indicating there is no shadow attached to the node.
 
 > If set to a function, and if it returns `true`, Tabbable assumes a closed `ShadowRoot` is attached and will treat the node as a scope, iterating its children for additional tabbable/focusable candidates as though it was looking inside the shadow, but not. This will get tabbing order _closer_ to -- but not necessarily the same as -- browser order.
 >
-> Returning `true` from a function will also inform how the node's visibility check is done, causing tabbable to use the __non-zero-area__ [Display Check](#display-check) when determining if it's visible, and so tabbable/focusable.
+> Returning `true` from a function will also inform how the node's visibility check is done, causing tabbable to use the __non-zero-area__ [Display Check](#displaycheck-option) when determining if it's visible, and so tabbable/focusable.
 
 ## More details
 
@@ -192,7 +206,7 @@ Type: `boolean | (node: FocusableElement) => ShadowRoot | boolean | undefined`
 - (Exemplifying the above ^^:) **The tabbability of `<iframe>`, `<embed>`, `<object>`, `<summary>`, and `<svg>` nodes is [inconsistent across browsers](https://allyjs.io/data-tables/focusable.html)**, so if you need an accurate read on one of these elements you should try giving it a `tabindex`. (You'll also need to pay attention to the `focusable` attribute on SVGs in Edge.) But you also might _not_ be able to get an accurate read — so you should avoid relying on it.
 - **Radio groups have some edge cases, which you can avoid by always having a `checked` one in each group** (and that is what you should usually do anyway). If there is no `checked` radio in the radio group, _all_ of the radios will be considered tabbable. (Some browsers do this, otherwise don't — there's not consistency.)
 - If you're thinking, "Why not just use the right `querySelectorAll`?", you _may_ be on to something ... but, as with most "just" statements, you're probably not. For example, a simple `querySelectorAll` approach will not figure out whether an element is _hidden_, and therefore not actually tabbable. (That said, if you do think Tabbable can be simplified or otherwise improved, I'd love to hear your idea.)
-- jQuery UI's `:tabbable` selector ignores elements with height and width of `0`. I'm not sure why — because I've found that I can still tab to those elements. So I kept them in. Only elements hidden with `display: none` or `visibility: hidden` are left out. See ["Display check"](#display-check) below for other options.
+- jQuery UI's `:tabbable` selector ignores elements with height and width of `0`. I'm not sure why — because I've found that I can still tab to those elements. So I kept them in. Only elements hidden with `display: none` or `visibility: hidden` are left out. See ["Display check"](#displaycheck-option) below for other options.
 - Although Tabbable tries to deal with positive tabindexes, **you should not use positive tabindexes**. Accessibility experts seem to be in (rare) unanimous and clear consent about this: rely on the order of elements in the document.
 - Safari on Mac OS X does not Tab to `<a>` elements by default: you have to change a setting to get the standard behavior. Tabbable does not know whether you've changed that setting or not, so it will include `<a>` elements in its list.
 
@@ -206,7 +220,7 @@ Type: `boolean | (node: FocusableElement) => ShadowRoot | boolean | undefined`
 
 Tabbable uses some DOM APIs such as [Element.getClientRects()](https://developer.mozilla.org/en-US/docs/Web/API/Element/getClientRects) in order to determine node visibility, which helps in deciding whether a node is tabbable, focusable, or neither.
 
-When using test engines such as Jest that use [JSDom](https://github.com/jsdom/jsdom) under the hood in order to run tests in Node.js (as opposed to using an automated browser testing tool like Cypress, Playwright, or Nightwatch where a full DOM is available), it is __highly recommended__ (if not _essential_) to set the [displayCheck](#display-check) option to `none` when calling any of the APIs in this library that accept it.
+When using test engines such as Jest that use [JSDom](https://github.com/jsdom/jsdom) under the hood in order to run tests in Node.js (as opposed to using an automated browser testing tool like Cypress, Playwright, or Nightwatch where a full DOM is available), it is __highly recommended__ (if not _essential_) to set the [displayCheck](#displaycheck-option) option to `none` when calling any of the APIs in this library that accept it.
 
 Using any other `displayCheck` setting will likely lead to failed tests due to nodes expected to be tabbable/focusable being determined to be the opposite because JSDom doesn't fully support some of the DOM APIs being used (even old ones that have been around for a long time).
 
