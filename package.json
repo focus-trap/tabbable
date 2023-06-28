@@ -89,7 +89,7 @@
     "rollup-plugin-sourcemaps": "^0.6.3",
     "typescript": "^5.1.5",
     "watchify": "^4.0.0",
-    "webpack": "^5.87.0"
+    "webpack": "^5.88.0"
   },
   "overrides": {
     "nwsapi": "2.2.2"
