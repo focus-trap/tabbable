@@ -13,6 +13,7 @@ Please be sure to go over the PR CHECKLIST below before posting your PR to make 
 __Please leave this checklist in your PR.__
 
 - Source changes maintain stated browser compatibility.
+- Web APIs introduced have __deep__ browser coverage, including Safari (often very late to adopt new APIs).
 - Issue being fixed is referenced.
 - Unit test coverage added/updated.
 - E2E test coverage added/updated.
