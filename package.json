@@ -74,7 +74,7 @@
     "browserify": "^17.0.0",
     "budo": "^11.8.4",
     "cross-env": "^7.0.3",
-    "cypress": "^12.16.0",
+    "cypress": "^12.17.1",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-cypress": "^2.13.3",
