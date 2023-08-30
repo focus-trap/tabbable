@@ -87,7 +87,7 @@
     "prettier": "^3.0.2",
     "rollup": "^2.79.1",
     "rollup-plugin-sourcemaps": "^0.6.3",
-    "typescript": "^5.1.6",
+    "typescript": "^5.2.2",
     "watchify": "^4.0.0",
     "webpack": "^5.88.2"
   },
