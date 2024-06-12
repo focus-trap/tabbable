@@ -64,7 +64,7 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@testing-library/dom": "^10.1.0",
-    "@testing-library/jest-dom": "^6.4.5",
+    "@testing-library/jest-dom": "^6.4.6",
     "@types/node": "^20.14.2",
     "all-contributors-cli": "^6.26.1",
     "babel-jest": "^29.7.0",
