@@ -58,7 +58,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.20.7",
     "@babel/preset-env": "^7.25.4",
     "@changesets/cli": "^2.27.8",
-    "@cypress/code-coverage": "^3.13.1",
+    "@cypress/code-coverage": "^3.13.2",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
