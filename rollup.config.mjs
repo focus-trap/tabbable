@@ -6,7 +6,6 @@ import babel from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
-import sourceMaps from 'rollup-plugin-sourcemaps';
 
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
@@ -38,7 +37,6 @@ const commonPlugins = [
     exclude: 'node_modules/**',
     babelHelpers: 'bundled',
   }),
-  sourceMaps(),
 ];
 
 const banner = `/*!
