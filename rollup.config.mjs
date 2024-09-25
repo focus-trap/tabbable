@@ -1,12 +1,14 @@
 /* eslint-disable no-console */
 /* eslint-env node */
 
+import { createRequire } from 'node:module';
 import babel from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 
+const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 
 // REQUIRED: process.env.BUILD_ENV: "esm" | "cjs" | "umd"
