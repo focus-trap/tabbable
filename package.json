@@ -88,7 +88,7 @@
     "rollup": "^4.28.0",
     "typescript": "^5.7.2",
     "watchify": "^4.0.0",
-    "webpack": "^5.96.1"
+    "webpack": "^5.97.0"
   },
   "overrides": {
     "nwsapi": "2.2.2"
