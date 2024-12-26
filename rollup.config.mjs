@@ -1,8 +1,7 @@
-/* eslint-disable no-console */
 /* eslint-env node */
 
 import { createRequire } from 'node:module';
-import babel from '@rollup/plugin-babel';
+import babelPlugin from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
@@ -33,7 +32,7 @@ const commonPlugins = [
   commonjs({
     include: 'node_modules/**',
   }),
-  babel({
+  babelPlugin({
     exclude: 'node_modules/**',
     babelHelpers: 'bundled',
   }),
