@@ -2,7 +2,9 @@ type FocusableElement = HTMLElement | SVGElement;
 
 export type CheckOptions = {
   displayCheck?: 'full' | 'legacy-full' | 'non-zero-area' | 'none';
-  getShadowRoot?: boolean | ((node: FocusableElement) => ShadowRoot | boolean | undefined);
+  getShadowRoot?:
+    | boolean
+    | ((node: FocusableElement) => ShadowRoot | boolean | undefined);
 };
 
 export type TabbableOptions = {
@@ -29,6 +31,4 @@ export declare function isFocusable(
   options?: CheckOptions
 ): boolean;
 
-export declare function getTabIndex(
-  node: Element,
-): number;
+export declare function getTabIndex(node: Element): number;
