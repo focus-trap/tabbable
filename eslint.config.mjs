@@ -8,9 +8,7 @@ import js from '@eslint/js';
 import globals from 'globals';
 import babel from '@babel/eslint-plugin';
 import babelParser from '@babel/eslint-parser';
-// eslint-disable-next-line import/no-unresolved -- it's there...!!!
 import typescript from '@typescript-eslint/eslint-plugin';
-// eslint-disable-next-line import/no-unresolved -- it's there...!!!
 import typescriptParser from '@typescript-eslint/parser';
 import prettier from 'eslint-config-prettier';
 import jest from 'eslint-plugin-jest';
@@ -19,56 +17,62 @@ import cypress from 'eslint-plugin-cypress';
 import importPlugin from 'eslint-plugin-import';
 import testingLibrary from 'eslint-plugin-testing-library';
 
+const ecmaVersion = 'latest';
+const impliedStrict = true;
+const tsconfigRootDir = import.meta.dirname;
+
 //
-// Base parser options and environments
+// Plugins
 //
 
-const languageOptions = {
-  ecmaVersion: 2019,
+// Plugins that apply to ALL envs
+const basePlugins = {
+  '@babel': babel, // @see https://www.npmjs.com/package/@babel/eslint-plugin
 };
 
-// @see https://eslint.org/docs/latest/use/configure/language-options#specifying-parser-options
-const parserOptions = {
-  ecmaFeatures: {
-    impliedStrict: true,
-  },
-  sourceType: 'module',
+const importPluginSettings = {
+  'import/resolver': {
+    node: {
+      extensions: ['.js', '.jsx', '.mjs', '.ts', '.tsx', '.mts'],
+      moduleDirectory: ['node_modules', 'src/', 'test/'],
+    },
+    typescript: {
+      alwaysTryTypes: true,
+    },
+  }
 };
 
-// for use with https://typescript-eslint.io/users/configs#projects-with-type-checking
-// @see https://typescript-eslint.io/getting-started/typed-linting
-const typedParserOptions = {
-  ...parserOptions,
-  ecmaFeatures: {
-    ...parserOptions.ecmaFeatures,
-  },
-  project: true,
-  tsconfigRootDir: import.meta.dirname,
-};
+//
+// Globals
+//
 
+// Globals that apply to ALL envs
 const baseGlobals = {
-  ...globals.es2017,
+  // anything in addition to what `languageOptions.ecmaVersion` provides
+  // @see https://eslint.org/docs/latest/use/configure/language-options#predefined-global-variables
 };
 
+// Globals for repo tooling scripts
 const toolingGlobals = {
-  ...baseGlobals,
   ...globals.node,
 };
 
+// Globals for browser-based source code
 const browserGlobals = {
-  ...baseGlobals,
   ...globals.browser,
 };
 
-const jestGlobals = {
-  ...browserGlobals,
-  ...globals.jest,
+// Globals for test files
+const testGlobals = {
   ...globals.node,
+  ...globals.jest,
+  ...cypress.environments.globals.globals,
 };
 
+// Globals for BUNDLED (Webpack, Rollup, etc) source code
 // NOTE: these must also be defined in <repo>/src/globals.d.ts referenced in the
-//  <repo>/tsconfig.json as well as the `globals` property in <repo>/jest.config.js
-const srcGlobals = {
+//  <repo>/tsconfig.json as well as the `globals` property in <repo>/jest.config.mjs
+const bundlerGlobals = {
 };
 
 //
@@ -158,7 +162,7 @@ const baseRules = {
 const typescriptRules = {
   ...typescript.configs['recommended-type-checked'].rules,
 
-  // add overrides here as needed
+  // AFTER TypeScript rules to turn off `import` rules that TypeScript covers
   ...importPlugin.flatConfigs.typescript.rules,
 };
 
@@ -195,10 +199,14 @@ const testRules = {
   // not much value in this one, and it's not sophisticated enough to detect all usage
   //  scenarios so we get false-positives
   'testing-library/await-async-utils': 'off',
+
+  //// Cypress plugin
+
+  ...cypress.configs.recommended.rules,
 };
 
 //
-// Configuration generator functions
+// Config generators
 //
 
 /**
@@ -211,24 +219,36 @@ const createToolingConfig = (isModule = true, isTypescript = false) => ({
   files: isModule ? (isTypescript ? ['**/*.m?ts'] : ['**/*.mjs']) : ['**/*.js'],
   ignores: ['src/**/*.*', 'test/**/*.*'],
   plugins: {
+    ...basePlugins,
     ...(isModule ? { import: importPlugin } : {}),
   },
   languageOptions: {
-    ...languageOptions,
+    ecmaVersion,
     parser: isTypescript ? typescriptParser : babelParser,
     parserOptions: {
-      ...(isModule && isTypescript ? typedParserOptions : parserOptions),
       sourceType: isModule ? 'module' : 'script',
+      ...(isModule && isTypescript ? {
+        project: true,
+        tsconfigRootDir,
+      } : {}),
+      ecmaFeatures: {
+        impliedStrict,
+        jsx: false,
+      },
     },
     globals: {
+      ...baseGlobals,
       ...toolingGlobals,
     },
   },
+  settings: {
+    ...(isModule ? importPluginSettings : {}),
+  },
   rules: {
     ...baseRules,
+    ...(isModule ? importPlugin.flatConfigs.recommended.rules : {}), // BEFORE TypeScript rules
     ...(isModule && isTypescript ? typescriptRules : {}),
-    ...(isModule ? importPlugin.flatConfigs.recommended.rules : {}),
-    'no-console': 'off',
+    'no-console': 'off', // OK in repo scripts
   },
 });
 
@@ -239,17 +259,27 @@ const createToolingConfig = (isModule = true, isTypescript = false) => ({
 const createSourceJSConfig = () => ({
   files: ['src/**/*.js'],
   plugins: {
-    '@babel': babel, // @see https://www.npmjs.com/package/@babel/eslint-plugin
+    ...basePlugins,
     import: importPlugin,
   },
   languageOptions: {
-    ...languageOptions,
+    ecmaVersion,
     parser: babelParser,
-    parserOptions,
-    globals: {
-      ...browserGlobals,
-      ...srcGlobals,
+    parserOptions: {
+      sourceType: 'module',
+      ecmaFeatures: {
+        impliedStrict,
+        jsx: false,
+      },
     },
+    globals: {
+      ...baseGlobals,
+      ...bundlerGlobals,
+      ...browserGlobals,
+    },
+  },
+  settings: {
+    ...importPluginSettings,
   },
   rules: {
     ...baseRules,
@@ -260,22 +290,31 @@ const createSourceJSConfig = () => ({
 const createSourceTSConfig = () => ({
   files: ['index.d.ts', 'src/**/*.ts'],
   plugins: {
-    '@babel': babel, // @see https://www.npmjs.com/package/@babel/eslint-plugin
-    '@typescript-eslint': typescript,
+    ...basePlugins,
     import: importPlugin,
+    '@typescript-eslint': typescript,
   },
   languageOptions: {
-    ...languageOptions,
+    ecmaVersion,
     parser: typescriptParser,
-    parserOptions: typedParserOptions,
+    parserOptions: {
+      project: true,
+      tsconfigRootDir,
+      sourceType: 'module',
+      ecmaFeatures: {
+        impliedStrict,
+        jsx: false,
+      },
+    },
     globals: {
+      ...baseGlobals,
+      ...bundlerGlobals,
       ...browserGlobals,
-      ...srcGlobals,
     },
   },
   rules: {
     ...baseRules,
-    ...importPlugin.flatConfigs.recommended.rules,
+    ...importPlugin.flatConfigs.recommended.rules, // BEFORE TypeScript rules
     ...typescriptRules,
   },
 });
@@ -283,37 +322,42 @@ const createSourceTSConfig = () => ({
 const createTestConfig = (isTypescript = false) => ({
   files: isTypescript ? ['test/**/*.ts'] : ['test/**/*.js'],
   plugins: {
-    '@babel': babel, // @see https://www.npmjs.com/package/@babel/eslint-plugin
+    ...basePlugins,
     import: importPlugin,
+    ...(isTypescript ? { '@typescript-eslint': typescript } : {}),
     jest,
     'jest-dom': jestDom,
     'testing-library': testingLibrary,
     cypress,
-    ...(isTypescript ? { '@typescript-eslint': typescript } : {}),
   },
   languageOptions: {
-    ...languageOptions,
+    ecmaVersion,
     parser: isTypescript ? typescriptParser : babelParser,
     parserOptions: {
-      ...parserOptions,
-      ...(isTypescript ? typedParserOptions : {}),
+      ...(isTypescript
+        ? {
+            project: true,
+            tsconfigRootDir,
+          }
+        : {}),
+      sourceType: 'module',
       ecmaFeatures: {
-        ...parserOptions.ecmaFeatures,
-        ...(isTypescript ? typedParserOptions.ecmaFeatures : {}),
+        impliedStrict,
+        jsx: false,
       },
     },
     globals: {
-      ...jestGlobals,
-      ...srcGlobals,
-      ...cypress.environments.globals.globals,
+      ...baseGlobals,
+      ...bundlerGlobals, // because tests execute code that also gets bundled
+      ...browserGlobals,
+      ...testGlobals,
     },
   },
   rules: {
     ...baseRules,
-    ...importPlugin.flatConfigs.recommended.rules,
+    ...importPlugin.flatConfigs.recommended.rules, // BEFORE TypeScript rules
     ...(isTypescript ? typescriptRules : {}),
     ...testRules,
-    ...cypress.configs.recommended.rules,
   },
 });
 
