@@ -33,13 +33,22 @@ const basePlugins = {
 const importPluginSettings = {
   'import/resolver': {
     node: {
-      extensions: ['.js', '.jsx', '.mjs', '.ts', '.tsx', '.mts'],
+      extensions: [
+        '.js',
+        '.jsx',
+        '.cts',
+        '.mjs',
+        '.ts',
+        '.tsx',
+        '.cts',
+        '.mts',
+      ],
       moduleDirectory: ['node_modules', 'src/', 'test/'],
     },
     typescript: {
       alwaysTryTypes: true,
     },
-  }
+  },
 };
 
 //
@@ -67,13 +76,16 @@ const testGlobals = {
   ...globals.node,
   ...globals.jest,
   ...cypress.environments.globals.globals,
+
+  // `globals.browser` defines this global but it's also part of the `testing-library`
+  //  API so needs to be overwritable to avoid ESLint's `no-redeclare` rule
+  screen: 'off',
 };
 
 // Globals for BUNDLED (Webpack, Rollup, etc) source code
 // NOTE: these must also be defined in <repo>/src/globals.d.ts referenced in the
 //  <repo>/tsconfig.json as well as the `globals` property in <repo>/jest.config.mjs
-const bundlerGlobals = {
-};
+const bundlerGlobals = {};
 
 //
 // Base rules
@@ -158,7 +170,10 @@ const baseRules = {
   'prefer-const': 'error',
 };
 
+//
 // TypeScript-specific rules
+//
+
 const typescriptRules = {
   ...typescript.configs['recommended-type-checked'].rules,
 
@@ -166,7 +181,10 @@ const typescriptRules = {
   ...importPlugin.flatConfigs.typescript.rules,
 };
 
-// Test-specific rules
+//
+// TypeScript-specific rules
+//
+
 const testRules = {
   //// jest plugin
 
@@ -183,7 +201,7 @@ const testRules = {
   // this rule is buggy, and doesn't seem to work well with the Testing Library's queries
   'jest-dom/prefer-in-document': 'off',
 
-  //// RTL plugin
+  //// testing-library plugin
 
   // this prevents expect(document.querySelector('foo')), which is useful because not
   //  all elements can be found using RTL queries (sticking to RTL queries probably
@@ -216,21 +234,28 @@ const testRules = {
  * @returns {Object} ESLint config.
  */
 const createToolingConfig = (isModule = true, isTypescript = false) => ({
-  files: isModule ? (isTypescript ? ['**/*.m?ts'] : ['**/*.mjs']) : ['**/*.js'],
+  files: isModule
+    ? isTypescript
+      ? ['**/*.{ts,mts}']
+      : ['**/*.{js,mjs}']
+    : ['**/*.{js,cjs}'],
   ignores: ['src/**/*.*', 'test/**/*.*'],
   plugins: {
     ...basePlugins,
     ...(isModule ? { import: importPlugin } : {}),
+    ...(isTypescript ? { '@typescript-eslint': typescript } : {}),
   },
   languageOptions: {
     ecmaVersion,
     parser: isTypescript ? typescriptParser : babelParser,
     parserOptions: {
       sourceType: isModule ? 'module' : 'script',
-      ...(isModule && isTypescript ? {
-        project: true,
-        tsconfigRootDir,
-      } : {}),
+      ...(isModule && isTypescript
+        ? {
+            project: true,
+            tsconfigRootDir,
+          }
+        : {}),
       ecmaFeatures: {
         impliedStrict,
         jsx: false,
