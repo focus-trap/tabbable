@@ -561,7 +561,7 @@ const isNodeMatchingSelectorTabbable = function (options, node) {
   return true;
 };
 
-const isValidShadowRootTabbable = function (shadowHostNode) {
+const isShadowRootTabbable = function (shadowHostNode) {
   const tabIndex = parseInt(shadowHostNode.getAttribute('tabindex'), 10);
   if (isNaN(tabIndex) || tabIndex >= 0) {
     return true;
@@ -621,7 +621,7 @@ const tabbable = function (container, options) {
         filter: isNodeMatchingSelectorTabbable.bind(null, options),
         flatten: false,
         getShadowRoot: options.getShadowRoot,
-        shadowRootFilter: isValidShadowRootTabbable,
+        shadowRootFilter: isShadowRootTabbable,
       }
     );
   } else {
