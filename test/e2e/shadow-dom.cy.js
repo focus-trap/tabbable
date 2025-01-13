@@ -163,6 +163,16 @@ describe('web-components', () => {
       expect(isFocusable(slotWithTabIndex), 'slot not focusable').to.eql(false);
       expect(isTabbable(slotWithTabIndex), 'slot not tabbable').to.eql(false);
     });
+
+    it('should not find elements inside shadow dom that browsers will skip due to -1 tabindex on host', () => {
+      const { container } = setupFixture(fixtures['shadow-dom-untabbable'], {
+        window,
+      });
+      const shadowElement = container.querySelector('test-shadow');
+
+      expect(isFocusable(shadowElement), 'shadow is focusable').to.eql(true);
+      expect(isTabbable(shadowElement), 'shadow is not tabbable').to.eql(false);
+    });
   });
 
   describe('tabbable/focusable', () => {
