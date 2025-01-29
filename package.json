@@ -59,7 +59,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.20.7",
     "@babel/preset-env": "^7.26.0",
     "@changesets/cli": "^2.27.11",
-    "@cypress/code-coverage": "^3.13.10",
+    "@cypress/code-coverage": "^3.13.11",
     "@eslint/js": "^9.18.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.2",
