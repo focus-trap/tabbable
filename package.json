@@ -52,7 +52,7 @@
   },
   "homepage": "https://github.com/focus-trap/tabbable#readme",
   "devDependencies": {
-    "@babel/core": "^7.26.8",
+    "@babel/core": "^7.26.9",
     "@babel/eslint-parser": "^7.26.8",
     "@babel/eslint-plugin": "^7.25.9",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.18.6",
