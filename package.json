@@ -94,7 +94,7 @@
     "jest-watch-typeahead": "^2.2.2",
     "onchange": "^7.1.0",
     "prettier": "^3.5.3",
-    "rollup": "^4.36.0",
+    "rollup": "^4.39.0",
     "typescript": "^5.8.2",
     "watchify": "^4.0.0",
     "webpack": "^5.98.0"
