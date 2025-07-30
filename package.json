@@ -91,7 +91,7 @@
     "globals": "^16.3.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^30.0.5",
-    "jest-watch-typeahead": "^2.2.2",
+    "jest-watch-typeahead": "^3.0.1",
     "onchange": "^7.1.0",
     "prettier": "^3.6.2",
     "rollup": "^4.46.2",
