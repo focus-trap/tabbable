@@ -69,7 +69,7 @@
     "@testing-library/jest-dom": "^6.6.4",
     "@types/node": "^24.1.0",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
-    "@typescript-eslint/parser": "^8.38.0",
+    "@typescript-eslint/parser": "^8.39.0",
     "all-contributors-cli": "^6.26.1",
     "babel-jest": "^30.0.5",
     "babel-loader": "^10.0.0",
