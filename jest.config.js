@@ -4,7 +4,7 @@ module.exports = {
   collectCoverageFrom: ['<rootDir>/src/*.js'],
   coverageDirectory: '<rootDir>/coverage',
   coverageProvider: 'v8',
-  setupFilesAfterEnv: ['regenerator-runtime/runtime', './setupTests.js'],
+  setupFilesAfterEnv: ['./setupTests.js'],
   testMatch: ['<rootDir>/test/**/*.test.js'],
   watchPlugins: [
     'jest-watch-typeahead/filename',
