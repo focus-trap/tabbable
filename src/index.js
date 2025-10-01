@@ -424,9 +424,6 @@ const isHidden = function (node, { displayCheck, getShadowRoot }) {
   // NOTE: we check this regardless of `displayCheck="none"` because this is a
   //  _visibility_ check, not a _display_ check
   if (getComputedStyle(node).visibility === 'hidden') {
-    // TODO(fpapado): check whether this makes sense in a 'checkVisibility'
-    // world; we might be able to avoid the style calculation (at least, on our
-    // end) here
     return true;
   }
 
