@@ -398,6 +398,20 @@ const isZeroArea = function (node) {
   return width === 0 && height === 0;
 };
 const isHidden = function (node, { displayCheck, getShadowRoot }) {
+  if (!displayCheck || displayCheck === 'full') {
+    // Specifically for the full check (or the default), we take a fast path via
+    // Element#checkVisibility
+    if ('checkVisibility' in node) {
+      const visible = node.checkVisibility({
+        contentVisibilityAuto: true,
+        opacityProperty: true,
+        visibilityProperty: true,
+      });
+      return !visible;
+    }
+    // Fall through to manual visibility checks
+  }
+
   // NOTE: visibility will be `undefined` if node is detached from the document
   //  (see notes about this further down), which means we will consider it visible
   //  (this is legacy behavior from a very long way back)
@@ -414,19 +428,6 @@ const isHidden = function (node, { displayCheck, getShadowRoot }) {
   const nodeUnderDetails = isDirectSummary ? node.parentElement : node;
   if (matches.call(nodeUnderDetails, 'details:not([open]) *')) {
     return true;
-  }
-
-  if (!displayCheck || displayCheck === 'full') {
-    if ('checkVisibility' in node) {
-      const visible = node.checkVisibility({
-        contentVisibilityAuto: true,
-        opacityProperty: true,
-        visibilityProperty: true,
-      });
-      return !visible;
-    }
-    // if checkVisibility is not supported, we fall through to the other
-    // checks
   }
 
   if (
