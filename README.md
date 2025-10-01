@@ -156,7 +156,7 @@ These options apply to all APIs.
 
 ### displayCheck option
 
-Type: `full` | `full-native-check-visibility` | `legacy-full` | `non-zero-area` | `none` . Default: `full`.
+Type: `full` | `full-native` | `legacy-full` | `non-zero-area` | `none` . Default: `full`.
 
 Configures how to check if an element is displayed.
 
