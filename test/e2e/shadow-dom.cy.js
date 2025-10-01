@@ -5,7 +5,7 @@ import {
   focusable,
 } from '../../src/index.js';
 import {
-  setupTestWindow,
+  setupTestDocument,
   removeAllChildNodes,
   setupFixture,
   getFixtures,
@@ -15,11 +15,15 @@ import {
 describe('web-components', () => {
   let window, document, fixtures;
   before(() => {
-    setupTestWindow((testWindow) => {
-      window = testWindow;
-      document = testWindow.document;
+    setupTestDocument((doc) => {
+      document = doc;
     });
-    getFixtures((f) => (fixtures = f));
+    cy.window().then((win) => {
+      window = win;
+    });
+    getFixtures((f) => {
+      fixtures = f;
+    });
   });
 
   afterEach(() => {

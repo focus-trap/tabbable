@@ -404,6 +404,9 @@ const isHidden = function (node, { displayCheck, getShadowRoot }) {
   // NOTE: we check this regardless of `displayCheck="none"` because this is a
   //  _visibility_ check, not a _display_ check
   if (getComputedStyle(node).visibility === 'hidden') {
+    // TODO(fpapado): check whether this makes sense in a 'checkVisibility'
+    // world; we might be able to avoid the style calculation (at least, on our
+    // end) here
     return true;
   }
 
@@ -411,6 +414,19 @@ const isHidden = function (node, { displayCheck, getShadowRoot }) {
   const nodeUnderDetails = isDirectSummary ? node.parentElement : node;
   if (matches.call(nodeUnderDetails, 'details:not([open]) *')) {
     return true;
+  }
+
+  if (!displayCheck || displayCheck === 'full') {
+    if ('checkVisibility' in node) {
+      const visible = node.checkVisibility({
+        contentVisibilityAuto: true,
+        opacityProperty: true,
+        visibilityProperty: true,
+      });
+      return !visible;
+    }
+    // if checkVisibility is not supported, we fall through to the other
+    // checks
   }
 
   if (

@@ -1,6 +1,6 @@
 import { tabbable } from '../../src/index.js';
 import {
-  setupTestWindow,
+  setupTestDocument,
   getFixtures,
   setupFixture,
   removeAllChildNodes,
@@ -15,8 +15,8 @@ describe('tabbable', () => {
   });
 
   beforeEach(() => {
-    setupTestWindow((testWindow) => {
-      document = testWindow.document;
+    setupTestDocument((doc) => {
+      document = doc;
     });
   });
 

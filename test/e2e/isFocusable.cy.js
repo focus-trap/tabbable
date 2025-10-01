@@ -1,6 +1,6 @@
 import { isFocusable } from '../../src/index.js';
 import {
-  setupTestWindow,
+  setupTestDocument,
   getFixtures,
   removeAllChildNodes,
 } from './e2e.helpers';
@@ -14,8 +14,8 @@ describe('isFocusable', () => {
   });
 
   beforeEach(() => {
-    setupTestWindow((testWindow) => {
-      document = testWindow.document;
+    setupTestDocument((doc) => {
+      document = doc;
     });
   });
 
