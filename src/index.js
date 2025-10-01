@@ -436,6 +436,9 @@ const isHidden = function (node, { displayCheck, getShadowRoot }) {
   if (
     !displayCheck ||
     displayCheck === 'full' ||
+    // full-native can run this branch when it falls through in case
+    // Element#checkVisibility is unsupported
+    displayCheck === 'full-native' ||
     displayCheck === 'legacy-full'
   ) {
     if (typeof getShadowRoot === 'function') {
