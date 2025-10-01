@@ -493,50 +493,52 @@ describe('isTabbable', () => {
       };
     }
 
-    [undefined, 'full', 'legacy-full'].forEach((displayCheck) => {
-      [true, false].forEach((inDocument) => {
-        it(`returns browser visible elements by default ("${
-          displayCheck || '(default)'
-        }" option, container ${inDocument ? '' : 'NOT '}in doc)`, () => {
-          const {
-            displayedTop,
-            displayedNested,
-            displayedZeroSize,
-            displayedNoneTop,
-            nestedUnderDisplayedNone,
-            displayedContentsTop,
-            nestedUnderDisplayedContents,
-          } = setupDisplayCheck(inDocument);
+    [undefined, 'full-native', 'full', 'legacy-full'].forEach(
+      (displayCheck) => {
+        [true, false].forEach((inDocument) => {
+          it(`returns browser visible elements by default ("${
+            displayCheck || '(default)'
+          }" option, container ${inDocument ? '' : 'NOT '}in doc)`, () => {
+            const {
+              displayedTop,
+              displayedNested,
+              displayedZeroSize,
+              displayedNoneTop,
+              nestedUnderDisplayedNone,
+              displayedContentsTop,
+              nestedUnderDisplayedContents,
+            } = setupDisplayCheck(inDocument);
 
-          const options = { displayCheck };
-          expect(isTabbable(displayedTop, options)).to.eql(
-            inDocument || displayCheck === 'legacy-full' ? true : false
-          );
-          expect(isTabbable(displayedNested, options)).to.eql(
-            inDocument || displayCheck === 'legacy-full' ? true : false
-          );
-          expect(isTabbable(displayedZeroSize, options)).to.eql(
-            inDocument || displayCheck === 'legacy-full' ? true : false
-          );
-          expect(isTabbable(displayedNoneTop, options)).to.eql(
-            inDocument || displayCheck === 'legacy-full'
-              ? !inDocument && displayCheck === 'legacy-full'
-              : false
-          );
-          expect(isTabbable(nestedUnderDisplayedNone, options)).to.eql(
-            inDocument || displayCheck === 'legacy-full'
-              ? !inDocument && displayCheck === 'legacy-full'
-              : false
-          );
-          expect(isTabbable(displayedContentsTop)).to.eql(
-            false // never because display style causes contents to be displayed instead of itself
-          );
-          expect(isTabbable(nestedUnderDisplayedContents, options)).to.eql(
-            inDocument || displayCheck === 'legacy-full' ? true : false
-          );
+            const options = { displayCheck };
+            expect(isTabbable(displayedTop, options)).to.eql(
+              inDocument || displayCheck === 'legacy-full' ? true : false
+            );
+            expect(isTabbable(displayedNested, options)).to.eql(
+              inDocument || displayCheck === 'legacy-full' ? true : false
+            );
+            expect(isTabbable(displayedZeroSize, options)).to.eql(
+              inDocument || displayCheck === 'legacy-full' ? true : false
+            );
+            expect(isTabbable(displayedNoneTop, options)).to.eql(
+              inDocument || displayCheck === 'legacy-full'
+                ? !inDocument && displayCheck === 'legacy-full'
+                : false
+            );
+            expect(isTabbable(nestedUnderDisplayedNone, options)).to.eql(
+              inDocument || displayCheck === 'legacy-full'
+                ? !inDocument && displayCheck === 'legacy-full'
+                : false
+            );
+            expect(isTabbable(displayedContentsTop)).to.eql(
+              false // never because display style causes contents to be displayed instead of itself
+            );
+            expect(isTabbable(nestedUnderDisplayedContents, options)).to.eql(
+              inDocument || displayCheck === 'legacy-full' ? true : false
+            );
+          });
         });
-      });
-    });
+      }
+    );
 
     it('return only elements with size ("non-zero-area" option)', () => {
       const {

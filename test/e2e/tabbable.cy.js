@@ -25,158 +25,165 @@ describe('tabbable', () => {
   });
 
   describe('example fixtures', () => {
-    [undefined, 'full', 'legacy-full'].forEach((displayCheck) => {
-      [true, false].forEach((inDocument) => {
-        it(`correctly identifies tabbable elements in the "basic" example ${
-          inDocument ? '(container IN doc' : '(container NOT in doc'
-        }, displayCheck=${displayCheck || '<default>'})`, () => {
-          let expectedTabbableIds;
+    [undefined, 'full-native', 'full', 'legacy-full'].forEach(
+      (displayCheck) => {
+        [true, false].forEach((inDocument) => {
+          it(`correctly identifies tabbable elements in the "basic" example ${
+            inDocument ? '(container IN doc' : '(container NOT in doc'
+          }, displayCheck=${displayCheck || '<default>'})`, () => {
+            let expectedTabbableIds;
 
-          if (inDocument) {
-            expectedTabbableIds = [
-              'tabindex-hrefless-anchor',
-              'contenteditable-true',
-              'contenteditable-nesting',
-              'contenteditable-NaN-tabindex',
-              'input',
-              'input-readonly',
-              'select',
-              'select-readonly',
-              'href-anchor',
-              'textarea',
-              'textarea-readonly',
-              'button',
-              'tabindex-div',
-              'hiddenParentVisible-button',
-              'displaycontents-child',
-              'audio-control',
-              'audio-control-NaN-tabindex',
-              'video-control',
-              'video-control-NaN-tabindex',
-            ];
-          } else if (displayCheck === 'legacy-full') {
-            // any node that has 'visibility: hidden' or 'display: hidden|contents'
-            //  will be considered visible and so tabbable
-            expectedTabbableIds = [
-              'tabindex-hrefless-anchor',
-              'contenteditable-true',
-              'contenteditable-nesting',
-              'contenteditable-NaN-tabindex',
-              'input',
-              'input-readonly',
-              'select',
-              'select-readonly',
-              'href-anchor',
-              'textarea',
-              'textarea-readonly',
-              'button',
-              'tabindex-div',
-              'displaynone-textarea',
-              'visibilityhidden-button',
-              'hiddenParent-button',
-              'hiddenParentVisible-button',
-              'displaycontents',
-              'displaycontents-child',
-              'displaycontents-child-displaynone',
-              'audio-control',
-              'audio-control-NaN-tabindex',
-              'video-control',
-              'video-control-NaN-tabindex',
-            ];
-          } else {
-            // should find nothing because the container will be detached
-            expectedTabbableIds = [];
-          }
+            if (inDocument) {
+              expectedTabbableIds = [
+                'tabindex-hrefless-anchor',
+                'contenteditable-true',
+                'contenteditable-nesting',
+                'contenteditable-NaN-tabindex',
+                'input',
+                'input-readonly',
+                'select',
+                'select-readonly',
+                'href-anchor',
+                'textarea',
+                'textarea-readonly',
+                'button',
+                'tabindex-div',
+                'hiddenParentVisible-button',
+                'displaycontents-child',
+                'audio-control',
+                'audio-control-NaN-tabindex',
+                'video-control',
+                'video-control-NaN-tabindex',
+              ];
+            } else if (displayCheck === 'legacy-full') {
+              // any node that has 'visibility: hidden' or 'display: hidden|contents'
+              //  will be considered visible and so tabbable
+              expectedTabbableIds = [
+                'tabindex-hrefless-anchor',
+                'contenteditable-true',
+                'contenteditable-nesting',
+                'contenteditable-NaN-tabindex',
+                'input',
+                'input-readonly',
+                'select',
+                'select-readonly',
+                'href-anchor',
+                'textarea',
+                'textarea-readonly',
+                'button',
+                'tabindex-div',
+                'displaynone-textarea',
+                'visibilityhidden-button',
+                'hiddenParent-button',
+                'hiddenParentVisible-button',
+                'displaycontents',
+                'displaycontents-child',
+                'displaycontents-child-displaynone',
+                'audio-control',
+                'audio-control-NaN-tabindex',
+                'video-control',
+                'video-control-NaN-tabindex',
+              ];
+            } else {
+              // should find nothing because the container will be detached
+              expectedTabbableIds = [];
+            }
 
-          const container = document.createElement('div');
-          container.innerHTML = fixtures.basic;
+            const container = document.createElement('div');
+            container.innerHTML = fixtures.basic;
 
-          if (inDocument) {
-            document.body.append(container);
-          }
+            if (inDocument) {
+              document.body.append(container);
+            }
 
-          const tabbableElements = tabbable(container, { displayCheck });
+            const tabbableElements = tabbable(container, { displayCheck });
 
-          expect(getIdsFromElementsArray(tabbableElements)).to.eql(
-            expectedTabbableIds
-          );
+            expect(getIdsFromElementsArray(tabbableElements)).to.eql(
+              expectedTabbableIds
+            );
+          });
         });
-      });
-    });
+      }
+    );
 
     // TODO[ff-inert-support]: FF does not yet (Feb 2023) support the `inert` attribute
     describe('inertness', { browser: '!firefox' }, () => {
-      [undefined, 'full', 'legacy-full', 'non-zero-area', 'none'].forEach(
-        (displayCheck) => {
-          it(`correctly identifies tabbable elements in the "inert" example with displayCheck=${
-            displayCheck || '<default>'
-          }`, () => {
-            const container = document.createElement('div');
-            container.innerHTML = fixtures.inert;
-            document.body.append(container);
+      [
+        undefined,
+        'full-native',
+        'full',
+        'legacy-full',
+        'non-zero-area',
+        'none',
+      ].forEach((displayCheck) => {
+        it(`correctly identifies tabbable elements in the "inert" example with displayCheck=${
+          displayCheck || '<default>'
+        }`, () => {
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.inert;
+          document.body.append(container);
 
-            // non-inert container, but every element inside of it is
-            const tabbableElements = tabbable(container, { displayCheck });
+          // non-inert container, but every element inside of it is
+          const tabbableElements = tabbable(container, { displayCheck });
 
-            expect(getIdsFromElementsArray(tabbableElements)).to.eql([]);
+          expect(getIdsFromElementsArray(tabbableElements)).to.eql([]);
+        });
+
+        it(`correctly identifies tabbable elements in the "basic" example with displayCheck=${
+          displayCheck || '<default>'
+        } when placed directly inside an inert container`, () => {
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.basic;
+          container.inert = true;
+          document.body.append(container);
+
+          // inert container has non-inert children
+          const tabbableElements = tabbable(container, { displayCheck });
+
+          expect(getIdsFromElementsArray(tabbableElements)).to.eql([]);
+        });
+
+        it(`correctly identifies tabbable elements in the "basic" example with displayCheck=${
+          displayCheck || '<default>'
+        } when nested inside an inert container`, () => {
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.basic;
+          container.inert = true;
+
+          const parentContainer = document.createElement('div');
+          parentContainer.appendChild(container);
+          document.body.append(parentContainer);
+
+          // non-inert parent has inert container which has non-inert children
+          const tabbableElements = tabbable(parentContainer, {
+            displayCheck,
           });
 
-          it(`correctly identifies tabbable elements in the "basic" example with displayCheck=${
-            displayCheck || '<default>'
-          } when placed directly inside an inert container`, () => {
-            const container = document.createElement('div');
-            container.innerHTML = fixtures.basic;
-            container.inert = true;
-            document.body.append(container);
+          expect(getIdsFromElementsArray(tabbableElements)).to.eql([]);
+        });
 
-            // inert container has non-inert children
-            const tabbableElements = tabbable(container, { displayCheck });
+        it(`correctly identifies tabbable elements in the "basic" example with displayCheck=${
+          displayCheck || '<default>'
+        } when deeply nested inside an inert container`, () => {
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.basic;
 
-            expect(getIdsFromElementsArray(tabbableElements)).to.eql([]);
+          const parentContainer = document.createElement('div');
+          parentContainer.inert = true;
+          parentContainer.appendChild(container);
+
+          const grandparentContainer = document.createElement('div');
+          grandparentContainer.appendChild(parentContainer);
+          document.body.append(grandparentContainer);
+
+          // non-inert grandparent has inert parent, which has non-container with children
+          const tabbableElements = tabbable(grandparentContainer, {
+            displayCheck,
           });
 
-          it(`correctly identifies tabbable elements in the "basic" example with displayCheck=${
-            displayCheck || '<default>'
-          } when nested inside an inert container`, () => {
-            const container = document.createElement('div');
-            container.innerHTML = fixtures.basic;
-            container.inert = true;
-
-            const parentContainer = document.createElement('div');
-            parentContainer.appendChild(container);
-            document.body.append(parentContainer);
-
-            // non-inert parent has inert container which has non-inert children
-            const tabbableElements = tabbable(parentContainer, {
-              displayCheck,
-            });
-
-            expect(getIdsFromElementsArray(tabbableElements)).to.eql([]);
-          });
-
-          it(`correctly identifies tabbable elements in the "basic" example with displayCheck=${
-            displayCheck || '<default>'
-          } when deeply nested inside an inert container`, () => {
-            const container = document.createElement('div');
-            container.innerHTML = fixtures.basic;
-
-            const parentContainer = document.createElement('div');
-            parentContainer.inert = true;
-            parentContainer.appendChild(container);
-
-            const grandparentContainer = document.createElement('div');
-            grandparentContainer.appendChild(parentContainer);
-            document.body.append(grandparentContainer);
-
-            // non-inert grandparent has inert parent, which has non-container with children
-            const tabbableElements = tabbable(grandparentContainer, {
-              displayCheck,
-            });
-
-            expect(getIdsFromElementsArray(tabbableElements)).to.eql([]);
-          });
-        }
-      );
+          expect(getIdsFromElementsArray(tabbableElements)).to.eql([]);
+        });
+      });
     });
 
     it('correctly identifies tabbable elements in the "nested" example', () => {

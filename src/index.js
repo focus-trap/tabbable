@@ -398,14 +398,20 @@ const isZeroArea = function (node) {
   return width === 0 && height === 0;
 };
 const isHidden = function (node, { displayCheck, getShadowRoot }) {
-  if (!displayCheck || displayCheck === 'full') {
-    // Specifically for the full check (or the default), we take a fast path via
-    // Element#checkVisibility
+  if (displayCheck === 'full-native') {
     if ('checkVisibility' in node) {
+      // Chrome >= 105, Edge >= 105, Firefox >= 106, Safari >= 17.4
+      // @see https://developer.mozilla.org/en-US/docs/Web/API/Element/checkVisibility#browser_compatibility
       const visible = node.checkVisibility({
         contentVisibilityAuto: true,
         opacityProperty: true,
         visibilityProperty: true,
+        // These two are aliases for opacityProperty and visibilityProperty.
+        // Contemporary browsers support both. However, these aliases have wider
+        // browser support (Chrome >= 105 and Firefox >= 106, vs. Chrome >= 121
+        // and Firefox >= 122), so we include them anyway.
+        checkOpacity: true,
+        checkVisibilityCSS: true,
       });
       return !visible;
     }
