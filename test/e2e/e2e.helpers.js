@@ -1,8 +1,8 @@
 import { appendHTMLWithShadowRoots } from '../shadow-root-utils';
 
-export function setupTestWindow(done) {
+export function setupTestDocument(done) {
   cy.visit('./cypress/test-sandbox.html');
-  cy.window().then(done);
+  cy.document().then(done);
 }
 export function getFixtures(done) {
   cy.task('getFixtures').then(done);

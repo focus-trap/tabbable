@@ -1,6 +1,6 @@
 import { focusable } from '../../src/index.js';
 import {
-  setupTestWindow,
+  setupTestDocument,
   getFixtures,
   setupFixture,
   removeAllChildNodes,
@@ -15,8 +15,8 @@ describe('focusable', () => {
   });
 
   beforeEach(() => {
-    setupTestWindow((testWindow) => {
-      document = testWindow.document;
+    setupTestDocument((doc) => {
+      document = doc;
     });
   });
 
