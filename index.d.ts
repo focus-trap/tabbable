@@ -1,7 +1,12 @@
 type FocusableElement = HTMLElement | SVGElement;
 
 export type CheckOptions = {
-  displayCheck?: 'full' | 'legacy-full' | 'non-zero-area' | 'none';
+  displayCheck?:
+    | 'full-native'
+    | 'full'
+    | 'legacy-full'
+    | 'non-zero-area'
+    | 'none';
   getShadowRoot?:
     | boolean
     | ((node: FocusableElement) => ShadowRoot | boolean | undefined);
