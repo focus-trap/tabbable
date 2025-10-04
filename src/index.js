@@ -46,10 +46,7 @@ const isInert = function (node, lookUp = true) {
   // NOTE: this could also be handled with `node.matches('[inert], :is([inert] *)')`
   //  if it weren't for `matches()` not being a function on shadow roots; the following
   //  code works for any kind of node
-  // CAREFUL: JSDom does not appear to support certain selectors like `:not([inert] *)`
-  //  so it likely would not support `:is([inert] *)` either...
-  const result = inert || (lookUp && node && isInert(node.parentNode)); // recursive
-  // const result = inert || (lookUp && node && isInert(node.closest('[inert]'))); // recursive
+  const result = inert || (lookUp && node && node.closest('[inert]'));
 
   return result;
 };
@@ -691,7 +688,7 @@ const isTabbable = function (node, options) {
 };
 
 const focusableCandidateSelector = /* #__PURE__ */ candidateSelectors
-  .concat('iframe')
+  .concat('iframe:not([inert]):not([inert] *)')
   .join(',');
 
 const isFocusable = function (node, options) {
