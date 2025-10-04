@@ -111,7 +111,7 @@ describe('focusable', () => {
     // TODO[ff-inert-support]: FF does not support the `inert` attribute in
     // versions lower than 112 (our CI uses 106). We can change this when we
     // update the browser versions in ci.yaml.
-    describe('inertness', { name: '!firefox' }, () => {
+    describe('inertness', { browser: '!firefox' }, () => {
       [
         undefined,
         'full-native',
