@@ -1,20 +1,17 @@
 // NOTE: separate `:not()` selectors has broader browser support than the newer
 //  `:not([inert], [inert] *)` (Feb 2023)
-// CAREFUL: JSDom does not support `:not([inert] *)` as a selector; using it causes
-//  the entire query to fail, resulting in no nodes found, which will break a lot
-//  of things... so we have to rely on JS to identify nodes inside an inert container
 const candidateSelectors = [
-  'input:not([inert])',
-  'select:not([inert])',
-  'textarea:not([inert])',
-  'a[href]:not([inert])',
-  'button:not([inert])',
-  '[tabindex]:not(slot):not([inert])',
-  'audio[controls]:not([inert])',
-  'video[controls]:not([inert])',
-  '[contenteditable]:not([contenteditable="false"]):not([inert])',
-  'details>summary:first-of-type:not([inert])',
-  'details:not([inert])',
+  'input:not([inert]):not([inert] *)',
+  'select:not([inert]):not([inert] *)',
+  'textarea:not([inert]):not([inert] *)',
+  'a[href]:not([inert]):not([inert] *)',
+  'button:not([inert]):not([inert] *)',
+  '[tabindex]:not(slot):not([inert]):not([inert] *)',
+  'audio[controls]:not([inert]):not([inert] *)',
+  'video[controls]:not([inert]):not([inert] *)',
+  '[contenteditable]:not([contenteditable="false"]):not([inert]):not([inert] *)',
+  'details>summary:first-of-type:not([inert]):not([inert] *)',
+  'details:not([inert]):not([inert] *)',
 ];
 const candidateSelector = /* #__PURE__ */ candidateSelectors.join(',');
 
@@ -52,6 +49,7 @@ const isInert = function (node, lookUp = true) {
   // CAREFUL: JSDom does not appear to support certain selectors like `:not([inert] *)`
   //  so it likely would not support `:is([inert] *)` either...
   const result = inert || (lookUp && node && isInert(node.parentNode)); // recursive
+  // const result = inert || (lookUp && node && isInert(node.closest('[inert]'))); // recursive
 
   return result;
 };
@@ -77,7 +75,7 @@ const isContentEditable = function (node) {
  */
 const getCandidates = function (el, includeContainer, filter) {
   // even if `includeContainer=false`, we still have to check it for inertness because
-  //  if it's inert, all its children are inert
+  //  if it's inert (either by itself or via its parent), then all its children are inert
   if (isInert(el)) {
     return [];
   }
@@ -561,10 +559,6 @@ const isDisabledFromFieldset = function (node) {
 const isNodeMatchingSelectorFocusable = function (options, node) {
   if (
     node.disabled ||
-    // we must do an inert look up to filter out any elements inside an inert ancestor
-    //  because we're limited in the type of selectors we can use in JSDom (see related
-    //  note related to `candidateSelectors`)
-    isInert(node) ||
     isHiddenInput(node) ||
     isHidden(node, options) ||
     // For a details element with a summary, the summary element gets the focus
