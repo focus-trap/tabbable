@@ -49,12 +49,16 @@ describe('tabbable', () => {
                 'button',
                 'tabindex-div',
                 'hiddenParentVisible-button',
+                'contentVisibilityHidden-button',
+                displayCheck !== 'full-native'
+                  ? 'contentVisibilityHiddenParent-button'
+                  : undefined,
                 'displaycontents-child',
                 'audio-control',
                 'audio-control-NaN-tabindex',
                 'video-control',
                 'video-control-NaN-tabindex',
-              ];
+              ].filter((id) => id !== undefined);
             } else if (displayCheck === 'legacy-full') {
               // any node that has 'visibility: hidden' or 'display: hidden|contents'
               //  will be considered visible and so tabbable
@@ -76,6 +80,8 @@ describe('tabbable', () => {
                 'visibilityhidden-button',
                 'hiddenParent-button',
                 'hiddenParentVisible-button',
+                'contentVisibilityHidden-button',
+                'contentVisibilityHiddenParent-button',
                 'displaycontents',
                 'displaycontents-child',
                 'displaycontents-child-displaynone',

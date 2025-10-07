@@ -51,12 +51,16 @@ describe('focusable', () => {
                 'tabindex-div',
                 'negative-select',
                 'hiddenParentVisible-button',
+                'contentVisibilityHidden-button',
+                displayCheck !== 'full-native'
+                  ? 'contentVisibilityHiddenParent-button'
+                  : undefined,
                 'displaycontents-child',
                 'audio-control',
                 'audio-control-NaN-tabindex',
                 'video-control',
                 'video-control-NaN-tabindex',
-              ];
+              ].filter((id) => id !== undefined);
             } else if (displayCheck === 'legacy-full') {
               expectedFocusableIds = [
                 'contenteditable-true',
@@ -78,6 +82,8 @@ describe('focusable', () => {
                 'visibilityhidden-button',
                 'hiddenParent-button',
                 'hiddenParentVisible-button',
+                'contentVisibilityHidden-button',
+                'contentVisibilityHiddenParent-button',
                 'displaycontents',
                 'displaycontents-child',
                 'displaycontents-child-displaynone',
