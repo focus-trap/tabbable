@@ -166,13 +166,12 @@ For this reason Tabbable offers the ability of an alternative way to check if an
 
 The `displayCheck` configuration accepts the following options:
 
-- `full-native`:  uses the browser built-in [Element#checkVisibility](https://developer.mozilla.org/en-US/docs/Web/API/Element/checkVisibility), with all of its options. This handles, for example, `opacity` `0`, `content-visibility` `auto` states, `visibility: hidden` and elements with zero size.
-  - If Element#checkVisibility is not supported, this strategy falls back to the `full` behavior below.
-  - While each check is specified, it is possible that browsers will disagree with each other, or not support the full set of options.
-  - This strategy may become the default in a future major version of tabbable.
 - `full`: (default) resembles browser behavior via manual checks; this option checks that an element is displayed, which requires it to be attached to the DOM, and for all of his ancestors to be displayed (notice this doesn't exclude `visibility: hidden` or elements with zero size). This option will cause layout reflow, however. If that is a concern, consider the `none` option.
     - ⚠️ If the container given to `tabbable()` or `focusable()`, or the node given to `isTabbable()` or `isFocusable()`, is not attached to the window's main `document`, the node will be considered hidden and neither tabbable nor focusable. This behavior is new as of `v6.0.0`.
     - If your code relies on the legacy behavior where detached nodes were considered visible, and you are unable to fix your code to use tabbable once the node is attached, use the `legacy-full` option.
+- `full-native`:  uses the browser built-in [Element#checkVisibility](https://developer.mozilla.org/en-US/docs/Web/API/Element/checkVisibility), with all of its options. This handles, for example, `content-visibility` `auto` states, `visibility: hidden` and elements with zero size.
+  - If Element#checkVisibility is not supported, this strategy falls back to the `full` behavior.
+  - While each check is specified, it is possible that browsers will disagree with each other, or not support the full set of options.
 - `legacy-full`: Same as `full` but restores the __legacy behavior__ of treating detached nodes as visible. This means that if a node is detached, it's then treated as though the display check was set to `none` (see below for details).
     - ❗️ Since detached nodes are not treated as tabbable/focusable by browsers, using this option is __not recommended__ as it knowingly diverges from browser behavior.
     - ⚠️ This option may be removed in the future. Tabbable will not maintain it at the expense of new features or if having it makes the code disproportionately more complex. It only exists to make the upgrade path to the correct behavior (i.e. the `full` option) as long and smooth as reasonably possible.
