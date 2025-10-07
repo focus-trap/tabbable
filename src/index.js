@@ -403,14 +403,14 @@ const isHidden = function (node, { displayCheck, getShadowRoot }) {
       // Chrome >= 105, Edge >= 105, Firefox >= 106, Safari >= 17.4
       // @see https://developer.mozilla.org/en-US/docs/Web/API/Element/checkVisibility#browser_compatibility
       const visible = node.checkVisibility({
+        // the opacity option might be desirable for some use cases, but
+        // natively opacity zero elements _are_ focusable and tabbable
         contentVisibilityAuto: true,
-        opacityProperty: true,
         visibilityProperty: true,
-        // These two are aliases for opacityProperty and visibilityProperty.
-        // Contemporary browsers support both. However, these aliases have wider
-        // browser support (Chrome >= 105 and Firefox >= 106, vs. Chrome >= 121
-        // and Firefox >= 122), so we include them anyway.
-        checkOpacity: true,
+        // This is an alias for visibilityProperty. Contemporary browsers
+        // support both. However, this alias has wider browser support (Chrome
+        // >= 105 and Firefox >= 106, vs. Chrome >= 121 and Firefox >= 122), so
+        // we include it anyway.
         checkVisibilityCSS: true,
       });
       return !visible;

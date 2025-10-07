@@ -55,6 +55,8 @@ describe('focusable', () => {
                 displayCheck !== 'full-native'
                   ? 'contentVisibilityHiddenParent-button'
                   : undefined,
+                'opacityZero-button',
+                'opacityZeroParent-button',
                 'displaycontents-child',
                 'audio-control',
                 'audio-control-NaN-tabindex',
@@ -84,6 +86,8 @@ describe('focusable', () => {
                 'hiddenParentVisible-button',
                 'contentVisibilityHidden-button',
                 'contentVisibilityHiddenParent-button',
+                'opacityZero-button',
+                'opacityZeroParent-button',
                 'displaycontents',
                 'displaycontents-child',
                 'displaycontents-child-displaynone',

@@ -58,6 +58,12 @@
   <button id="contentVisibilityHiddenParent-button">foo</button>
 </div>
 
+<!-- opacity zero elements are still natively focusable and tabbable -->
+<button id="opacityZero-button" style="opacity: 0;">foo</button>
+<div style="opacity: 0;">
+  <button id="opacityZeroParent-button">foo</button>
+</div>
+
 <div id="noindex-div">foo</div>
 
 <div id="displaycontents" style="display: contents; background-color: lime;" tabindex="0">

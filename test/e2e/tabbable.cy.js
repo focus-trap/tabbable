@@ -53,6 +53,8 @@ describe('tabbable', () => {
                 displayCheck !== 'full-native'
                   ? 'contentVisibilityHiddenParent-button'
                   : undefined,
+                'opacityZero-button',
+                'opacityZeroParent-button',
                 'displaycontents-child',
                 'audio-control',
                 'audio-control-NaN-tabindex',
@@ -82,6 +84,8 @@ describe('tabbable', () => {
                 'hiddenParentVisible-button',
                 'contentVisibilityHidden-button',
                 'contentVisibilityHiddenParent-button',
+                'opacityZero-button',
+                'opacityZeroParent-button',
                 'displaycontents',
                 'displaycontents-child',
                 'displaycontents-child-displaynone',
