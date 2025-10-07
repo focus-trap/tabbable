@@ -2,8 +2,8 @@ type FocusableElement = HTMLElement | SVGElement;
 
 export type CheckOptions = {
   displayCheck?:
-    | 'full-native'
     | 'full'
+    | 'full-native'
     | 'legacy-full'
     | 'non-zero-area'
     | 'none';
