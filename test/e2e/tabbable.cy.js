@@ -51,7 +51,7 @@ describe('tabbable', () => {
                 'tabindex-div',
                 'hiddenParentVisible-button',
                 'contentVisibilityHidden-button',
-                displayCheck !== 'full-native' && !isFirefoxLowerThan125()
+                displayCheck !== 'full-native' || isFirefoxLowerThan125()
                   ? 'contentVisibilityHiddenParent-button'
                   : undefined,
                 'opacityZero-button',

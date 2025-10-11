@@ -53,7 +53,7 @@ describe('focusable', () => {
                 'negative-select',
                 'hiddenParentVisible-button',
                 'contentVisibilityHidden-button',
-                displayCheck !== 'full-native' && !isFirefoxLowerThan125()
+                displayCheck !== 'full-native' || isFirefoxLowerThan125()
                   ? 'contentVisibilityHiddenParent-button'
                   : undefined,
                 'opacityZero-button',
