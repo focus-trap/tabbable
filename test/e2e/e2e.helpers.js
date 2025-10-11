@@ -1,8 +1,8 @@
 import { appendHTMLWithShadowRoots } from '../shadow-root-utils';
 
-export function setupTestWindow(done) {
+export function setupTestDocument(done) {
   cy.visit('./cypress/test-sandbox.html');
-  cy.window().then(done);
+  cy.document().then(done);
 }
 export function getFixtures(done) {
   cy.task('getFixtures').then(done);
@@ -39,4 +39,19 @@ export function setupFixture(content, options = {}) {
   });
   doc.body.append(container);
   return { container };
+}
+
+/**
+ * Useful to check whether a `content-visibility: hidden` parent leads to a
+ * visible child element in `Element.checkVisibility`. In Firefox < 125, both
+ * checkVisibility and native focusability checks seem to consider such an element
+ * visible and focusable.
+ *
+ * @see
+ * https://github.com/fpapado/firefox-checkVisibility-with-contentVisibilityHidden
+ */
+export function isFirefoxLowerThan125() {
+  return (
+    Cypress.browser.name === 'Firefox' && Cypress.browser.majorVersion < 125
+  );
 }

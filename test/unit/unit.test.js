@@ -51,6 +51,10 @@ describe('unit tests', () => {
           'tabindex-div',
           'displaynone-textarea',
           'hiddenParentVisible-button',
+          'contentVisibilityHidden-button',
+          'contentVisibilityHiddenParent-button',
+          'opacityZero-button',
+          'opacityZeroParent-button',
           'displaycontents',
           'displaycontents-child',
           'displaycontents-child-displaynone',
@@ -114,6 +118,10 @@ describe('unit tests', () => {
           'negative-select',
           'displaynone-textarea',
           'hiddenParentVisible-button',
+          'contentVisibilityHidden-button',
+          'contentVisibilityHiddenParent-button',
+          'opacityZero-button',
+          'opacityZeroParent-button',
           'displaycontents',
           'displaycontents-child',
           'displaycontents-child-displaynone',
@@ -138,6 +146,34 @@ describe('unit tests', () => {
         const elements = focusable(container, options);
 
         expectElementsInOrder(getElementIds(elements), []);
+      });
+    });
+
+    describe('displayCheck option', () => {
+      it('falls back to full option if full-native is specified but Element#checkVisibility is unsupported', () => {
+        // This test is here as an alternative to testing the fallback in e2e
+        // tests. Cypress only supports Chrome or Firefox < 105 (versions
+        // without checkVisibility) in their Node 16 docker image
+        const container = document.createElement('div');
+        const button = document.createElement('button');
+        button.innerText = 'foo';
+        container.appendChild(button);
+        document.body.append(container);
+
+        if (typeof container.checkVisibility !== 'undefined') {
+          // a tacit assumption in this test is that checkVisibility() is unsupported in JSDOM
+          throw new Error(
+            'checkVisibility seems to be supported in this version of JSDOM, making the test invalid. Consider changing to an end-to-end test with sufficiently old browsers.'
+          );
+        }
+
+        // we use getComputedStyle() as a proxy for manual display checks being made
+        const getComputedStyleSpy = jest.spyOn(window, 'getComputedStyle');
+
+        focusable(container, { displayCheck: 'full-native' });
+
+        expect(getComputedStyleSpy).toHaveBeenCalledTimes(1);
+        expect(getComputedStyleSpy).toHaveBeenNthCalledWith(1, button);
       });
     });
   });
