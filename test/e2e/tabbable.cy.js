@@ -5,6 +5,7 @@ import {
   setupFixture,
   removeAllChildNodes,
   getIdsFromElementsArray,
+  isFirefoxLowerThan125,
 } from './e2e.helpers';
 
 describe('tabbable', () => {
@@ -50,7 +51,7 @@ describe('tabbable', () => {
                 'tabindex-div',
                 'hiddenParentVisible-button',
                 'contentVisibilityHidden-button',
-                displayCheck !== 'full-native'
+                displayCheck !== 'full-native' && !isFirefoxLowerThan125()
                   ? 'contentVisibilityHiddenParent-button'
                   : undefined,
                 'opacityZero-button',

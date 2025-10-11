@@ -40,3 +40,18 @@ export function setupFixture(content, options = {}) {
   doc.body.append(container);
   return { container };
 }
+
+/**
+ * Useful to check whether a `content-visibility: hidden` parent leads to a
+ * visible child element in `Element.checkVisibility`. In Firefox < 125, both
+ * checkVisibility and native focusability checks seem to consider such an element
+ * visible and focusable.
+ *
+ * @see
+ * https://github.com/fpapado/firefox-checkVisibility-with-contentVisibilityHidden
+ */
+export function isFirefoxLowerThan125() {
+  return (
+    Cypress.browser.name === 'Firefox' && Cypress.browser.majorVersion < 125
+  );
+}
