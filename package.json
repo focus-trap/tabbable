@@ -67,7 +67,7 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
-    "@types/node": "^24.7.0",
+    "@types/node": "^24.7.2",
     "@typescript-eslint/eslint-plugin": "^8.44.1",
     "@typescript-eslint/parser": "^8.46.0",
     "all-contributors-cli": "^6.26.1",
