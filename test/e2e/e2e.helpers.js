@@ -52,6 +52,8 @@ export function setupFixture(content, options = {}) {
  */
 export function isFirefoxLowerThan125() {
   return (
-    Cypress.browser.name === 'Firefox' && Cypress.browser.majorVersion < 125
+    // NOTE: `browser.name` is lowercase
+    // @see https://docs.cypress.io/api/cypress-api/browser#Syntax
+    Cypress.browser.name === 'firefox' && Cypress.browser.majorVersion < 125
   );
 }
