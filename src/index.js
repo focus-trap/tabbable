@@ -398,6 +398,29 @@ const isZeroArea = function (node) {
   return width === 0 && height === 0;
 };
 const isHidden = function (node, { displayCheck, getShadowRoot }) {
+  if (displayCheck === 'full-native') {
+    if ('checkVisibility' in node) {
+      // Chrome >= 105, Edge >= 105, Firefox >= 106, Safari >= 17.4
+      // @see https://developer.mozilla.org/en-US/docs/Web/API/Element/checkVisibility#browser_compatibility
+      const visible = node.checkVisibility({
+        // Checking opacity might be desirable for some use cases, but natively,
+        // opacity zero elements _are_ focusable and tabbable.
+        checkOpacity: false,
+        opacityProperty: false,
+
+        contentVisibilityAuto: true,
+        visibilityProperty: true,
+        // This is an alias for `visibilityProperty`. Contemporary browsers
+        // support both. However, this alias has wider browser support (Chrome
+        // >= 105 and Firefox >= 106, vs. Chrome >= 121 and Firefox >= 122), so
+        // we include it anyway.
+        checkVisibilityCSS: true,
+      });
+      return !visible;
+    }
+    // Fall through to manual visibility checks
+  }
+
   // NOTE: visibility will be `undefined` if node is detached from the document
   //  (see notes about this further down), which means we will consider it visible
   //  (this is legacy behavior from a very long way back)
@@ -416,6 +439,9 @@ const isHidden = function (node, { displayCheck, getShadowRoot }) {
   if (
     !displayCheck ||
     displayCheck === 'full' ||
+    // full-native can run this branch when it falls through in case
+    // Element#checkVisibility is unsupported
+    displayCheck === 'full-native' ||
     displayCheck === 'legacy-full'
   ) {
     if (typeof getShadowRoot === 'function') {

@@ -1,10 +1,11 @@
 import { focusable } from '../../src/index.js';
 import {
-  setupTestWindow,
+  setupTestDocument,
   getFixtures,
   setupFixture,
   removeAllChildNodes,
   getIdsFromElementsArray,
+  isFirefoxLowerThan125,
 } from './e2e.helpers';
 
 describe('focusable', () => {
@@ -15,8 +16,8 @@ describe('focusable', () => {
   });
 
   beforeEach(() => {
-    setupTestWindow((testWindow) => {
-      document = testWindow.document;
+    setupTestDocument((doc) => {
+      document = doc;
     });
   });
 
@@ -25,160 +26,179 @@ describe('focusable', () => {
   });
 
   describe('example fixtures', () => {
-    [undefined, 'full', 'legacy-full'].forEach((displayCheck) => {
-      [true, false].forEach((inDocument) => {
-        it(`correctly identifies focusable elements in the "basic" example ${
-          inDocument ? '(container IN doc' : '(container NOT in doc'
-        }, displayCheck=${displayCheck || '<default>'})`, () => {
-          let expectedFocusableIds;
+    [undefined, 'full-native', 'full', 'legacy-full'].forEach(
+      (displayCheck) => {
+        [true, false].forEach((inDocument) => {
+          it(`correctly identifies focusable elements in the "basic" example ${
+            inDocument ? '(container IN doc' : '(container NOT in doc'
+          }, displayCheck=${displayCheck || '<default>'})`, () => {
+            let expectedFocusableIds;
 
-          if (inDocument) {
-            expectedFocusableIds = [
-              'contenteditable-true',
-              'contenteditable-nesting',
-              'contenteditable-negative-tabindex',
-              'contenteditable-NaN-tabindex',
-              'input',
-              'input-readonly',
-              'select',
-              'select-readonly',
-              'href-anchor',
-              'tabindex-hrefless-anchor',
-              'textarea',
-              'textarea-readonly',
-              'button',
-              'tabindex-div',
-              'negative-select',
-              'hiddenParentVisible-button',
-              'displaycontents-child',
-              'audio-control',
-              'audio-control-NaN-tabindex',
-              'video-control',
-              'video-control-NaN-tabindex',
-            ];
-          } else if (displayCheck === 'legacy-full') {
-            expectedFocusableIds = [
-              'contenteditable-true',
-              'contenteditable-nesting',
-              'contenteditable-negative-tabindex',
-              'contenteditable-NaN-tabindex',
-              'input',
-              'input-readonly',
-              'select',
-              'select-readonly',
-              'href-anchor',
-              'tabindex-hrefless-anchor',
-              'textarea',
-              'textarea-readonly',
-              'button',
-              'tabindex-div',
-              'negative-select',
-              'displaynone-textarea',
-              'visibilityhidden-button',
-              'hiddenParent-button',
-              'hiddenParentVisible-button',
-              'displaycontents',
-              'displaycontents-child',
-              'displaycontents-child-displaynone',
-              'audio-control',
-              'audio-control-NaN-tabindex',
-              'video-control',
-              'video-control-NaN-tabindex',
-            ];
-          } else {
-            // should find nothing because the container will be detached
-            expectedFocusableIds = [];
-          }
+            if (inDocument) {
+              expectedFocusableIds = [
+                'contenteditable-true',
+                'contenteditable-nesting',
+                'contenteditable-negative-tabindex',
+                'contenteditable-NaN-tabindex',
+                'input',
+                'input-readonly',
+                'select',
+                'select-readonly',
+                'href-anchor',
+                'tabindex-hrefless-anchor',
+                'textarea',
+                'textarea-readonly',
+                'button',
+                'tabindex-div',
+                'negative-select',
+                'hiddenParentVisible-button',
+                'contentVisibilityHidden-button',
+                displayCheck !== 'full-native' || isFirefoxLowerThan125()
+                  ? 'contentVisibilityHiddenParent-button'
+                  : undefined,
+                'opacityZero-button',
+                'opacityZeroParent-button',
+                'displaycontents-child',
+                'audio-control',
+                'audio-control-NaN-tabindex',
+                'video-control',
+                'video-control-NaN-tabindex',
+              ].filter((id) => id !== undefined);
+            } else if (displayCheck === 'legacy-full') {
+              expectedFocusableIds = [
+                'contenteditable-true',
+                'contenteditable-nesting',
+                'contenteditable-negative-tabindex',
+                'contenteditable-NaN-tabindex',
+                'input',
+                'input-readonly',
+                'select',
+                'select-readonly',
+                'href-anchor',
+                'tabindex-hrefless-anchor',
+                'textarea',
+                'textarea-readonly',
+                'button',
+                'tabindex-div',
+                'negative-select',
+                'displaynone-textarea',
+                'visibilityhidden-button',
+                'hiddenParent-button',
+                'hiddenParentVisible-button',
+                'contentVisibilityHidden-button',
+                'contentVisibilityHiddenParent-button',
+                'opacityZero-button',
+                'opacityZeroParent-button',
+                'displaycontents',
+                'displaycontents-child',
+                'displaycontents-child-displaynone',
+                'audio-control',
+                'audio-control-NaN-tabindex',
+                'video-control',
+                'video-control-NaN-tabindex',
+              ];
+            } else {
+              // should find nothing because the container will be detached
+              expectedFocusableIds = [];
+            }
 
+            const container = document.createElement('div');
+            container.innerHTML = fixtures.basic;
+
+            if (inDocument) {
+              document.body.append(container);
+            }
+
+            const focusableElements = focusable(container, { displayCheck });
+
+            expect(getIdsFromElementsArray(focusableElements)).to.eql(
+              expectedFocusableIds
+            );
+          });
+        });
+      }
+    );
+
+    // TODO[ff-inert-support]: FF does not support the `inert` attribute in
+    // versions lower than 112 (our CI uses 106). We can change this when we
+    // update the browser versions in ci.yaml.
+    describe('inertness', { browser: '!firefox' }, () => {
+      [
+        undefined,
+        'full-native',
+        'full',
+        'legacy-full',
+        'non-zero-area',
+        'none',
+      ].forEach((displayCheck) => {
+        it(`correctly identifies focusable elements in the "inert" example with displayCheck=${
+          displayCheck || '<default>'
+        }`, () => {
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.inert;
+          document.body.append(container);
+
+          // non-inert container, but every element inside of it is
+          const focusableElements = focusable(container, { displayCheck });
+
+          expect(getIdsFromElementsArray(focusableElements)).to.eql([]);
+        });
+
+        it(`correctly identifies focusable elements in the "basic" example with displayCheck=${
+          displayCheck || '<default>'
+        } when placed directly inside an inert container`, () => {
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.basic;
+          container.inert = true;
+          document.body.append(container);
+
+          // inert container has non-inert children
+          const focusableElements = focusable(container, { displayCheck });
+
+          expect(getIdsFromElementsArray(focusableElements)).to.eql([]);
+        });
+
+        it(`correctly identifies focusable elements in the "basic" example with displayCheck=${
+          displayCheck || '<default>'
+        } when nested inside an inert container`, () => {
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.basic;
+          container.inert = true;
+
+          const parentContainer = document.createElement('div');
+          parentContainer.appendChild(container);
+          document.body.append(parentContainer);
+
+          // non-inert parent has inert container which has non-inert children
+          const focusableElements = focusable(parentContainer, {
+            displayCheck,
+          });
+
+          expect(getIdsFromElementsArray(focusableElements)).to.eql([]);
+        });
+
+        it(`correctly identifies focusable elements in the "basic" example with displayCheck=${
+          displayCheck || '<default>'
+        } when deeply nested inside an inert container`, () => {
           const container = document.createElement('div');
           container.innerHTML = fixtures.basic;
 
-          if (inDocument) {
-            document.body.append(container);
-          }
+          const parentContainer = document.createElement('div');
+          parentContainer.inert = true;
+          parentContainer.appendChild(container);
 
-          const focusableElements = focusable(container, { displayCheck });
+          const grandparentContainer = document.createElement('div');
+          grandparentContainer.appendChild(parentContainer);
+          document.body.append(grandparentContainer);
 
-          expect(getIdsFromElementsArray(focusableElements)).to.eql(
-            expectedFocusableIds
-          );
+          // non-inert grandparent has inert parent, which has non-container with children
+          const focusableElements = focusable(grandparentContainer, {
+            displayCheck,
+          });
+
+          expect(getIdsFromElementsArray(focusableElements)).to.eql([]);
         });
       });
-    });
-
-    // TODO[ff-inert-support]: FF does not yet (Feb 2023) support the `inert` attribute
-    describe('inertness', { browser: '!firefox' }, () => {
-      [undefined, 'full', 'legacy-full', 'non-zero-area', 'none'].forEach(
-        (displayCheck) => {
-          it(`correctly identifies focusable elements in the "inert" example with displayCheck=${
-            displayCheck || '<default>'
-          }`, () => {
-            const container = document.createElement('div');
-            container.innerHTML = fixtures.inert;
-            document.body.append(container);
-
-            // non-inert container, but every element inside of it is
-            const focusableElements = focusable(container, { displayCheck });
-
-            expect(getIdsFromElementsArray(focusableElements)).to.eql([]);
-          });
-
-          it(`correctly identifies focusable elements in the "basic" example with displayCheck=${
-            displayCheck || '<default>'
-          } when placed directly inside an inert container`, () => {
-            const container = document.createElement('div');
-            container.innerHTML = fixtures.basic;
-            container.inert = true;
-            document.body.append(container);
-
-            // inert container has non-inert children
-            const focusableElements = focusable(container, { displayCheck });
-
-            expect(getIdsFromElementsArray(focusableElements)).to.eql([]);
-          });
-
-          it(`correctly identifies focusable elements in the "basic" example with displayCheck=${
-            displayCheck || '<default>'
-          } when nested inside an inert container`, () => {
-            const container = document.createElement('div');
-            container.innerHTML = fixtures.basic;
-            container.inert = true;
-
-            const parentContainer = document.createElement('div');
-            parentContainer.appendChild(container);
-            document.body.append(parentContainer);
-
-            // non-inert parent has inert container which has non-inert children
-            const focusableElements = focusable(parentContainer, {
-              displayCheck,
-            });
-
-            expect(getIdsFromElementsArray(focusableElements)).to.eql([]);
-          });
-
-          it(`correctly identifies focusable elements in the "basic" example with displayCheck=${
-            displayCheck || '<default>'
-          } when deeply nested inside an inert container`, () => {
-            const container = document.createElement('div');
-            container.innerHTML = fixtures.basic;
-
-            const parentContainer = document.createElement('div');
-            parentContainer.inert = true;
-            parentContainer.appendChild(container);
-
-            const grandparentContainer = document.createElement('div');
-            grandparentContainer.appendChild(parentContainer);
-            document.body.append(grandparentContainer);
-
-            // non-inert grandparent has inert parent, which has non-container with children
-            const focusableElements = focusable(grandparentContainer, {
-              displayCheck,
-            });
-
-            expect(getIdsFromElementsArray(focusableElements)).to.eql([]);
-          });
-        }
-      );
     });
 
     it('correctly identifies focusable elements in the "nested" example', () => {
