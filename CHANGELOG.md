@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.3.0
+
+### Minor Changes
+
+- fae1e50: feat: add 'full-native' `displayCheck` option, utilising Element#checkVisibility
+
 ## 6.2.0
 
 ### Minor Changes
