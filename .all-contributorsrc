@@ -167,9 +167,20 @@
       "contributions": [
         "test"
       ]
+    },
+    {
+      "login": "fpapado",
+      "name": "Fotis Papadogeorgopoulos",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3210764?v=4",
+      "profile": "http://fotis.xyz",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "contributorsPerLine": 7,
   "contributorsSortAlphabetically": true,
-  "skipCi": true
+  "skipCi": true,
+  "commitType": "docs"
 }
