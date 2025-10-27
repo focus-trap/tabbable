@@ -52,10 +52,10 @@ jobs:
     container:
       # https://hub.docker.com/r/cypress/browsers/tags
       #
-      # NOTE: at least Chrome 102 is required for testing `inert` attribute
-      # support. At least Chrome 105 and Firefox 106 are required for
-      # `Element#checkVisibility` support.
-      image: cypress/browsers:node18.12.0-chrome106-ff106
+      # NOTE: At least Chrome 102 is required for testing `inert` attribute support.
+      #  At least Chrome 105 and Firefox 106 are required for `Element#checkVisibility` support.
+      #  At least FireFox 135 is required for Cypress >=15.
+      image: cypress/browsers:node-22.21.0-chrome-141.0.7390.107-1-ff-144.0-edge-141.0.3537.92-1
       options: --user 1001 --shm-size=2g # @see https://github.com/cypress-io/github-action/issues/104#issuecomment-666047965
     env:
       BABEL_ENV: test
