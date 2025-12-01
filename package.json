@@ -98,8 +98,5 @@
     "typescript": "^5.9.3",
     "watchify": "^4.0.0",
     "webpack": "^5.103.0"
-  },
-  "overrides": {
-    "nwsapi": "2.2.2"
   }
 }
