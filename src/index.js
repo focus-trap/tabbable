@@ -30,7 +30,7 @@ const getRootNode =
 
 /**
  * Determines if a node is inert or in an inert ancestor.
- * @param {Element} [node]
+ * @param {Node} [node]
  * @param {boolean} [lookUp] If true and `node` is not inert, looks up at ancestors to
  *  see if any of them are inert. If false, only `node` itself is considered.
  * @returns {boolean} True if inert itself or by way of being in an inert ancestor.
@@ -46,7 +46,14 @@ const isInert = function (node, lookUp = true) {
   // NOTE: this could also be handled with `node.matches('[inert], :is([inert] *)')`
   //  if it weren't for `matches()` not being a function on shadow roots; the following
   //  code works for any kind of node
-  const result = inert || (lookUp && node && node.closest('[inert]'));
+  const result =
+    inert ||
+    (lookUp &&
+      node &&
+      // closest is only defined on Element, but does not exist on shadow roots,
+      // so we fall back to manual lookups upward in case it is not defined.
+      ((typeof node.closest === 'function' && node.closest('[inert]')) ||
+        isInert(node.parentNode)));
 
   return result;
 };
