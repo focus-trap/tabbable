@@ -3,6 +3,7 @@ import {
   setupTestDocument,
   getFixtures,
   removeAllChildNodes,
+  getIdsFromElementsArray,
 } from './e2e.helpers';
 const { getByTestId, getByText } = require('@testing-library/dom');
 
@@ -428,9 +429,9 @@ describe('isFocusable', () => {
         container.innerHTML = fixtures.inert;
         document.body.append(container);
 
-        for (const child of container.children) {
-          expect(isFocusable(child)).to.eql(false);
-        }
+        const focusables = Array.from(container.children).filter(isFocusable);
+
+        expect(getIdsFromElementsArray(focusables)).to.eql([]);
       });
 
       it('returns false for any element inside an inert parent', () => {
@@ -439,9 +440,9 @@ describe('isFocusable', () => {
         container.inert = true;
         document.body.append(container);
 
-        for (const child of container.children) {
-          expect(isFocusable(child), child.id).to.eql(false);
-        }
+        const focusables = Array.from(container.children).filter(isFocusable);
+
+        expect(getIdsFromElementsArray(focusables)).to.eql([]);
       });
 
       it('returns false for any element inside an inert ancestor', () => {
@@ -453,9 +454,9 @@ describe('isFocusable', () => {
         parent.appendChild(container);
         document.body.append(parent);
 
-        for (const child of container.children) {
-          expect(isFocusable(child), child.id).to.eql(false);
-        }
+        const focusables = Array.from(container.children).filter(isFocusable);
+
+        expect(getIdsFromElementsArray(focusables)).to.eql([]);
       });
     });
   });
