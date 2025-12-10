@@ -50,10 +50,11 @@ const isInert = function (node, lookUp = true) {
     inert ||
     (lookUp &&
       node &&
-      // closest is only defined on Element, but does not exist on shadow roots,
-      // so we fall back to manual lookups upward in case it is not defined.
-      ((typeof node.closest === 'function' && node.closest('[inert]')) ||
-        isInert(node.parentNode)));
+      // closest does not exist on shadow roots, so we fall back to a manual
+      // lookup upward, in case it is not defined.
+      (typeof node.closest === 'function'
+        ? node.closest('[inert]')
+        : isInert(node.parentNode)));
 
   return result;
 };
