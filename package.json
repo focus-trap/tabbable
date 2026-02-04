@@ -97,6 +97,6 @@
     "rollup": "^4.57.0",
     "typescript": "^5.9.3",
     "watchify": "^4.0.0",
-    "webpack": "^5.104.1"
+    "webpack": "^5.105.0"
   }
 }
