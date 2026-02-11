@@ -60,7 +60,7 @@
     "@babel/preset-env": "^7.29.0",
     "@changesets/cli": "^2.29.8",
     "@cypress/code-coverage": "^4.0.0",
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^10.0.1",
     "@rollup/plugin-babel": "^6.1.0",
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
