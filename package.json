@@ -29,7 +29,7 @@
     "lint": "eslint \"{*,src/**/*,test/**/*}.+(js|cjs|mjs|ts|cts|mts)\"",
     "start": "npm run compile:cjs && budo test/debug.js --live --dir -- -t brfs",
     "test": "npm run format:check && npm run lint && npm run test:types && npm run test:unit && npm run test:e2e",
-    "test:types": "tsc index.d.ts",
+    "test:types": "tsc",
     "test:unit": "jest",
     "test:e2e": "ELECTRON_ENABLE_LOGGING=1 cypress run",
     "test:e2e:dev": "cypress open",
@@ -95,7 +95,7 @@
     "onchange": "^7.1.0",
     "prettier": "^3.8.1",
     "rollup": "^4.60.1",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "watchify": "^4.0.0",
     "webpack": "^5.105.4"
   }
