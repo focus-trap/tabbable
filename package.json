@@ -73,7 +73,7 @@
     "all-contributors-cli": "^6.26.1",
     "babel-jest": "^30.2.0",
     "babel-loader": "^10.1.1",
-    "babel-plugin-istanbul": "^7.0.1",
+    "babel-plugin-istanbul": "^8.0.0",
     "brfs": "^2.0.2",
     "browserify": "^17.0.1",
     "budo": "^11.8.4",
