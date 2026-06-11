@@ -563,6 +563,30 @@ describe('tabbable', () => {
             expectedTabbableIds
           );
         });
+        it('excludes visibility: collapse elements in every displayCheck mode', () => {
+          const container = document.createElement('div');
+          container.innerHTML = fixtures.displayed;
+          document.body.append(container);
+
+          for (const displayCheck of [
+            undefined,
+            'full',
+            'full-native',
+            'legacy-full',
+            'non-zero-area',
+            'none',
+          ]) {
+            const ids = getIdsFromElementsArray(
+              tabbable(container, { displayCheck })
+            );
+            expect(ids, `displayCheck=${displayCheck}`).to.not.include(
+              'displayed-visibility-collapse'
+            );
+            expect(ids, `displayCheck=${displayCheck}`).to.not.include(
+              'displayed-collapsed-row-button'
+            );
+          }
+        });
       });
     });
   });
