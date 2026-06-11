@@ -14,7 +14,7 @@ npm start
 
 Then open your browser to http://localhost:9966
 
-> Note that changes to **test** files ([test](./test) HTML and JS) are hot-reloaded, but changes to the [source](src/index.js) **are not**. It would be great if source changes were also hot-reloaded. If you know how to fix that, please do!
+> Changes to **test** files ([test](./test) HTML and JS) as well as the [source](src/index.js) are hot-reloaded.
 
 ## Testing
 
