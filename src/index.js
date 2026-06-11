@@ -429,7 +429,8 @@ const isHidden = function (node, { displayCheck, getShadowRoot }) {
   //  (this is legacy behavior from a very long way back)
   // NOTE: we check this regardless of `displayCheck="none"` because this is a
   //  _visibility_ check, not a _display_ check
-  if (getComputedStyle(node).visibility === 'hidden') {
+  const { visibility } = getComputedStyle(node);
+  if (visibility === 'hidden' || visibility === 'collapse') {
     return true;
   }
 
