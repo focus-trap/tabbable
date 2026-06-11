@@ -2,7 +2,7 @@
 
 const { ...testCases } = require('./fixtures/fixtures.js');
 const { appendHTMLWithShadowRoots } = require('./shadow-root-utils');
-global.tabbable = require('../dist/index.js');
+global.tabbable = require('../src/index.js');
 
 let root;
 let content;
