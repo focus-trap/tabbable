@@ -333,6 +333,20 @@ describe('focusable', () => {
       );
     });
 
+    it('correctly identifies focusable elements in the "area" example', () => {
+      const expectedFocusableIds = ['area-href', 'area-negative-tabindex'];
+
+      const container = document.createElement('div');
+      container.innerHTML = fixtures.area;
+      document.body.append(container);
+
+      const focusableElements = focusable(container);
+
+      expect(getIdsFromElementsArray(focusableElements)).to.eql(
+        expectedFocusableIds
+      );
+    });
+
     it('correctly identifies focusable elements in the "radio" example', () => {
       const expectedFocusableIds = [
         'form1-radioA',
