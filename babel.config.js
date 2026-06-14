@@ -23,6 +23,12 @@ module.exports = {
       ],
       plugins,
     },
+    dev: {
+      presets: [
+        ['@babel/preset-env', { targets: { esmodules: true }, loose: true }],
+      ],
+      plugins,
+    },
     esm: {
       // ESM browsers for ESM builds
       presets: [

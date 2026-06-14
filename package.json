@@ -27,7 +27,7 @@
     "format:check": "prettier --check \"{*,src/**/*,test/**/*,.github/workflows/**/*}.+(js|cjs|mjs|ts|cts|mts|yml)\"",
     "format:watch": "onchange \"{*,src/**/*,test/**/*,.github/workflows/**/*}.+(js|cjs|mjs|ts|cts|mts|yml)\" -- prettier --write {{changed}}",
     "lint": "eslint \"{*,src/**/*,test/**/*}.+(js|cjs|mjs|ts|cts|mts)\"",
-    "start": "cross-env BABEL_ENV=es5 budo test/debug.js --live --dir -- -t brfs -t babelify",
+    "start": "cross-env BABEL_ENV=dev budo test/debug.js --live --dir -- -t brfs -t babelify",
     "test": "npm run format:check && npm run lint && npm run test:types && npm run test:unit && npm run test:e2e",
     "test:types": "tsc",
     "test:unit": "jest",
