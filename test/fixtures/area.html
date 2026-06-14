@@ -1,0 +1,29 @@
+<img
+  id="area-image"
+  width="320"
+  height="160"
+  usemap="#area-map"
+  alt="image map"
+  src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMjAiIGhlaWdodD0iMTYwIj48cmVjdCB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE2MCIgZmlsbD0iI2Y0ZjRmNCIvPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDYiIGhlaWdodD0iMTYwIiBmaWxsPSIjN2FhNmZmIi8+PGNpcmNsZSBjeD0iMTYwIiBjeT0iODAiIHI9IjM1IiBmaWxsPSIjYmRiZGJkIi8+PHJlY3QgeD0iMjE0IiB5PSIwIiB3aWR0aD0iMTA2IiBoZWlnaHQ9IjE2MCIgZmlsbD0iI2ZmZDI3YSIvPjx0ZXh0IHg9IjUzIiB5PSI4NSIgZm9udC1zaXplPSIxMyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwMCI+aHJlZjwvdGV4dD48dGV4dCB4PSIxNjAiIHk9Ijg0IiBmb250LXNpemU9IjEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMDAwIj5ubyBocmVmPC90ZXh0Pjx0ZXh0IHg9IjI2NyIgeT0iNzgiIGZvbnQtc2l6ZT0iMTEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMwMDAiPnRhYmluZGV4PC90ZXh0Pjx0ZXh0IHg9IjI2NyIgeT0iOTIiIGZvbnQtc2l6ZT0iMTEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMwMDAiPi0xPC90ZXh0Pjwvc3ZnPg=="
+/>
+<map name="area-map">
+  <!-- has href -> tabbable + focusable -->
+  <area
+    id="area-href"
+    shape="rect"
+    coords="0,0,106,160"
+    href="#href"
+    alt="href"
+  />
+  <!-- no href -> neither tabbable nor focusable (excluded by the selector) -->
+  <area id="area-no-href" shape="circle" coords="160,80,35" alt="no href" />
+  <!-- href but negative tabindex -> focusable but NOT tabbable -->
+  <area
+    id="area-negative-tabindex"
+    shape="rect"
+    coords="214,0,320,160"
+    href="#negative"
+    tabindex="-1"
+    alt="negative tabindex"
+  />
+</map>
