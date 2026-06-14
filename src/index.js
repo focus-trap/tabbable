@@ -5,6 +5,7 @@ const candidateSelectors = [
   'select:not([inert]):not([inert] *)',
   'textarea:not([inert]):not([inert] *)',
   'a[href]:not([inert]):not([inert] *)',
+  'area[href]:not([inert]):not([inert] *)',
   'button:not([inert]):not([inert] *)',
   '[tabindex]:not(slot):not([inert]):not([inert] *)',
   'audio[controls]:not([inert]):not([inert] *)',
