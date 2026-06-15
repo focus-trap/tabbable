@@ -177,6 +177,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "spaansba",
+      "name": "Bart Spaans",
+      "avatar_url": "https://avatars.githubusercontent.com/u/143680439?v=4",
+      "profile": "https://www.bartspaans.com/",
+      "contributions": [
+        "infra"
+      ]
     }
   ],
   "contributorsPerLine": 7,
