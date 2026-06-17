@@ -1,5 +1,3 @@
-/* eslint-env node */
-
 import { createRequire } from 'node:module';
 import babelPlugin from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
