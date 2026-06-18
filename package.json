@@ -59,7 +59,6 @@
     "@babel/plugin-transform-optional-chaining": "^8.0.1",
     "@babel/preset-env": "^8.0.0",
     "@changesets/cli": "^2.31.0",
-    "@cypress/code-coverage": "^4.0.3",
     "@eslint/js": "^9.39.2",
     "@rollup/plugin-babel": "^7.1.0",
     "@rollup/plugin-commonjs": "^29.0.3",
