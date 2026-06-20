@@ -329,6 +329,20 @@ describe('tabbable', () => {
       );
     });
 
+    it('correctly identifies tabbable elements in the "area" example', () => {
+      const expectedTabbableIds = ['area-href'];
+
+      const container = document.createElement('div');
+      container.innerHTML = fixtures.area;
+      document.body.append(container);
+
+      const tabbableElements = tabbable(container);
+
+      expect(getIdsFromElementsArray(tabbableElements)).to.eql(
+        expectedTabbableIds
+      );
+    });
+
     it('correctly identifies tabbable elements in the "radio" example', () => {
       const expectedTabbableIds = [
         'form1-radioA',
