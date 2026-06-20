@@ -26,7 +26,7 @@ Any of the above will _not_ be considered tabbable, though, if any of the follow
 - has a negative `tabindex` attribute
 - has a `disabled` attribute
 - either the node itself _or an ancestor of it_ is hidden via `display: none` (*see ["Display check"](#displaycheck-option) below to modify this behavior)
-- has `visibility: hidden` style
+- has `visibility: hidden` or `visibility: collapse` style
 - is nested under a closed `<details>` element (with the exception of the first `<summary>` element)
 - is an `<input type="radio">` element and a different radio in its group is `checked`
 - is a form field (button, input, select, textarea) inside a disabled `<fieldset>`
