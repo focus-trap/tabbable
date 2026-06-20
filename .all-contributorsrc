@@ -185,7 +185,8 @@
       "profile": "https://www.bartspaans.com/",
       "contributions": [
         "infra",
-        "code"
+        "code",
+        "bug"
       ]
     }
   ],
