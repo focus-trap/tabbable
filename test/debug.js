@@ -2,7 +2,8 @@
 
 const { ...testCases } = require('./fixtures/fixtures.js');
 const { appendHTMLWithShadowRoots } = require('./shadow-root-utils');
-global.tabbable = require('../src/index.js');
+const { tabbable, focusable, getTabIndex } =
+  (global.tabbable = require('../src/index.js'));
 
 let root;
 let content;
@@ -51,3 +52,36 @@ document.body.addEventListener('focusin', onFocusIn);
 const styleTag = document.createElement('style');
 styleTag.innerHTML = ':focus { outline: 5px solid #b603f6; }';
 document.body.appendChild(styleTag);
+
+// Log out tabbable/focusable elements on the page on startup
+const allTabbable = tabbable(document.body);
+const allFocusable = focusable(document.body);
+const focusableNotTabbable = allFocusable.filter(
+  (element) => !allTabbable.includes(element)
+);
+
+/* eslint-disable no-console */
+console.groupCollapsed(
+  'Tabbable elements on the page (' + allTabbable.length + ')'
+);
+allTabbable.forEach((element) =>
+  console.log('tabindex ' + getTabIndex(element) + ':', element)
+);
+console.groupEnd();
+
+console.groupCollapsed(
+  'Focusable elements on the page (' + allFocusable.length + ')'
+);
+allFocusable.forEach((element) =>
+  console.log('tabindex ' + getTabIndex(element) + ':', element)
+);
+console.groupEnd();
+
+console.groupCollapsed(
+  'Focusable but not tabbable (' + focusableNotTabbable.length + ')'
+);
+focusableNotTabbable.forEach((element) =>
+  console.log('tabindex ' + getTabIndex(element) + ':', element)
+);
+console.groupEnd();
+/* eslint-enable no-console */
