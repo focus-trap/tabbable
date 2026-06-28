@@ -17,12 +17,6 @@
  */
 // eslint-disable-next-line no-unused-vars
 module.exports = (on, config) => {
-  if (config.env.coverage === true) {
-    // enable coverage
-    require('@cypress/code-coverage/task')(on, config);
-    on('file:preprocessor', require('@cypress/code-coverage/use-babelrc'));
-  }
-
   // fetch fixtures
   on('task', {
     getFixtures() {

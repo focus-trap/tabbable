@@ -2,8 +2,6 @@
 // ROOT ESLint Configuration
 //
 
-/* eslint-env node */
-
 import url from 'node:url';
 import path from 'node:path';
 import js from '@eslint/js';

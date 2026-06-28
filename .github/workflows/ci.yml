@@ -65,7 +65,6 @@ jobs:
 
       - name: Test E2E
         # https://github.com/cypress-io/github-action
-        # https://github.com/cypress-io/code-coverage
         uses: cypress-io/github-action@v5 # will run all tests found per cypress.config.js
         with:
           browser: ${{ matrix.browser }}
