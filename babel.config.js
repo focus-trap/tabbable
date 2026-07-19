@@ -1,9 +1,28 @@
-/* eslint-env node */
-
 const plugins = [
-  '@babel/plugin-proposal-nullish-coalescing-operator',
-  '@babel/plugin-proposal-optional-chaining',
+  '@babel/plugin-transform-nullish-coalescing-operator',
+  '@babel/plugin-transform-optional-chaining',
 ];
+
+const assumptions = {
+  arrayLikeIsIterable: true,
+  constantReexports: true,
+  ignoreFunctionLength: true,
+  ignoreToPrimitiveHint: true,
+  mutableTemplateObject: true,
+  noClassCalls: true,
+  noDocumentAll: true,
+  objectRestNoSymbols: true,
+  privateFieldsAsProperties: true,
+  pureGetters: true,
+  setClassMethods: true,
+  setComputedProperties: true,
+  setPublicClassFields: true,
+  setSpreadProperties: true,
+  skipForOfIteratorClosing: true,
+  superIsCallableConstructor: true,
+};
+
+const exclude = ['transform-typeof-symbol'];
 
 module.exports = {
   env: {
@@ -17,10 +36,11 @@ module.exports = {
           // @see https://babeljs.io/docs/en/babel-preset-env#targets
           '@babel/preset-env',
           {
-            loose: true,
+            exclude,
           },
         ],
       ],
+      assumptions,
       plugins,
     },
     dev: {
@@ -40,10 +60,11 @@ module.exports = {
           '@babel/preset-env',
           {
             modules: false, // preserve ES modules
-            loose: true,
+            exclude,
           },
         ],
       ],
+      assumptions,
       plugins,
     },
     test: {

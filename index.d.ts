@@ -5,7 +5,6 @@ export type CheckOptions = {
     'full' | 'full-native' | 'legacy-full' | 'non-zero-area' | 'none';
   getShadowRoot?:
     | boolean
-    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- there is no overlap here; the function can return true/false/undefined
     | ((node: FocusableElement) => ShadowRoot | boolean | undefined);
 };
 
