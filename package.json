@@ -99,5 +99,12 @@
     "typescript": "^6.0.3",
     "watchify": "^4.0.0",
     "webpack": "^5.110.3"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true,
+    "cypress@16.0.0": true,
+    "es5-ext@0.10.64": true,
+    "fsevents@2.3.3": true,
+    "unrs-resolver@1.12.2": true
   }
 }
