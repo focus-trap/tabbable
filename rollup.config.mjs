@@ -1,5 +1,3 @@
-/* eslint-env node */
-
 import { createRequire } from 'node:module';
 import babelPlugin from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
@@ -135,7 +133,7 @@ const umd = [
   },
 ];
 
-let config = {};
+let config;
 console.log(process.env.BUILD_ENV);
 switch (process.env.BUILD_ENV) {
   case 'cjs':
