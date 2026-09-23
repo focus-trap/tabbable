@@ -1,10 +1,3 @@
-/* eslint-env node */
-
-const plugins = [
-  '@babel/plugin-proposal-nullish-coalescing-operator',
-  '@babel/plugin-proposal-optional-chaining',
-];
-
 module.exports = {
   env: {
     es5: {
@@ -21,13 +14,11 @@ module.exports = {
           },
         ],
       ],
-      plugins,
     },
     dev: {
       presets: [
         ['@babel/preset-env', { targets: { esmodules: true }, loose: true }],
       ],
-      plugins,
     },
     esm: {
       // ESM browsers for ESM builds
@@ -44,12 +35,11 @@ module.exports = {
           },
         ],
       ],
-      plugins,
     },
     test: {
       // Jest/Cypress
       // @see https://github.com/istanbuljs/babel-plugin-istanbul
-      plugins: [...plugins, 'istanbul'],
+      plugins: ['istanbul'],
       presets: [['@babel/preset-env', { targets: { node: 'current' } }]],
     },
   },
