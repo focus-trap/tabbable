@@ -97,10 +97,10 @@
     "webpack": "^5.111.0"
   },
   "allowScripts": {
-    "@parcel/watcher@2.6.0": true,
-    "cypress@16.0.0": true,
-    "es5-ext@0.10.64": true,
-    "fsevents@2.3.3": true,
-    "unrs-resolver@1.12.2": true
+    "@parcel/watcher": true,
+    "cypress": true,
+    "es5-ext": true,
+    "fsevents": true,
+    "unrs-resolver": true
   }
 }
