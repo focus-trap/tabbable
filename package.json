@@ -90,7 +90,7 @@
     "jest-environment-jsdom": "^30.5.1",
     "jest-watch-typeahead": "^3.0.1",
     "onchange": "^7.1.0",
-    "prettier": "^3.9.6",
+    "prettier": "^3.9.10",
     "rollup": "^4.64.6",
     "typescript": "^6.0.3",
     "watchify": "^4.0.0",
