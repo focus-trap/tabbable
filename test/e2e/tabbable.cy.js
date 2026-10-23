@@ -26,6 +26,20 @@ describe('tabbable', () => {
   });
 
   describe('example fixtures', () => {
+    it('includes plaintext-only and case-insensitive editable elements in tab order', () => {
+      const container = document.createElement('div');
+      container.innerHTML =
+        '<div id="plain" contenteditable="plaintext-only">text</div>' +
+        '<div id="upper" contenteditable="TRUE">text</div>';
+      document.body.append(container);
+      expect(getIdsFromElementsArray(tabbable(container))).to.deep.equal([
+        'plain',
+        'upper',
+      ]);
+      container.firstChild.focus();
+      expect(document.activeElement.id).to.equal('plain');
+    });
+
     [undefined, 'full-native', 'full', 'legacy-full'].forEach(
       (displayCheck) => {
         [true, false].forEach((inDocument) => {
