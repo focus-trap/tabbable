@@ -179,6 +179,20 @@ describe('unit tests', () => {
   });
 
   describe('getTabIndex', () => {
+    it.each(['plaintext-only', 'PLAINTEXT-ONLY', 'TRUE'])(
+      'recognizes contenteditable=%s without an explicit tab index',
+      (value) => {
+        const editable = document.createElement('div');
+        editable.setAttribute('contenteditable', value);
+        expect(getTabIndex(editable)).toBe(0);
+        expect(
+          tabbable(editable, { ...options, includeContainer: true })
+        ).toEqual([editable]);
+        editable.tabIndex = -1;
+        expect(getTabIndex(editable)).toBe(-1);
+      }
+    );
+
     describe('tabindex example', () => {
       let container;
 

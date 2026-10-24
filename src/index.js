@@ -67,10 +67,12 @@ const isInert = function (node, lookUp = true) {
  */
 const isContentEditable = function (node) {
   // CAREFUL: JSDom does not support the `HTMLElement.isContentEditable` API so we have
-  //  to use the attribute directly to check for this, which can either be empty or 'true';
-  //  if it's `null` (not specified) or 'false', it's a non-editable element
-  const attValue = node?.getAttribute?.('contenteditable');
-  return attValue === '' || attValue === 'true';
+  //  to use the case-insensitive attribute directly: empty, 'true', and 'plaintext-only'
+  //  are editable states; `null` (not specified) and 'false' are not.
+  const attValue = node?.getAttribute?.('contenteditable')?.toLowerCase();
+  return (
+    attValue === '' || attValue === 'true' || attValue === 'plaintext-only'
+  );
 };
 
 /**
