@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.5.1
+
+### Patch Changes
+
+- ab07c2b: Recognize plaintext-only and case-insensitive contenteditable values in natural tab order.
+
 ## 6.5.0
 
 ### Minor Changes
