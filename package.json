@@ -94,7 +94,7 @@
     "rollup": "^4.64.6",
     "typescript": "^6.0.3",
     "watchify": "^4.0.0",
-    "webpack": "^5.111.0"
+    "webpack": "^5.112.0"
   },
   "allowScripts": {
     "@parcel/watcher": true,
