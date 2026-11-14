@@ -177,6 +177,24 @@ describe('web-components', () => {
       expect(isFocusable(shadowElement), 'shadow is focusable').to.eql(true);
       expect(isTabbable(shadowElement), 'shadow is not tabbable').to.eql(false);
     });
+
+    it('should not match elements in nested shadow roots once the outer host is detached', () => {
+      const doc = window.document;
+      const outerHost = doc.createElement('div');
+      const innerHost = doc.createElement('div');
+      const button = doc.createElement('button');
+      outerHost.attachShadow({ mode: 'open' }).appendChild(innerHost);
+      innerHost.attachShadow({ mode: 'open' }).appendChild(button);
+      doc.body.appendChild(outerHost);
+
+      expect(isTabbable(button), 'tabbable while attached').to.eql(true);
+      expect(isFocusable(button), 'focusable while attached').to.eql(true);
+
+      outerHost.remove();
+
+      expect(isTabbable(button), 'not tabbable once detached').to.eql(false);
+      expect(isFocusable(button), 'not focusable once detached').to.eql(false);
+    });
   });
 
   describe('tabbable/focusable', () => {
