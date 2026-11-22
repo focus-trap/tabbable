@@ -615,6 +615,34 @@ describe('tabbable', () => {
             );
           }
         });
+        it('keeps content-visibility: auto contents in every displayCheck mode', () => {
+          // Browsers keep the contents of a `content-visibility: auto` element
+          // focusable and in the tab order, also while they are skipped
+          // (offscreen, or before the first rendering update).
+          const autoSection = (id) =>
+            '<section style="content-visibility: auto; contain-intrinsic-size: auto 100px;">' +
+            `<button id="${id}">${id}</button>` +
+            '</section>';
+          const container = document.createElement('div');
+          container.innerHTML =
+            '<button id="cv-auto-before">before</button>' +
+            autoSection('cv-auto-near') +
+            '<div style="height: 10000px;"></div>' +
+            autoSection('cv-auto-far');
+          document.body.append(container);
+
+          for (const displayCheck of [
+            undefined,
+            'full',
+            'full-native',
+            'legacy-full',
+          ]) {
+            expect(
+              getIdsFromElementsArray(tabbable(container, { displayCheck })),
+              `displayCheck=${displayCheck}`
+            ).to.eql(['cv-auto-before', 'cv-auto-near', 'cv-auto-far']);
+          }
+        });
       });
     });
   });

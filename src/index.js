@@ -364,7 +364,10 @@ const isHidden = function (node, { displayCheck, getShadowRoot }) {
         checkOpacity: false,
         opacityProperty: false,
 
-        contentVisibilityAuto: true,
+        // Same for `content-visibility: auto`: its skipped contents (e.g. when
+        // offscreen) stay focusable and in the tab order.
+        // @see https://drafts.csswg.org/css-contain-2/#content-visibility
+        contentVisibilityAuto: false,
         visibilityProperty: true,
         // This is an alias for `visibilityProperty`. Contemporary browsers
         // support both. However, this alias has wider browser support (Chrome
